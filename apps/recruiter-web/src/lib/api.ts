@@ -1,6 +1,6 @@
 import { FresherToWorkApiClient } from '@fresher2work/api-client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export const recruiterApi = new FresherToWorkApiClient({
   baseUrl: API_BASE_URL,

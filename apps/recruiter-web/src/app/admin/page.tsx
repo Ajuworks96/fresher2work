@@ -134,7 +134,7 @@ export default function SuperAdminSidebarPage() {
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
