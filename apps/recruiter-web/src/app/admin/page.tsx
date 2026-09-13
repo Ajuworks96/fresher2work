@@ -946,7 +946,7 @@ export default function SuperAdminSidebarPage() {
                                     {roleName}
                                   </p>
                                   <p className="text-[11px] text-slate-400 mt-0.5">
-                                    {hire.city ? `${hire.city} • ` : ''}{hire.user?.email || hire.email || 'candidate@freshertowork.com'}
+                                    {hire.city ? `${hire.city} • ` : ''}{hire.user?.email || hire.email || '—'}
                                   </p>
                                 </div>
                               </div>
@@ -2511,8 +2511,8 @@ export default function SuperAdminSidebarPage() {
                           <td className="px-5 py-3.5 font-bold text-slate-900">{p.id.substring(0, 8)}...</td>
                           <td className="px-5 py-3.5 font-sans font-bold text-slate-800">{p.user?.email || 'Candidate'}</td>
                           <td className="px-5 py-3.5 font-bold text-emerald-700 font-sans">₹{(p.amountPaise / 100).toFixed(2)}</td>
-                          <td className="px-5 py-3.5 text-slate-500">{p.razorpayOrderId || 'order_test'}</td>
-                          <td className="px-5 py-3.5 text-slate-500">{p.razorpayPaymentId || 'pay_test'}</td>
+                          <td className="px-5 py-3.5 text-slate-500 font-mono">{p.razorpayOrderId || '—'}</td>
+                          <td className="px-5 py-3.5 text-slate-500 font-mono">{p.razorpayPaymentId || '—'}</td>
                           <td className="px-5 py-3.5 font-sans">
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase">
                               <CheckCircle2 className="w-3 h-3" />
@@ -2806,7 +2806,7 @@ export default function SuperAdminSidebarPage() {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <div>
                       <p className="font-bold text-slate-900">Super Admin Authentication Successful</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Actor: {adminEmail} • IP: 127.0.0.1</p>
+                      <p className="text-[10px] text-slate-400 font-mono">Actor: {adminEmail} • Session Authenticated</p>
                     </div>
                   </div>
                   <span className="text-[10px] font-bold text-slate-400">Just now</span>

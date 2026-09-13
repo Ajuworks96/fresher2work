@@ -872,7 +872,7 @@
             "company": {
               "id": "8773a829-1f5d-46b9-b07d-4fad13b341be",
               "name": "Velvetbyte PVT Ltd",
-              "website": "https:velvetbyte.com",
+              "website": "https://velvetbyte.com",
               "location": "Calicut",
               "industry": "Web Development",
               "verificationStatus": "VERIFIED"
@@ -1126,7 +1126,7 @@
       "company": {
         "id": "8773a829-1f5d-46b9-b07d-4fad13b341be",
         "name": "Velvetbyte PVT Ltd",
-        "website": "https:velvetbyte.com",
+        "website": "https://velvetbyte.com",
         "location": "Calicut",
         "industry": "Web Development",
         "verificationStatus": "VERIFIED"
@@ -1149,7 +1149,7 @@
     {
       "id": "8773a829-1f5d-46b9-b07d-4fad13b341be",
       "name": "Velvetbyte PVT Ltd",
-      "website": "https:velvetbyte.com",
+      "website": "https://velvetbyte.com",
       "location": "Calicut",
       "industry": "Web Development",
       "verificationStatus": "VERIFIED"
