@@ -55,6 +55,12 @@ import {
   MessageSquare,
   HelpCircle,
   Info,
+  Image as ImageIcon,
+  Palette,
+  Megaphone,
+  Video,
+  FolderGit2,
+  Code2,
 } from 'lucide-react';
 
 type NavTab = 'candidates' | 'placements' | 'dashboard' | 'recruiters' | 'ledger';
@@ -1440,25 +1446,25 @@ export default function SuperAdminSidebarPage() {
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Hiring Company</p>
                         <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                          {inspectingCandidate.companyName || 'Infosys Digital Hub'}
+                          {inspectingCandidate.placement?.company?.name || inspectingCandidate.companyName || 'Velvetbyte PVT Ltd'}
                         </p>
                       </div>
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Offered Role</p>
                         <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                          {inspectingCandidate.roleTitle || 'Associate Software Engineer'}
+                          {inspectingCandidate.placement?.roleTitle || inspectingCandidate.roleTitle || 'Associate Software Engineer'}
                         </p>
                       </div>
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Package (CTC)</p>
                         <p className="font-extrabold text-emerald-700 text-base mt-0.5">
-                          {inspectingCandidate.packageLpa || '₹6.80 LPA'}
+                          {inspectingCandidate.placement?.packageLpa ? `₹${inspectingCandidate.placement.packageLpa} LPA` : (inspectingCandidate.packageLpa || '₹6.50 LPA')}
                         </p>
                       </div>
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Recruiter Lead</p>
                         <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                          {inspectingCandidate.recruiterName || 'Priya Sharma (Talent Lead)'}
+                          {inspectingCandidate.placement?.recruiter?.fullName || inspectingCandidate.recruiterName || 'Arjun K (Talent Lead)'}
                         </p>
                       </div>
                     </div>
@@ -1525,60 +1531,144 @@ export default function SuperAdminSidebarPage() {
 
               {/* TAB: PROOF OF WORK */}
               {inspectorTab === 'projects' && (
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    Verified Proof-of-Work Projects ({inspectingCandidate.projects?.length || 0})
-                  </h4>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+                      Verified Technical & Domain Projects ({inspectingCandidate.projects?.length || 0})
+                    </h4>
 
-                  {!inspectingCandidate.projects || inspectingCandidate.projects.length === 0 ? (
-                    <div className="p-12 text-center text-slate-400 text-xs font-medium border border-dashed rounded-2xl bg-white">
-                      No project repositories added by candidate yet.
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {inspectingCandidate.projects.map((p: any) => (
-                        <div key={p.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <h5 className="text-sm font-extrabold text-slate-900">{p.title}</h5>
-                              {p.role && <p className="text-xs text-emerald-700 font-bold mt-0.5">Role: {p.role}</p>}
+                    {!inspectingCandidate.projects || inspectingCandidate.projects.length === 0 ? (
+                      <div className="p-8 text-center text-slate-400 text-xs font-medium border border-dashed rounded-2xl bg-white">
+                        No project repositories recorded for this candidate yet.
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {inspectingCandidate.projects.map((p: any) => (
+                          <div key={p.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <h5 className="text-sm font-extrabold text-slate-900">{p.title}</h5>
+                                {p.role && <p className="text-xs text-emerald-700 font-bold mt-0.5">Role: {p.role}</p>}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs font-bold">
+                                {(p.liveDemoUrl || p.projectLink) && (
+                                  <a
+                                    href={p.liveDemoUrl || p.projectLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-1 rounded-lg bg-emerald-100 text-emerald-800 px-2.5 py-1 hover:bg-emerald-200 transition-colors"
+                                  >
+                                    <Globe className="w-3 h-3" />
+                                    Live Demo ↗
+                                  </a>
+                                )}
+                                {p.githubRepoUrl && (
+                                  <a
+                                    href={p.githubRepoUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-1 rounded-lg bg-slate-100 text-slate-800 px-2.5 py-1 hover:bg-slate-200 transition-colors border border-slate-200"
+                                  >
+                                    Code Repo ↗
+                                  </a>
+                                )}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs font-bold">
-                              {(p.liveDemoUrl || p.projectLink) && (
-                                <a
-                                  href={p.liveDemoUrl || p.projectLink}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="flex items-center gap-1 rounded-lg bg-emerald-100 text-emerald-800 px-2.5 py-1 hover:bg-emerald-200 transition-colors"
-                                >
-                                  <Globe className="w-3 h-3" />
-                                  Live Demo ↗
-                                </a>
-                              )}
-                              {p.githubRepoUrl && (
-                                <a
-                                  href={p.githubRepoUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="flex items-center gap-1 rounded-lg bg-slate-100 text-slate-800 px-2.5 py-1 hover:bg-slate-200 transition-colors border border-slate-200"
-                                >
-                                  Code Repo ↗
-                                </a>
-                              )}
-                            </div>
+                            <p className="text-xs text-slate-600 leading-relaxed">{p.description}</p>
+                            {((p.toolsUsed && p.toolsUsed.length > 0) || (p.techStack && p.techStack.length > 0)) && (
+                              <div className="flex flex-wrap gap-1.5 pt-1">
+                                {(p.toolsUsed && p.toolsUsed.length > 0 ? p.toolsUsed : p.techStack).map((tech: string, idx: number) => (
+                                  <span key={idx} className="text-[10px] bg-slate-50 px-2 py-0.5 rounded-md font-semibold text-slate-700 border border-slate-200">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Visual Proof / Screenshot Gallery */}
+                            {p.mediaUrls && p.mediaUrls.length > 0 && (
+                              <div className="pt-2 border-t border-slate-100">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                  <ImageIcon className="w-3 h-3 text-slate-400" />
+                                  Visual Proof & Screenshots ({p.mediaUrls.length})
+                                </p>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                  {p.mediaUrls.map((url: string, imgIdx: number) => (
+                                    <a
+                                      key={imgIdx}
+                                      href={url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="group relative block aspect-video rounded-lg overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-colors"
+                                    >
+                                      <img
+                                        src={url}
+                                        alt={`Proof asset ${imgIdx + 1}`}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                      />
+                                      <span className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[10px] font-bold transition-opacity">
+                                        Open Proof ↗
+                                      </span>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <p className="text-xs text-slate-600 leading-relaxed">{p.description}</p>
-                          {p.techStack && p.techStack.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 pt-1">
-                              {p.techStack.map((tech: string, idx: number) => (
-                                <span key={idx} className="text-[10px] bg-slate-50 px-2 py-0.5 rounded-md font-semibold text-slate-700 border border-slate-200">
-                                  {tech}
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Creative Work Samples & Portfolios (UI/UX, Marketing, Video Editing) */}
+                  {inspectingCandidate.workSamples && inspectingCandidate.workSamples.length > 0 && (
+                    <div className="pt-4 border-t border-slate-200/80">
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+                        Creative Portfolios & Work Samples ({inspectingCandidate.workSamples.length})
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {inspectingCandidate.workSamples.map((ws: any) => (
+                          <div key={ws.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200 mb-1">
+                                  {ws.sampleType || 'DELIVERABLE'}
                                 </span>
-                              ))}
+                                <h5 className="text-sm font-extrabold text-slate-900">{ws.title}</h5>
+                              </div>
+                              {ws.fileUrl && (
+                                <a
+                                  href={ws.fileUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex items-center gap-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 text-xs font-bold hover:bg-emerald-100 transition-colors shrink-0"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  View Live Asset ↗
+                                </a>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            <p className="text-xs text-slate-600 leading-relaxed">{ws.description}</p>
+                            {ws.thumbnailUrl && (
+                              <a
+                                href={ws.fileUrl || ws.thumbnailUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="group relative block aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-colors"
+                              >
+                                <img
+                                  src={ws.thumbnailUrl}
+                                  alt={ws.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <span className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity">
+                                  Preview Asset ↗
+                                </span>
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>

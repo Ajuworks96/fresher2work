@@ -10,37 +10,30 @@ Fresher2Work is a full-stack monorepo consisting of:
 
 ---
 
-## 2. Deploying Web Apps to Vercel
+## 2. Deploying Single Unified Web App to Vercel (Recommended)
 
-Both `apps/recruiter-web` and `apps/admin-web` can be deployed to Vercel directly from the GitHub repository (`https://github.com/Ajuworks96/fresher2work.git`).
+You do **NOT** need two separate Vercel projects or two separate URLs! 
+Everything is unified under a single Next.js deployment (`apps/recruiter-web`):
 
-### Option A: Via Vercel Dashboard (Recommended)
+| Portal | URL Path | Description |
+| :--- | :--- | :--- |
+| **Recruiter Portal** | `/discover`, `/shortlists`, `/company` | Talent discovery, locked profile protection, contact unlocks, hire workflow |
+| **Super Admin Portal** | **`/admin`** (Sub-directory) | Full candidate moderation, multi-domain proof of work inspection (UI/UX, Marketing, Video, Software), recruiter and placement management |
+| **Talent Portfolio** | `/p/[slug]` | Public candidate verified profile |
 
-#### 1. Deploy Recruiter Web (`apps/recruiter-web`)
-1. Log into your [Vercel Dashboard](https://vercel.com) and click **"Add New Project"**.
-2. Import the Git repository: `https://github.com/Ajuworks96/fresher2work.git`.
-3. In the project configuration:
-   - **Project Name**: `fresher2work-recruiter`
-   - **Framework Preset**: `Next.js`
-   - **Root Directory**: Click "Edit" and choose `apps/recruiter-web`.
-   - **Include files outside the Root Directory**: Checked (Enabled by default for monorepo resolution).
-   - **Build Command**: `npm run build:recruiter` (or leave default `npm run build` as `transpilePackages` is enabled).
-4. Environment Variables:
-   - `NEXT_PUBLIC_API_URL`: URL of your deployed API (e.g. `https://api.yourdomain.com` or backend server URL).
-5. Click **Deploy**.
+### Step-by-Step Vercel Setup (Single URL):
+1. Go to your [Vercel Dashboard](https://vercel.com).
+2. Select your project **`fresher2work-recruiter`** (or import `https://github.com/Ajuworks96/fresher2work.git`).
+3. Set **Root Directory** to: `apps/recruiter-web`.
+4. Ensure **Include files outside the Root Directory** is checked.
+5. Set Environment Variable:
+   - `NEXT_PUBLIC_API_URL`: Your backend API URL (e.g. `https://api.yourdomain.com` or local backend).
+6. Click **Deploy**.
 
-#### 2. Deploy Super Admin Web (`apps/admin-web`)
-1. In Vercel Dashboard, click **"Add New Project"**.
-2. Select the same Git repository (`fresher2work`).
-3. In the project configuration:
-   - **Project Name**: `fresher2work-admin`
-   - **Framework Preset**: `Next.js`
-   - **Root Directory**: Click "Edit" and choose `apps/admin-web`.
-   - **Include files outside the Root Directory**: Checked.
-   - **Build Command**: `npm run build:admin` (or default `npm run build`).
-4. Environment Variables:
-   - `NEXT_PUBLIC_API_URL`: URL of your deployed API.
-5. Click **Deploy**.
+Once deployed:
+- Point your custom domain or subdomain (e.g. `https://recruiter.yourdomain.com` or `https://app.yourdomain.com`).
+- Recruiter portal is at `https://recruiter.yourdomain.com`
+- Super Admin portal is directly at `https://recruiter.yourdomain.com/admin`!
 
 ---
 
