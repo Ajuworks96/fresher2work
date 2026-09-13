@@ -1,0 +1,537 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  STUDENT
+  RECRUITER
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum WorkMode {
+  REMOTE
+  HYBRID
+  ON_SITE
+  ANY
+}
+
+enum AvailabilityOption {
+  IMMEDIATE
+  WITHIN_15_DAYS
+  WITHIN_30_DAYS
+  WITHIN_60_DAYS
+  CUSTOM_DATE
+}
+
+enum RelocationPreference {
+  WILLING
+  DOMESTIC_ONLY
+  INTERNATIONAL_ONLY
+  NOT_WILLING
+}
+
+enum WorkType {
+  FULL_TIME
+  INTERNSHIP
+  CONTRACT
+  PART_TIME
+  FREELANCE
+}
+
+enum WorkSampleCategory {
+  GRAPHIC_DESIGN
+  SOCIAL_MEDIA
+  CAMPAIGN
+  WEBSITE
+  BRANDING
+  MARKETING
+  CONTENT
+  OTHER
+}
+
+enum ModerationStatus {
+  PENDING_REVIEW
+  APPROVED
+  FLAGGED
+  REJECTED
+}
+
+enum PaymentStatus {
+  CREATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum CompanyVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum ViewChannel {
+  WEB_DISCOVERY
+  PUBLIC_LINK
+  CONTACT_REVEAL
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+// 1. Users table (Authentication & Base Identity)
+model User {
+  id              String      @id @default(uuid())
+  email           String      @unique
+  phone           String?     @unique
+  passwordHash    String?
+  role            UserRole    @default(STUDENT)
+  status          UserStatus  @default(ACTIVE)
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  isDeleted       Boolean     @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  studentProfile   StudentProfile?
+  recruiterProfile RecruiterProfile?
+  profileViews     ProfileView[]
+  auditLogs        AuditLog[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([role, status])
+  @@map("users")
+}
+
+// 2. Student Profiles
+model StudentProfile {
+  id                String            @id @default(uuid())
+  userId            String            @unique
+  fullName          String
+  headline          String            @default("")
+  about             String            @default("")
+  avatarUrl         String?
+  cvFileUrl         String?
+  cvFileName        String?
+  cvFileSize        Int?
+  cvUploadedAt      DateTime?
+  githubUrl         String?
+  linkedinUrl       String?
+  portfolioUrl      String?
+  city              String?
+  country           String?
+  completenessScore Int               @default(0)
+  isActivated       Boolean           @default(false)
+  activatedAt       DateTime?
+  moderationStatus  ModerationStatus  @default(APPROVED)
+  moderationNotes   String?
+  publicSlug        String            @unique
+  isDeleted         Boolean           @default(false)
+  deletedAt         DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  user               User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  education          Education[]
+  projects           Project[]
+  workSamples        WorkSample[]
+  studentSkills      StudentSkill[]
+  certificates       Certificate[]
+  careerPreference   CareerPreference?
+  preferredLocations PreferredLocation[]
+  cvFiles            CvFile[]
+  profileActivation  ProfileActivation?
+  payments           Payment[]
+  savedByRecruiters  RecruiterSavedCandidate[]
+  profileViews       ProfileView[]
+  placement          PlacementRecord?
+
+  @@index([isActivated, moderationStatus, isDeleted])
+  @@index([completenessScore])
+  @@index([publicSlug])
+  @@map("student_profiles")
+}
+
+// 3. Companies
+model Company {
+  id                 String                    @id @default(uuid())
+  name               String
+  website            String?
+  logoUrl            String?
+  location           String
+  industry           String
+  verificationStatus CompanyVerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  verifiedBy         String?
+  isDeleted          Boolean                   @default(false)
+  deletedAt          DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  recruiters RecruiterProfile[]
+  placements PlacementRecord[]
+
+  @@index([name])
+  @@index([verificationStatus])
+  @@map("companies")
+}
+
+// 4. Recruiter Profiles
+model RecruiterProfile {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  companyId     String
+  fullName      String
+  designation   String
+  businessEmail String
+  linkedinUrl   String?
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company         Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  savedCandidates RecruiterSavedCandidate[]
+  profileViews    ProfileView[]
+  placements      PlacementRecord[]
+
+  @@index([businessEmail])
+  @@index([companyId])
+  @@map("recruiter_profiles")
+}
+
+// 5. Education
+model Education {
+  id              String         @id @default(uuid())
+  studentId       String
+  institutionName String
+  degree          String
+  fieldOfStudy    String
+  startYear       Int
+  endYear         Int
+  gradeOrCgpa     String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@map("education")
+}
+
+// 6. Master Skills Table
+model Skill {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  category  String?
+  createdAt DateTime @default(now())
+
+  studentSkills StudentSkill[]
+
+  @@index([name])
+  @@map("skills")
+}
+
+// 7. Student Skills
+model StudentSkill {
+  id               String         @id @default(uuid())
+  studentId        String
+  skillId          String?
+  skillName        String
+  proficiencyLevel SkillLevel     @default(BEGINNER)
+  isVerified       Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  skill          Skill?         @relation(fields: [skillId], references: [id], onDelete: SetNull)
+
+  @@unique([studentId, skillName])
+  @@index([skillName])
+  @@index([studentId])
+  @@map("student_skills")
+}
+
+// 8. Projects (Proof of Work)
+model Project {
+  id                 String         @id @default(uuid())
+  studentId          String
+  title              String
+  description        String
+  role               String?
+  toolsUsed          String[]       @default([])
+  skillsDemonstrated String[]       @default([])
+  projectLink        String?
+  liveDemoUrl        String?
+  githubRepoUrl      String?
+  mediaUrls          String[]       @default([])
+  techStack          String[]       @default([])
+  orderIndex         Int            @default(0)
+  isDeleted          Boolean        @default(false)
+  deletedAt          DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  media          ProjectMedia[]
+
+  @@index([studentId, isDeleted])
+  @@map("projects")
+}
+
+// 9. Project Media
+model ProjectMedia {
+  id         String    @id @default(uuid())
+  projectId  String
+  mediaUrl   String
+  mediaType  MediaType @default(IMAGE)
+  orderIndex Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("project_media")
+}
+
+// 10. Work Samples (Creative Portfolio)
+model WorkSample {
+  id              String             @id @default(uuid())
+  studentId       String
+  title           String
+  category        WorkSampleCategory @default(GRAPHIC_DESIGN)
+  description     String
+  mediaUrls       String[]           @default([])
+  workLink        String?
+  clientOrContext String?
+  toolsUsed       String[]           @default([])
+  orderIndex      Int                @default(0)
+  isDeleted       Boolean            @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, isDeleted])
+  @@map("work_samples")
+}
+
+// 11. Certificates
+model Certificate {
+  id                  String         @id @default(uuid())
+  studentId           String
+  name                String
+  issuingOrganization String
+  issueDate           DateTime
+  credentialUrl       String?
+  certificateFileUrl  String?
+  isVerified          Boolean        @default(false)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@map("certificates")
+}
+
+// 12. Career Preferences
+model CareerPreference {
+  id                    String                @id @default(uuid())
+  studentId             String                @unique
+  preferredRoles        String[]              @default([])
+  preferredIndustries   String[]              @default([])
+  preferredLocations    String[]              @default([])
+  preferredCountries    String[]              @default([])
+  workModes             WorkMode[]            @default([ANY])
+  workMode              WorkMode              @default(ANY)
+  relocationWillingness RelocationPreference  @default(WILLING)
+  availability          AvailabilityOption    @default(IMMEDIATE)
+  availableFromDate     DateTime?
+  preferredWorkTypes    WorkType[]            @default([FULL_TIME])
+  expectedSalaryMin     Int?
+  salaryCurrency        String                @default("INR")
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("career_preferences")
+}
+
+// 13. Preferred Locations
+model PreferredLocation {
+  id           String   @id @default(uuid())
+  studentId    String
+  locationName String
+  createdAt    DateTime @default(now())
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, locationName])
+  @@index([locationName])
+  @@map("preferred_locations")
+}
+
+// 14. CV Files
+model CvFile {
+  id            String    @id @default(uuid())
+  studentId     String
+  fileUrl       String
+  fileKey       String    @unique
+  fileName      String
+  fileSizeBytes Int
+  mimeType      String    @default("application/pdf")
+  isPrimary     Boolean   @default(true)
+  uploadedAt    DateTime  @default(now())
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, isPrimary, isDeleted])
+  @@map("cv_files")
+}
+
+// 15. Profile Activation
+model ProfileActivation {
+  id               String    @id @default(uuid())
+  studentId        String    @unique
+  isActivated      Boolean   @default(false)
+  activatedAt      DateTime?
+  expiresAt        DateTime?
+  activationMethod String    @default("PAID_INR_99")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([isActivated])
+  @@map("profile_activation")
+}
+
+// 16. Payments (₹99 Activation Fee)
+model Payment {
+  id                String        @id @default(uuid())
+  studentId         String
+  gatewayOrderId    String        @unique
+  gatewayPaymentId  String?       @unique
+  amountPaise       Int           @default(9900) // ₹99.00 INR
+  currency          String        @default("INR")
+  status            PaymentStatus @default(CREATED)
+  signature         String?
+  rawWebhookPayload Json?
+  createdAt         DateTime      @default(now())
+  verifiedAt        DateTime?
+
+  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([gatewayOrderId])
+  @@index([status])
+  @@index([studentId])
+  @@map("payments")
+}
+
+// 17. Recruiter Saved Candidates (Shortlists)
+model RecruiterSavedCandidate {
+  id          String   @id @default(uuid())
+  recruiterId String
+  studentId   String
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  recruiter      RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  studentProfile StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([recruiterId, studentId])
+  @@index([recruiterId])
+  @@index([studentId])
+  @@map("recruiter_saved_candidates")
+}
+
+// 18. Profile Views & Contact Auditing
+model ProfileView {
+  id           String      @id @default(uuid())
+  studentId    String
+  viewerUserId String
+  recruiterId  String?
+  channel      ViewChannel @default(WEB_DISCOVERY)
+  ipAddress    String?
+  createdAt    DateTime    @default(now())
+
+  studentProfile StudentProfile    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  viewerUser     User              @relation(fields: [viewerUserId], references: [id], onDelete: Cascade)
+  recruiter      RecruiterProfile? @relation(fields: [recruiterId], references: [id], onDelete: SetNull)
+
+  @@index([studentId, createdAt])
+  @@index([viewerUserId])
+  @@index([recruiterId])
+  @@map("profile_views")
+}
+
+// 19. Audit & Moderation Logs
+model AuditLog {
+  id             String   @id @default(uuid())
+  actorUserId    String
+  targetEntity   String
+  targetEntityId String
+  action         String
+  previousState  Json?
+  newState       Json?
+  reason         String?
+  ipAddress      String?
+  createdAt      DateTime @default(now())
+
+  actorUser User @relation(fields: [actorUserId], references: [id], onDelete: Cascade)
+
+  @@index([actorUserId])
+  @@index([targetEntity, targetEntityId])
+  @@map("audit_logs")
+}
+
+// 20. Verified Direct Placements & Hires
+model PlacementRecord {
+  id          String   @id @default(uuid())
+  studentId   String   @unique
+  recruiterId String
+  companyId   String
+  roleTitle   String
+  packageLpa  String?
+  notes       String?
+  hiredAt     DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  studentProfile StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  recruiter      RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  company        Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([recruiterId])
+  @@index([companyId])
+  @@map("placement_records")
+}
