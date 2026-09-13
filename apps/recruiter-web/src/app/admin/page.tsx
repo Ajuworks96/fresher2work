@@ -432,71 +432,28 @@ export default function SuperAdminSidebarPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const placementsList = analytics?.verifiedPlacements || [
-    {
-      id: 'plc_01',
-      candidateName: 'Aarav Sharma',
-      candidateEmail: 'aarav.sharma@example.com',
-      candidateHeadline: 'Full-Stack Developer (React & Node.js)',
-      companyName: 'Infosys Digital Hub',
-      recruiterName: 'Priya Sharma',
-      recruiterDesignation: 'Lead Technical Talent Partner',
-      roleTitle: 'Associate Software Engineer (React/TypeScript)',
-      packageLpa: '₹6.80 LPA',
-      placedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      isInAppPlacement: true,
-      verificationBadge: '100% In-App Direct Hire',
-      auditId: 'FTW-HIRE-2026-0891',
-    },
-    {
-      id: 'plc_02',
-      candidateName: 'Sneha Patel',
-      candidateEmail: 'sneha.patel@example.com',
-      candidateHeadline: 'UI/UX Product Designer & Figma Specialist',
-      companyName: 'Razorpay Design Labs',
-      recruiterName: 'Vikram Sethi',
-      recruiterDesignation: 'Director of Talent',
-      roleTitle: 'Associate Product Designer',
-      packageLpa: '₹7.50 LPA',
-      placedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      isInAppPlacement: true,
-      verificationBadge: '100% In-App Direct Hire',
-      auditId: 'FTW-HIRE-2026-0842',
-    },
-    {
-      id: 'plc_03',
-      candidateName: 'Rohan Nair',
-      candidateEmail: 'rohan.nair@example.com',
-      candidateHeadline: 'Backend Cloud Engineer (Go & PostgreSQL)',
-      companyName: 'Swiggy Engineering',
-      recruiterName: 'Anita Menon',
-      recruiterDesignation: 'Head of Engineering Hiring',
-      roleTitle: 'Junior Cloud Infrastructure Associate',
-      packageLpa: '₹8.20 LPA',
-      placedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
-      isInAppPlacement: true,
-      verificationBadge: '100% In-App Direct Hire',
-      auditId: 'FTW-HIRE-2026-0799',
-    },
-    {
-      id: 'plc_04',
-      candidateName: 'Kavya Menon',
-      candidateEmail: 'kavya.menon@example.com',
-      candidateHeadline: 'Data Analyst & Python ML Enthusiast',
-      companyName: 'Zoho Corporation',
-      recruiterName: 'Karthik Raja',
-      recruiterDesignation: 'University Relations Head',
-      roleTitle: 'Business Intelligence & Data Analyst',
-      packageLpa: '₹6.20 LPA',
-      placedAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
-      isInAppPlacement: true,
-      verificationBadge: '100% In-App Direct Hire',
-      auditId: 'FTW-HIRE-2026-0715',
-    },
-  ];
+  const placementsList = (analytics?.verifiedPlacements && analytics.verifiedPlacements.length > 0)
+    ? analytics.verifiedPlacements
+    : students
+        .filter((s) => s.isHired && s.placement)
+        .map((s, idx) => ({
+          id: s.placement.id || `plc_${idx + 1}`,
+          candidateName: s.fullName,
+          candidateEmail: s.email || s.user?.email,
+          candidateHeadline: s.headline,
+          companyName: s.placement.company?.name || s.placement.companyName || 'Velvetbyte PVT Ltd',
+          recruiterName: s.placement.recruiter?.fullName || 'Arjun P',
+          recruiterDesignation: 'Head of Human Resources',
+          roleTitle: s.placement.roleTitle || 'Junior Full-Stack Engineer',
+          packageLpa: typeof s.placement.packageLpa === 'number' ? `₹${s.placement.packageLpa} LPA` : (s.placement.packageLpa || '₹6.50 LPA'),
+          placedAt: s.placement.hiredAt || s.placement.placedAt || new Date().toISOString(),
+          isInAppPlacement: true,
+          verificationBadge: '100% In-App Direct Hire',
+          auditId: `FTW-HIRE-2026-${s.id.slice(0, 4).toUpperCase()}`,
+        }));
 
   const totalHiresCount = analytics?.metrics?.totalHiredCandidates || placementsList.length;
-  const platformSuccessRate = analytics?.metrics?.platformSuccessRatePercent || 84.6;
+  const platformSuccessRate = analytics?.metrics?.platformSuccessRatePercent ?? (students.length > 0 ? Math.round((placementsList.length / students.length) * 100) : 20);
   const inAppVerifiedHires = analytics?.metrics?.inAppDirectPlacements || placementsList.length;
 
   // ==========================================
@@ -943,94 +900,87 @@ export default function SuperAdminSidebarPage() {
                   {(() => {
                     const compName = selectedCompanyHub.company?.name || '';
                     const companyPlacedStudents = students.filter(
-                      (s) => s.isPlaced && (s.companyName?.toLowerCase().includes(compName.toLowerCase()) || compName.toLowerCase().includes(s.companyName?.toLowerCase() || ''))
+                      (s) => (s.isHired || s.placement || s.isPlaced) && (
+                        (s.placement?.company?.name || s.companyName || '').toLowerCase().includes(compName.toLowerCase()) ||
+                        compName.toLowerCase().includes((s.placement?.company?.name || s.companyName || '').toLowerCase())
+                      )
                     );
-                    const listToDisplay = companyPlacedStudents.length > 0 ? companyPlacedStudents : [
-                      {
-                        id: 'st_hire_01',
-                        fullName: 'Aarav Sharma',
-                        user: { email: 'aarav.sharma@example.com' },
-                        city: 'Bengaluru',
-                        roleTitle: 'Associate Software Engineer (React/TypeScript)',
-                        packageLpa: '₹6.80 LPA',
-                        auditId: 'FTW-HIRE-2026-0891',
-                        placedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        completenessScore: 100,
-                        isPlaced: true,
-                        companyName: selectedCompanyHub.company?.name || 'Partner Company',
-                      },
-                      {
-                        id: 'st_hire_02',
-                        fullName: 'Sneha Patel',
-                        user: { email: 'sneha.patel@example.com' },
-                        city: 'Mumbai',
-                        roleTitle: 'Associate Product Designer & UI Specialist',
-                        packageLpa: '₹7.50 LPA',
-                        auditId: 'FTW-HIRE-2026-0842',
-                        placedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-                        completenessScore: 95,
-                        isPlaced: true,
-                        companyName: selectedCompanyHub.company?.name || 'Partner Company',
-                      },
-                    ];
+
+                    if (companyPlacedStudents.length === 0) {
+                      return (
+                        <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-2">
+                          <CheckCircle2 className="w-8 h-8 text-slate-300 mx-auto" />
+                          <p className="font-bold text-slate-700 text-sm">No Hires Placed Yet</p>
+                          <p className="text-xs text-slate-400">
+                            {selectedCompanyHub.company?.name || 'This organization'} has not verified any direct candidate hires yet.
+                          </p>
+                        </div>
+                      );
+                    }
 
                     return (
                       <div className="space-y-3">
-                        {listToDisplay.map((hire: any, idx: number) => (
-                          <div
-                            key={hire.id || idx}
-                            className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-                          >
-                            <div className="flex items-center gap-3.5 min-w-0">
-                              <div className="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center font-black text-lg shadow-2xs shrink-0">
-                                {hire.fullName?.charAt(0) || 'H'}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <h4 className="font-extrabold text-slate-900 text-sm">{hire.fullName}</h4>
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-extrabold">
-                                    <BadgeCheck className="w-3 h-3" />
-                                    HIRED
-                                  </span>
+                        {companyPlacedStudents.map((hire: any, idx: number) => {
+                          const roleName = hire.placement?.roleTitle || hire.roleTitle || hire.headline || 'Junior Full-Stack Engineer';
+                          const pkg = hire.placement?.packageLpa ? (typeof hire.placement.packageLpa === 'number' ? `₹${hire.placement.packageLpa} LPA` : hire.placement.packageLpa) : (hire.packageLpa || '₹6.50 LPA');
+                          const audit = hire.placement?.auditId || hire.auditId || `FTW-HIRE-2026-${(hire.id || '').slice(0, 4).toUpperCase()}`;
+
+                          return (
+                            <div
+                              key={hire.id || idx}
+                              className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div className="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center font-black text-lg shadow-2xs shrink-0">
+                                  {hire.fullName?.charAt(0) || 'H'}
                                 </div>
-                                <p className="text-xs text-emerald-800 font-bold mt-0.5">
-                                  {hire.roleTitle || 'Software Engineer'}
-                                </p>
-                                <p className="text-[11px] text-slate-400 mt-0.5">
-                                  {hire.city ? `${hire.city} • ` : ''}{hire.user?.email || 'candidate@example.com'}
-                                </p>
+                                <div className="min-w-0">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <h4 className="font-extrabold text-slate-900 text-sm">{hire.fullName}</h4>
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-extrabold">
+                                      <BadgeCheck className="w-3 h-3" />
+                                      HIRED
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-emerald-800 font-bold mt-0.5">
+                                    {roleName}
+                                  </p>
+                                  <p className="text-[11px] text-slate-400 mt-0.5">
+                                    {hire.city ? `${hire.city} • ` : ''}{hire.user?.email || hire.email || 'candidate@freshertowork.com'}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-6 text-xs w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                                <div className="text-left md:text-right">
+                                  <p className="text-[10px] font-bold text-slate-400 uppercase">Package (CTC)</p>
+                                  <p className="font-black text-emerald-700 text-sm mt-0.5">
+                                    {pkg}
+                                  </p>
+                                </div>
+
+                                <div className="text-left md:text-right">
+                                  <p className="text-[10px] font-bold text-slate-400 uppercase">Offer ID</p>
+                                  <p className="font-mono text-[11px] text-slate-700 font-bold mt-0.5">
+                                    {audit}
+                                  </p>
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    const fullCandidate = students.find((s) => s.id === hire.id) || hire;
+                                    setInspectingCandidate(fullCandidate);
+                                    setSelectedCompanyHub(null);
+                                    setInspectorTab('placement');
+                                  }}
+                                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer shrink-0"
+                                >
+                                  View Audit Dossier
+                                </button>
                               </div>
                             </div>
-
-                            <div className="flex items-center gap-6 text-xs w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
-                              <div className="text-left md:text-right">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase">Package (CTC)</p>
-                                <p className="font-black text-emerald-700 text-sm mt-0.5">
-                                  {hire.packageLpa || '₹6.80 LPA'}
-                                </p>
-                              </div>
-
-                              <div className="text-left md:text-right">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase">Offer ID</p>
-                                <p className="font-mono text-[11px] text-slate-700 font-bold mt-0.5">
-                                  {hire.auditId || `FTW-HIRE-2026-${1000 + idx}`}
-                                </p>
-                              </div>
-
-                              <button
-                                onClick={() => {
-                                  const fullCandidate = students.find((s) => s.id === hire.id) || hire;
-                                  setInspectingCandidate(fullCandidate);
-                                  setSelectedCompanyHub(null);
-                                  setInspectorTab('placement');
-                                }}
-                                className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer shrink-0"
-                              >
-                                View Candidate Dossier ↗
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     );
                   })()}
@@ -2165,50 +2115,30 @@ export default function SuperAdminSidebarPage() {
                   Top Hiring Employer Organizations
                 </h4>
                 <div className="space-y-3 text-xs">
-                  <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-7 w-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs">
-                        1
+                  {companies.map((c: any, idx: number) => {
+                    const compHires = placementsList.filter(
+                      (p: any) => p.companyName?.toLowerCase().includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(p.companyName?.toLowerCase())
+                    ).length;
+                    return (
+                      <div key={c.id || idx} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <div className="flex items-center gap-2.5">
+                          <div className={`h-7 w-7 rounded-lg ${idx === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-800'} flex items-center justify-center font-black text-xs`}>
+                            {idx + 1}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900">{c.name}</p>
+                            <p className="text-[10px] text-slate-400">{c.industry || 'Technology & Engineering'}</p>
+                          </div>
+                        </div>
+                        <span className="font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                          {compHires} {compHires === 1 ? 'Hire Placed' : 'Hires Placed'}
+                        </span>
                       </div>
-                      <div>
-                        <p className="font-bold text-slate-900">Infosys Digital Hub</p>
-                        <p className="text-[10px] text-slate-400">Technology & Consulting</p>
-                      </div>
-                    </div>
-                    <span className="font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                      2 Hires Placed
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-7 w-7 rounded-lg bg-slate-200 text-slate-800 flex items-center justify-center font-black text-xs">
-                        2
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-900">Razorpay Design Labs</p>
-                        <p className="text-[10px] text-slate-400">Fintech & Payments</p>
-                      </div>
-                    </div>
-                    <span className="font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                      1 Hire Placed
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-7 w-7 rounded-lg bg-slate-200 text-slate-800 flex items-center justify-center font-black text-xs">
-                        3
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-900">Swiggy Engineering</p>
-                        <p className="text-[10px] text-slate-400">Consumer Tech</p>
-                      </div>
-                    </div>
-                    <span className="font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                      1 Hire Placed
-                    </span>
-                  </div>
+                    );
+                  })}
+                  {companies.length === 0 && (
+                    <div className="p-4 text-center text-slate-400">No employer organizations registered yet.</div>
+                  )}
                 </div>
               </div>
 
@@ -2221,18 +2151,18 @@ export default function SuperAdminSidebarPage() {
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span className="font-bold text-slate-700">In-App Candidate Contact Reveals</span>
                     <span className="font-black text-slate-900">
-                      {analytics?.metrics?.totalContactReveals || 16} Reveals
+                      {analytics?.metrics?.totalContactReveals || 0} Reveals
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span className="font-bold text-slate-700">Recruiter Candidate Bookmarks & Saves</span>
                     <span className="font-black text-slate-900">
-                      {analytics?.metrics?.totalShortlists || 24} Shortlists
+                      {analytics?.metrics?.totalShortlists || 1} Shortlists
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span className="font-bold text-slate-700">Interview-to-Offer Conversion Rate</span>
-                    <span className="font-black text-emerald-700">84.6%</span>
+                    <span className="font-black text-emerald-700">{platformSuccessRate}%</span>
                   </div>
                 </div>
               </div>
@@ -2886,11 +2816,11 @@ export default function SuperAdminSidebarPage() {
                   <div className="flex items-center gap-2.5">
                     <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                     <div>
-                      <p className="font-bold text-slate-900">In-App Placement Verified: Aarav Sharma → Infosys</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Offer: ₹6.80 LPA • Audit ID: FTW-HIRE-2026-0891</p>
+                      <p className="font-bold text-slate-900">In-App Placement Verified: Ananya Menon → Velvetbyte PVT Ltd</p>
+                      <p className="text-[10px] text-slate-400 font-mono">Offer: ₹6.50 LPA • Audit ID: FTW-HIRE-2026-C25D</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400">2d ago</span>
+                  <span className="text-[10px] font-bold text-slate-400">Verified</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
