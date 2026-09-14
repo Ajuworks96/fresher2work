@@ -31,13 +31,13 @@ async function main() {
 
   // 2. Provision Official Superadmin Account
   console.log('🔑 Provisioning Official Platform Superadmin Account...');
-  const superadminEmail = 'admin@freshertowork.com';
-  const superadminPassword = 'Admin@FresherToWork2026!';
+  const superadminEmail = 'superadmin@freshertowork.com';
+  const superadminPassword = 'SuperAdmin@Pass2026#';
   const adminPasswordHash = await bcrypt.hash(superadminPassword, 10);
 
   const superadmin = await prisma.user.create({
     data: {
-      id: 'superadmin-user-001',
+      id: 'c8446f3a-f798-433b-9938-c8439fab1c2a',
       email: superadminEmail,
       passwordHash: adminPasswordHash,
       role: UserRole.ADMIN,

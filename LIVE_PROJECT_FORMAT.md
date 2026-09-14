@@ -37,7 +37,7 @@ fresher2work/ (Root Workspace)
 | Component | Target Platform | Live URL / Path | Access Credentials / Notes |
 | :--- | :--- | :--- | :--- |
 | **Recruiter Portal** | Vercel Serverless | `https://recruiter-web-ajuworks96s-projects.vercel.app` | Recruiter Email login / Discovery |
-| **Super Admin Portal** | Vercel (Unified Sub-route) | `https://recruiter-web-ajuworks96s-projects.vercel.app/admin` | Email: `admin@freshertowork.com`<br>Password: `Admin@FresherToWork2026!` |
+| **Super Admin Portal** | Vercel (Unified Sub-route) | `https://recruiter-web-ajuworks96s-projects.vercel.app/admin` | Email: `Superadmin@freshertowork.com`<br>Password: `SuperAdmin@Pass2026#` |
 | **Public Candidate Showcase** | Vercel Serverless | `https://recruiter-web-ajuworks96s-projects.vercel.app/p/[slug]` | Shareable portfolio with PII protection |
 | **Serverless API Engine** | Vercel Route Handlers | `https://recruiter-web-ajuworks96s-projects.vercel.app/api/v1` | Standalone zero-cold-start API |
 | **PostgreSQL Database** | Supabase Cloud (AWS ap-southeast) | `aws-0-ap-southeast-2.pooler.supabase.com:5432` | SSL connection pooling with PgBouncer |
