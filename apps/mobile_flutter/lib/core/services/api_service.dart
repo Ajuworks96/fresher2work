@@ -4,9 +4,22 @@ import 'package:http/http.dart' as http;
 import 'storage_service.dart';
 
 class ApiService {
+  static String? _customBaseUrl;
+
+  static void setBaseUrl(String url) {
+    _customBaseUrl = url;
+  }
+
   static String get baseUrl {
+    if (_customBaseUrl != null && _customBaseUrl!.isNotEmpty) {
+      return _customBaseUrl!;
+    }
+    const envUrl = String.fromEnvironment('API_URL');
+    if (envUrl.isNotEmpty) return envUrl;
+
     if (kIsWeb) return 'http://localhost:4000/api/v1';
-    return 'http://10.0.2.2:4000/api/v1'; // Standard Android Emulator / local dev API URL
+    // Production Cloud API URL (enables live connectivity on physical devices)
+    return 'https://recruiter-web-ajuworks96s-projects.vercel.app/api/v1';
   }
 
   static Future<Map<String, String>> _headers({bool withAuth = true}) async {

@@ -73,8 +73,8 @@ export default function SuperAdminSidebarPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Admin Auth State
-  const [adminEmail, setAdminEmail] = useState('admin@freshertowork.com');
-  const [adminPassword, setAdminPassword] = useState('Password@123');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
   // Data State

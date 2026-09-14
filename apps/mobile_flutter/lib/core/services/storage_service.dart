@@ -65,8 +65,7 @@ class StorageService {
 
   static Future<String?> getFlaggedIssue() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_flaggedIssueKey) ??
-        "Super Admin Notice: Degree certificate is blurred. Re-upload clean scan to maintain verified badge in recruiter search.";
+    return prefs.getString(_flaggedIssueKey);
   }
 
   static Future<void> clearFlaggedIssue() async {
@@ -83,10 +82,10 @@ class StorageService {
         final list = jsonDecode(data) as List;
         return list.map((item) => ProofItem.fromJson(Map<String, dynamic>.from(item))).toList();
       } catch (_) {
-        return DomainConstants.getDomainById(domainId).sampleProjects;
+        return [];
       }
     }
-    return DomainConstants.getDomainById(domainId).sampleProjects;
+    return [];
   }
 
   static Future<void> saveStoredProofs(String domainId, List<Map<String, dynamic>> proofs) async {

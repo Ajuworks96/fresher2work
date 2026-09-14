@@ -91,7 +91,7 @@ export default function PaymentsAdminPage() {
           <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
             {search
               ? 'No transaction matches your search filter.'
-              : 'All dummy records were purged. Real transactions completed via Razorpay in the Flutter app will be recorded here.'}
+              : 'No transactions recorded yet. Live student activations completed via Razorpay will be recorded here.'}
           </p>
         </div>
       ) : (

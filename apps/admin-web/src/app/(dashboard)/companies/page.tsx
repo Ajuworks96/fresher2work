@@ -80,7 +80,7 @@ export default function CompaniesAdminPage() {
           </div>
           <h4 className="text-sm font-bold text-slate-800">No Employer Companies Registered Yet</h4>
           <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
-            All mock companies were cleanly purged. As partner employers register or get onboarded, their records will display here.
+            No partner companies onboarded yet. As partner employers register or get onboarded, their records will display here.
           </p>
         </div>
       ) : (

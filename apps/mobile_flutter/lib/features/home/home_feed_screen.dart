@@ -104,7 +104,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                             ),
                           ),
                           Text(
-                            _candidateName.isNotEmpty ? _candidateName : currentDomain.candidateName,
+                            _candidateName.isNotEmpty ? _candidateName : 'Fresher Candidate',
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
@@ -400,7 +400,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                         ),
-                        child: Text('+ Add $currentDomain.shortTitle Proof', style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w800)),
+                        child: Text('+ Add ${currentDomain.shortTitle} Proof', style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w800)),
                       ),
                     ],
                   ),
@@ -425,7 +425,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   }
 
   List<ProofItem> _getFilteredProofs(FresherDomain domain) {
-    var list = _storedProofs.isNotEmpty ? _storedProofs : domain.sampleProjects;
+    var list = _storedProofs.toList();
 
     if (_selectedPill != 'All') {
       list = list.where((p) => p.categoryBadge.toLowerCase().contains(_selectedPill.toLowerCase())).toList();

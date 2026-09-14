@@ -52,19 +52,19 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
             linkText: 'View Verified Live Proof',
             tags: tech,
             attachedFiles: [],
-            candidateName: profile['fullName'] as String? ?? currentDomain.candidateName,
-            avatarUrl: currentDomain.avatarUrl,
-            rating: 4.9,
-            reviewCount: 120,
+            candidateName: profile['fullName'] as String? ?? 'Candidate',
+            avatarUrl: '',
+            rating: 5.0,
+            reviewCount: 0,
           );
         }).toList();
       } else {
         final stored = await StorageService.getStoredProofs(domain);
-        _activeProofs = stored.isNotEmpty ? stored : List.from(currentDomain.sampleProjects);
+        _activeProofs = stored;
       }
     } catch (_) {
       final stored = await StorageService.getStoredProofs(domain);
-      _activeProofs = stored.isNotEmpty ? stored : List.from(currentDomain.sampleProjects);
+      _activeProofs = stored;
     }
 
     if (mounted) {
@@ -382,10 +382,10 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                         linkText: 'View Verified Live Proof',
                         tags: [selectedSubcategory, currentDomain.shortTitle, 'Verified Work'],
                         attachedFiles: attachedFiles.map((f) => f.name).toList(),
-                        candidateName: currentDomain.candidateName,
-                        avatarUrl: currentDomain.avatarUrl,
-                        rating: 4.9,
-                        reviewCount: 130,
+                        candidateName: 'Candidate',
+                        avatarUrl: '',
+                        rating: 5.0,
+                        reviewCount: 0,
                       );
 
                       if (mounted) {

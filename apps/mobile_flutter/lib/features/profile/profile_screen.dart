@@ -78,7 +78,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _copyPitchLink() {
-    Clipboard.setData(const ClipboardData(text: 'https://fresherto.work/candidate/arjun-krishnan'));
+    final slug = _candidateFullName.isNotEmpty ? _candidateFullName.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-') : 'profile';
+    Clipboard.setData(ClipboardData(text: 'https://recruiter-web-ajuworks96s-projects.vercel.app/p/$slug'));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: AppColors.bluePrimary,
@@ -90,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final currentDomain = DomainConstants.getDomainById(_currentDomainId);
-    final proofs = _storedProofs.isNotEmpty ? _storedProofs : currentDomain.sampleProjects;
+    final proofs = _storedProofs;
     final displayRoleTitle = _userRoleTitle.isNotEmpty ? _userRoleTitle : currentDomain.roleTitle;
 
     return Scaffold(
@@ -234,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _candidateFullName.isNotEmpty ? _candidateFullName : currentDomain.candidateName,
+                          _candidateFullName.isNotEmpty ? _candidateFullName : 'Candidate Profile',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 24,
                             fontWeight: FontWeight.w900,

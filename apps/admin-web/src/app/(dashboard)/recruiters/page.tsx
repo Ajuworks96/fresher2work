@@ -295,7 +295,7 @@ export default function RecruitersAdminPage() {
               </div>
               <h4 className="text-sm font-bold text-slate-800">No Recruiters Found</h4>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
-                All dummy records have been removed. You can onboard real corporate hiring partners using the button below.
+                No corporate recruiters onboarded yet. You can onboard corporate hiring partners using the button below.
               </p>
               <button
                 onClick={() => setShowAddModal(true)}
@@ -436,7 +436,7 @@ export default function RecruitersAdminPage() {
                 <Award className="w-10 h-10 mx-auto mb-3 text-slate-300" />
                 <h4 className="text-sm font-bold text-slate-800">No In-App Placements Recorded Yet</h4>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
-                  All dummy records were purged. As corporate recruiters review candidates on the platform and extend job offers, verified placement records will appear here.
+                  No verified placements registered yet. As corporate recruiters review candidates on the platform and extend job offers, verified placement records will appear here.
                 </p>
               </div>
             ) : (
