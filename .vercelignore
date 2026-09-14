@@ -1,0 +1,10 @@
+# Vercel Ignore for Web Portal Deployment
+apps/mobile_flutter
+apps/mobile
+*.apk
+node_modules
+.git
+.turbo
+dist
+build
+.dart_tool
