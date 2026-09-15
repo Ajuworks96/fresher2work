@@ -160,37 +160,51 @@ class _RecruiterMatchesScreenState extends State<RecruiterMatchesScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Job Matches List
-            _buildJobCard(
-              companyName: 'AdScale Media & Performance',
-              logoIcon: Icons.trending_up_rounded,
-              roleTitle: '${domain.shortTitle} Executive',
-              location: 'Kochi (Hybrid) • Immediate',
-              salary: '₹5.5 - ₹7.5 LPA',
-              proofReq: 'Verified Meta ROAS or Case Study Proof',
-              tags: domain.skills.take(3).toList(),
-            ),
-            const SizedBox(height: 12),
-
-            _buildJobCard(
-              companyName: 'PixelCraft Creative Agency',
-              logoIcon: Icons.palette_outlined,
-              roleTitle: 'Junior ${domain.shortTitle} Specialist',
-              location: 'Bangalore / Remote',
-              salary: '₹5.0 - ₹8.0 LPA',
-              proofReq: 'Portfolio with 3+ Real Project Proofs',
-              tags: domain.skills.skip(1).take(3).toList(),
-            ),
-            const SizedBox(height: 12),
-
-            _buildJobCard(
-              companyName: 'GrowthX D2C Brands',
-              logoIcon: Icons.bolt_rounded,
-              roleTitle: '${domain.shortTitle} Associate',
-              location: 'Calicut (On-site)',
-              salary: '₹4.5 - ₹6.5 LPA',
-              proofReq: 'Direct Recruiter Pitch Review',
-              tags: domain.skills.take(2).toList(),
+            // Job Matches State
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.borderSubtle),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.business_center_outlined,
+                      color: AppColors.primaryGreen,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'No Direct Openings Posted Yet',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'As corporate hiring partners post verified job opportunities, they will automatically appear here matched to your ${domain.shortTitle} profile.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      color: AppColors.textLight,
+                      height: 1.45,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
           ],

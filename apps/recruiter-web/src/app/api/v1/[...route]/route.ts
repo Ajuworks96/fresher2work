@@ -12,10 +12,10 @@ function getAuthUser(req: NextRequest): { id: string; email: string; role: strin
   const authHeader = req.headers.get('authorization') || '';
   if (!authHeader.startsWith('Bearer ')) return null;
   const token = authHeader.replace('Bearer ', '').trim();
-  if (token.includes('admin')) {
-    return { id: 'superadmin-user-001', email: 'admin@freshertowork.com', role: 'ADMIN' };
+  if (token.includes('admin') || token.includes('superadmin')) {
+    return { id: 'c8446f3a-f798-433b-9938-c8439fab1c2a', email: 'superadmin@freshertowork.com', role: 'ADMIN' };
   }
-  return { id: 'recruiter-arjun-01', email: 'arjun@velvetbyte.com', role: 'RECRUITER' };
+  return { id: 'recruiter-session-user', email: 'recruiter@freshertowork.com', role: 'RECRUITER' };
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
@@ -29,8 +29,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       totalCandidates: studentsList.length,
       verifiedCandidates: studentsList.filter((s) => s.verificationStatus === 'VERIFIED').length,
       placedCount: studentsList.filter((s) => s.isHired).length,
-      totalRevenue: 495000,
-      activeRecruiters: platformData.recruiters?.length || 1,
+      totalRevenue: 0,
+      activeRecruiters: platformData.recruiters?.length || 0,
     });
   }
 
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       total: studentsList.length,
       page: 1,
       limit: 50,
-      totalPages: 1,
+      totalPages: Math.ceil(studentsList.length / 50) || 1,
     });
   }
 
@@ -76,13 +76,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     // Exclusivity Check: If placed and caller is a different recruiter, lock it!
     if (student.isHired || student.placement) {
       const isSuperAdmin = authUser?.role === 'ADMIN';
-      const hiringCompanyId = platformData.companies?.[0]?.id || '8773a829-1f5d-46b9-b07d-4fad13b341be';
-      const hiringRecruiterEmail = platformData.recruiters?.[0]?.businessEmail || 'arjun@velvetbyte.com';
+      const hiringCompanyId = platformData.companies?.[0]?.id;
+      const hiringRecruiterEmail = platformData.recruiters?.[0]?.businessEmail;
       const isHiringOrg =
         authUser &&
         (student.placement?.recruiterId === authUser.id ||
-          student.placement?.company?.id === hiringCompanyId ||
-          authUser.email === hiringRecruiterEmail);
+          (hiringCompanyId && student.placement?.company?.id === hiringCompanyId) ||
+          (hiringRecruiterEmail && authUser.email === hiringRecruiterEmail));
 
       if (!isSuperAdmin && !isHiringOrg) {
         return NextResponse.json(
@@ -90,7 +90,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
             error:
               'Candidate profile is locked. This candidate has been placed and hired. Full profile is exclusively accessible to the hiring organization and Super Admin.',
             isLocked: true,
-            placedAt: student.placement?.company?.name || 'Partner Organization',
+            placedAt: student.placement?.company?.name || 'Verified Hiring Partner',
           },
           { status: 403 }
         );
@@ -100,24 +100,24 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     return NextResponse.json(student);
   }
 
+  // 8. Recruiter Profile
   if (path === 'recruiters/profile') {
-    // Serve from platform data if available, otherwise use default
     const recruiterData = platformData.recruiters?.[0];
     if (recruiterData) {
       return NextResponse.json(recruiterData);
     }
     return NextResponse.json({
-      id: '246522b1-8f89-4eea-b4be-df4ab51b4469',
-      fullName: 'Arjun P',
-      email: 'arjun@velvetbyte.com',
-      designation: 'Head of Human Resources',
-      companyId: '8773a829-1f5d-46b9-b07d-4fad13b341be',
+      id: 'recruiter-profile-default',
+      fullName: 'Corporate Recruiter',
+      email: 'recruiter@freshertowork.com',
+      designation: 'Talent Acquisition Manager',
+      companyId: 'company-partner',
       company: {
-        id: '8773a829-1f5d-46b9-b07d-4fad13b341be',
-        name: 'Velvetbyte PVT Ltd',
-        industry: 'Web Development',
-        location: 'Calicut',
-        website: 'https://velvetbyte.com',
+        id: 'company-partner',
+        name: 'Corporate Hiring Partner',
+        industry: 'Information Technology',
+        location: 'Kochi',
+        website: 'https://freshertowork.com',
         verificationStatus: 'VERIFIED',
       },
     });
@@ -162,24 +162,37 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     }
 
     // Recruiter Authentication
-    if (
-      email?.toLowerCase().includes('recruiter') ||
-      email?.toLowerCase().includes('velvetbyte') ||
-      email?.toLowerCase().includes('arjun')
-    ) {
+    const existingRecruiter = (platformData.recruiters || []).find(
+      (r: any) => r.businessEmail?.toLowerCase() === email?.toLowerCase()
+    );
+
+    if (existingRecruiter) {
+      return NextResponse.json({
+        token: `ftw_recruiter_jwt_${existingRecruiter.id}`,
+        user: {
+          id: existingRecruiter.id,
+          email: existingRecruiter.businessEmail,
+          role: 'RECRUITER',
+          fullName: existingRecruiter.fullName,
+        },
+        recruiter: existingRecruiter,
+      });
+    }
+
+    if (email?.toLowerCase().includes('recruiter')) {
       return NextResponse.json({
         token: 'ftw_recruiter_jwt_token_2026',
         user: {
-          id: 'recruiter-arjun-01',
+          id: 'recruiter-session-user',
           email: email,
           role: 'RECRUITER',
-          fullName: 'Arjun K',
+          fullName: 'Corporate Recruiter',
         },
         recruiter: {
-          id: 'recruiter-arjun-01',
-          fullName: 'Arjun K',
-          companyId: 'company-velvetbyte-01',
-          companyName: 'Velvetbyte PVT Ltd',
+          id: 'recruiter-session-user',
+          fullName: 'Corporate Recruiter',
+          companyId: 'company-partner-01',
+          companyName: 'Hiring Partner',
         },
       });
     }
@@ -189,9 +202,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       token: 'ftw_authenticated_user_jwt_token',
       user: {
         id: 'user-001',
-        email: email || 'user@fresher2work.com',
+        email: email || 'user@freshertowork.com',
         role: email?.includes('admin') ? 'ADMIN' : 'RECRUITER',
-        fullName: 'Authenticated User',
+        fullName: 'Corporate Partner',
       },
     });
   }
@@ -203,8 +216,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     if (!student) return NextResponse.json({ error: 'Talent not found' }, { status: 404 });
 
     // Check exclusivity using real recruiter data
-    const hiringRecruiterEmail = platformData.recruiters?.[0]?.businessEmail || 'arjun@velvetbyte.com';
-    if (student.isHired && authUser?.role !== 'ADMIN' && authUser?.email !== hiringRecruiterEmail) {
+    const hiringRecruiterEmail = platformData.recruiters?.[0]?.businessEmail;
+    if (student.isHired && authUser?.role !== 'ADMIN' && hiringRecruiterEmail && authUser?.email !== hiringRecruiterEmail) {
       return NextResponse.json(
         { error: 'Candidate has been hired. Contact details are locked to unauthorized recruiters.' },
         { status: 403 }
@@ -235,18 +248,18 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     student.isHired = true;
     student.placement = {
       id: `placement-${Date.now()}`,
-      companyId: companyRecord?.id || '8773a829-1f5d-46b9-b07d-4fad13b341be',
-      recruiterId: authUser?.id || recruiterRecord?.id || '246522b1-8f89-4eea-b4be-df4ab51b4469',
+      companyId: companyRecord?.id || 'company-partner',
+      recruiterId: authUser?.id || recruiterRecord?.id || 'recruiter-partner',
       roleTitle: body.roleTitle || 'Hired Role',
-      packageLpa: body.packageLpa || 6.5,
+      packageLpa: body.packageLpa || 'Verified CTC',
       placedAt: new Date().toISOString(),
       company: {
-        id: companyRecord?.id || '8773a829-1f5d-46b9-b07d-4fad13b341be',
-        name: companyRecord?.name || 'Velvetbyte PVT Ltd',
+        id: companyRecord?.id || 'company-partner',
+        name: companyRecord?.name || 'Hiring Partner',
       },
       recruiter: {
-        id: recruiterRecord?.id || '246522b1-8f89-4eea-b4be-df4ab51b4469',
-        fullName: recruiterRecord?.fullName || 'Arjun P',
+        id: recruiterRecord?.id || 'recruiter-partner',
+        fullName: recruiterRecord?.fullName || 'Hiring Manager',
       },
     };
 

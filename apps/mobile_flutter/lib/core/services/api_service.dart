@@ -19,7 +19,7 @@ class ApiService {
 
     if (kIsWeb) return 'http://localhost:4000/api/v1';
     // Production Cloud API URL (enables live connectivity on physical devices)
-    return 'https://recruiter-web-ajuworks96s-projects.vercel.app/api/v1';
+    return 'https://recruiter-web-lac.vercel.app/api/v1';
   }
 
   static Future<Map<String, String>> _headers({bool withAuth = true}) async {

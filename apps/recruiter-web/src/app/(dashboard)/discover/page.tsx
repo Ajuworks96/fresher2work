@@ -668,7 +668,7 @@ export default function TalentDiscoveryPage() {
                         <div className="truncate flex items-center gap-1.5 min-w-0">
                           <Briefcase className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                           <span className="truncate">
-                            <strong className="text-emerald-900">Placed at your company:</strong> {student.placement?.companyName || 'Velvetbyte PVT Ltd'}
+                            <strong className="text-emerald-900">Placed at your company:</strong> {student.placement?.companyName || currentRecruiter?.company?.name || 'Your Company'}
                             {student.placement?.roleTitle && ` • ${student.placement.roleTitle}`}
                           </span>
                         </div>

@@ -441,11 +441,11 @@ export default function SuperAdminSidebarPage() {
           candidateName: s.fullName,
           candidateEmail: s.email || s.user?.email,
           candidateHeadline: s.headline,
-          companyName: s.placement.company?.name || s.placement.companyName || 'Velvetbyte PVT Ltd',
-          recruiterName: s.placement.recruiter?.fullName || 'Arjun P',
-          recruiterDesignation: 'Head of Human Resources',
-          roleTitle: s.placement.roleTitle || 'Junior Full-Stack Engineer',
-          packageLpa: typeof s.placement.packageLpa === 'number' ? `₹${s.placement.packageLpa} LPA` : (s.placement.packageLpa || '₹6.50 LPA'),
+          companyName: s.placement.company?.name || s.placement.companyName || 'Corporate Partner',
+          recruiterName: s.placement.recruiter?.fullName || 'Hiring Recruiter',
+          recruiterDesignation: 'Talent Acquisition',
+          roleTitle: s.placement.roleTitle || 'Verified Role',
+          packageLpa: typeof s.placement.packageLpa === 'number' ? `₹${s.placement.packageLpa} LPA` : (s.placement.packageLpa || 'Verified CTC'),
           placedAt: s.placement.hiredAt || s.placement.placedAt || new Date().toISOString(),
           isInAppPlacement: true,
           verificationBadge: '100% In-App Direct Hire',
@@ -1396,7 +1396,7 @@ export default function SuperAdminSidebarPage() {
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Hiring Company</p>
                         <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                          {inspectingCandidate.placement?.company?.name || inspectingCandidate.companyName || 'Velvetbyte PVT Ltd'}
+                          {inspectingCandidate.placement?.company?.name || inspectingCandidate.companyName || 'Corporate Partner'}
                         </p>
                       </div>
                       <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-2xs">
@@ -2812,27 +2812,30 @@ export default function SuperAdminSidebarPage() {
                   <span className="text-[10px] font-bold text-slate-400">Just now</span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <div>
-                      <p className="font-bold text-slate-900">In-App Placement Verified: Ananya Menon → Velvetbyte PVT Ltd</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Offer: ₹6.50 LPA • Audit ID: FTW-HIRE-2026-C25D</p>
+                {placementsList.length > 0 && (
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div>
+                        <p className="font-bold text-slate-900">In-App Placement: {placementsList[0].candidateName} → {placementsList[0].companyName}</p>
+                        <p className="text-[10px] text-slate-400 font-mono">Offer: {placementsList[0].packageLpa} • Audit ID: {placementsList[0].auditId}</p>
+                      </div>
                     </div>
+                    <span className="text-[10px] font-bold text-slate-400">Verified</span>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400">Verified</span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <CreditCard className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <div>
-                      <p className="font-bold text-slate-900">₹99 Profile Activation Verified</p>
-                      <p className="text-[10px] text-slate-400 font-mono">Razorpay Gateway Signature Validated</p>
+                )}
+                {payments.length > 0 && (
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <CreditCard className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div>
+                        <p className="font-bold text-slate-900">Profile Activation Payment Verified</p>
+                        <p className="text-[10px] text-slate-400 font-mono">Gateway Order ID: {payments[0].gatewayOrderId || 'RAZORPAY'}</p>
+                      </div>
                     </div>
+                    <span className="text-[10px] font-bold text-slate-400">Paid</span>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400">3d ago</span>
-                </div>
+                )}
               </div>
             </div>
 
