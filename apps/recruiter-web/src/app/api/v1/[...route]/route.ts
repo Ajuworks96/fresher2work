@@ -7,6 +7,35 @@ let studentsList: any[] = [...(studentsDataRaw as any[])];
 const platformData = platformDataRaw as any;
 const shortlistsStore: any[] = [];
 
+// Ensure structure
+if (!platformData.recruiters) platformData.recruiters = [];
+if (!platformData.companies) platformData.companies = [];
+if (!platformData.payments) platformData.payments = [];
+if (!platformData.analytics) {
+  platformData.analytics = {
+    metrics: {
+      totalStudents: 0,
+      activatedStudents: 0,
+      activationRatePercent: 0,
+      pendingModeration: 0,
+      totalRecruiters: 0,
+      totalCompanies: 0,
+      successfulPaymentsCount: 0,
+      totalRevenueInRupees: 0,
+      totalHiredCandidates: 0,
+      inAppDirectPlacements: 0,
+      inAppPlacementRatioPercent: 0,
+      platformSuccessRatePercent: 0,
+      averagePackageLpa: '₹0 LPA',
+      averageDaysToHire: '0 Days',
+      totalContactReveals: 0,
+      totalShortlists: 0,
+    },
+    verifiedPlacements: [],
+    recentActivity: { latestStudents: [], recentHires: [] },
+  };
+}
+
 // Helper to extract bearer token
 function getAuthUser(req: NextRequest): { id: string; email: string; role: string } | null {
   const authHeader = req.headers.get('authorization') || '';
@@ -15,9 +44,16 @@ function getAuthUser(req: NextRequest): { id: string; email: string; role: strin
   if (token.includes('admin') || token.includes('superadmin')) {
     return { id: 'c8446f3a-f798-433b-9938-c8439fab1c2a', email: 'superadmin@freshertowork.com', role: 'ADMIN' };
   }
+  const matchedRecruiter = platformData.recruiters.find((r: any) => token.includes(r.id));
+  if (matchedRecruiter) {
+    return { id: matchedRecruiter.id, email: matchedRecruiter.businessEmail, role: 'RECRUITER' };
+  }
   return { id: 'recruiter-session-user', email: 'recruiter@freshertowork.com', role: 'RECRUITER' };
 }
 
+// =============================================================================
+// GET HANDLER
+// =============================================================================
 export async function GET(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
@@ -128,9 +164,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     return NextResponse.json({ shortlists: shortlistsStore });
   }
 
+  // 10. Student Current Profile
+  if (path === 'students/me') {
+    const currentStudent = studentsList[0] || null;
+    return NextResponse.json({ student: currentStudent });
+  }
+
+  // 11. Auth Me
+  if (path === 'auth/me') {
+    return NextResponse.json({
+      user: authUser || { id: 'user-default', email: 'user@freshertowork.com', role: 'STUDENT' },
+    });
+  }
+
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
 }
 
+// =============================================================================
+// POST HANDLER
+// =============================================================================
 export async function POST(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
@@ -161,9 +213,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
-    // Recruiter Authentication
+    // Recruiter Authentication (Matching registered recruiters)
     const existingRecruiter = (platformData.recruiters || []).find(
-      (r: any) => r.businessEmail?.toLowerCase() === email?.toLowerCase()
+      (r: any) =>
+        r.businessEmail?.toLowerCase() === email?.toLowerCase() ||
+        r.email?.toLowerCase() === email?.toLowerCase()
     );
 
     if (existingRecruiter) {
@@ -171,7 +225,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
         token: `ftw_recruiter_jwt_${existingRecruiter.id}`,
         user: {
           id: existingRecruiter.id,
-          email: existingRecruiter.businessEmail,
+          email: existingRecruiter.businessEmail || existingRecruiter.email,
           role: 'RECRUITER',
           fullName: existingRecruiter.fullName,
         },
@@ -179,6 +233,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
+    // Generic recruiter login for demo
     if (email?.toLowerCase().includes('recruiter')) {
       return NextResponse.json({
         token: 'ftw_recruiter_jwt_token_2026',
@@ -197,25 +252,147 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
-    // Generic fallback login for valid demo
+    // Generic fallback user login
     return NextResponse.json({
       token: 'ftw_authenticated_user_jwt_token',
       user: {
-        id: 'user-001',
+        id: `user-${Date.now()}`,
         email: email || 'user@freshertowork.com',
-        role: email?.includes('admin') ? 'ADMIN' : 'RECRUITER',
-        fullName: 'Corporate Partner',
+        role: email?.includes('admin') ? 'ADMIN' : 'STUDENT',
+        fullName: 'Registered User',
       },
     });
   }
 
-  // 2. Contact Reveal: discovery/talents/:id/contact
+  // 2. Auth Register (Candidate signup from mobile app)
+  if (path === 'auth/register') {
+    const { fullName, email, password, phone, role } = body;
+    const studentId = `student-${Date.now()}`;
+    const newStudent = {
+      id: studentId,
+      userId: `user-${Date.now()}`,
+      fullName: fullName || 'New Candidate',
+      email: email,
+      phone: phone || '',
+      headline: 'Aspiring Professional',
+      about: '',
+      isActivated: false,
+      completenessScore: 30,
+      moderationStatus: 'APPROVED',
+      createdAt: new Date().toISOString(),
+      education: [],
+      skills: [],
+      projects: [],
+      workSamples: [],
+    };
+
+    studentsList.unshift(newStudent);
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.totalStudents = studentsList.length;
+    }
+
+    return NextResponse.json({
+      token: `ftw_student_jwt_${studentId}`,
+      user: {
+        id: newStudent.userId,
+        email: email,
+        fullName: fullName,
+        role: role || 'STUDENT',
+      },
+      student: newStudent,
+    }, { status: 201 });
+  }
+
+  // 3. Admin: Create Recruiter & Company (Called from Super Admin modal)
+  if (path === 'admin/recruiters') {
+    const {
+      fullName,
+      email,
+      password,
+      phone,
+      designation,
+      companyName,
+      industry,
+      location,
+      website,
+      verificationStatus,
+    } = body;
+
+    const companyId = `comp-${Date.now()}`;
+    const newCompany = {
+      id: companyId,
+      name: companyName || 'Hiring Company',
+      website: website || '',
+      industry: industry || 'Technology & SaaS',
+      location: location || 'Bengaluru / Remote',
+      verificationStatus: verificationStatus || 'VERIFIED',
+      createdAt: new Date().toISOString(),
+    };
+
+    const recruiterId = `rec-${Date.now()}`;
+    const newRecruiter = {
+      id: recruiterId,
+      fullName: fullName || 'Corporate Recruiter',
+      businessEmail: email,
+      phone: phone || '',
+      designation: designation || 'Talent Acquisition Manager',
+      companyId: companyId,
+      companyName: newCompany.name,
+      company: newCompany,
+      password: password || 'Recruiter@123',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!platformData.companies) platformData.companies = [];
+    platformData.companies.unshift(newCompany);
+
+    if (!platformData.recruiters) platformData.recruiters = [];
+    platformData.recruiters.unshift(newRecruiter);
+
+    if (platformData.analytics && platformData.analytics.metrics) {
+      platformData.analytics.metrics.totalRecruiters = platformData.recruiters.length;
+      platformData.analytics.metrics.totalCompanies = platformData.companies.length;
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        recruiter: newRecruiter,
+        company: newCompany,
+      },
+      { status: 201 }
+    );
+  }
+
+  // 4. Admin: Create Company
+  if (path === 'admin/companies') {
+    const companyId = `comp-${Date.now()}`;
+    const newCompany = {
+      id: companyId,
+      name: body.name || body.companyName || 'Hiring Partner',
+      website: body.website || '',
+      industry: body.industry || 'Technology & Services',
+      location: body.location || 'India',
+      verificationStatus: body.verificationStatus || 'VERIFIED',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!platformData.companies) platformData.companies = [];
+    platformData.companies.unshift(newCompany);
+
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.totalCompanies = platformData.companies.length;
+    }
+
+    return NextResponse.json({ success: true, company: newCompany }, { status: 201 });
+  }
+
+  // 5. Contact Reveal: discovery/talents/:id/contact
   if (path.includes('/contact')) {
     const talentId = path.split('/')[2];
     const student = studentsList.find((s) => s.id === talentId);
     if (!student) return NextResponse.json({ error: 'Talent not found' }, { status: 404 });
 
-    // Check exclusivity using real recruiter data
     const hiringRecruiterEmail = platformData.recruiters?.[0]?.businessEmail;
     if (student.isHired && authUser?.role !== 'ADMIN' && hiringRecruiterEmail && authUser?.email !== hiringRecruiterEmail) {
       return NextResponse.json(
@@ -232,7 +409,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     });
   }
 
-  // 3. Hire Candidate: discovery/talents/:id/hire
+  // 6. Hire Candidate: discovery/talents/:id/hire
   if (path.includes('/hire')) {
     const talentId = path.split('/')[2];
     const student = studentsList.find((s) => s.id === talentId);
@@ -263,6 +440,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       },
     };
 
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.totalHiredCandidates = (platformData.analytics.metrics.totalHiredCandidates || 0) + 1;
+      platformData.analytics.metrics.inAppDirectPlacements = (platformData.analytics.metrics.inAppDirectPlacements || 0) + 1;
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Candidate hired successfully. Profile is now locked exclusively to your organization and Super Admin.',
@@ -270,7 +452,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     });
   }
 
-  // 4. Recruiter Shortlist toggle
+  // 7. Recruiter Shortlist toggle
   if (path === 'recruiters/shortlists') {
     const { studentId } = body;
     const existingIdx = shortlistsStore.findIndex((s) => s.studentId === studentId);
@@ -289,15 +471,70 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     }
   }
 
+  // 8. Payment order creation
+  if (path === 'payments/create-order') {
+    const orderId = `order_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    return NextResponse.json({
+      success: true,
+      orderId,
+      amount: 9900,
+      currency: 'INR',
+      keyId: 'rzp_test_FresherToWorkDemo',
+    });
+  }
+
+  // 9. Payment verify
+  if (path === 'payments/verify-payment') {
+    const { orderId, paymentId, signature } = body;
+    const newPayment = {
+      id: `pay-${Date.now()}`,
+      gatewayOrderId: orderId,
+      gatewayPaymentId: paymentId,
+      amountPaise: 9900,
+      currency: 'INR',
+      status: 'SUCCESS',
+      createdAt: new Date().toISOString(),
+    };
+    if (!platformData.payments) platformData.payments = [];
+    platformData.payments.unshift(newPayment);
+
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.successfulPaymentsCount = platformData.payments.length;
+      platformData.analytics.metrics.totalRevenueInRupees += 99;
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Payment verified and profile activated successfully',
+      payment: newPayment,
+    });
+  }
+
+  // 10. Student sub-resource creation (Education, Projects, Work Samples)
+  if (path.startsWith('students/me/')) {
+    const sub = path.replace('students/me/', '');
+    const currentStudent = studentsList[0] || null;
+    if (currentStudent) {
+      if (!currentStudent[sub]) currentStudent[sub] = [];
+      const newItem = { id: `item-${Date.now()}`, ...body, createdAt: new Date().toISOString() };
+      currentStudent[sub].push(newItem);
+      return NextResponse.json({ success: true, item: newItem }, { status: 201 });
+    }
+    return NextResponse.json({ success: true, item: body }, { status: 201 });
+  }
+
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
 }
 
+// =============================================================================
+// PATCH HANDLER
+// =============================================================================
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
   const body = await req.json().catch(() => ({}));
 
-  // Moderate Student: admin/students/:id/moderate
+  // 1. Moderate Student: admin/students/:id/moderate
   if (path.includes('admin/students/') && path.includes('/moderate')) {
     const studentId = path.split('/')[2];
     const student = studentsList.find((s) => s.id === studentId);
@@ -308,6 +545,121 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
     if (body.moderationNotes !== undefined) student.moderationNotes = body.moderationNotes;
 
     return NextResponse.json({ success: true, student });
+  }
+
+  // 2. Admin: Update Recruiter Profile: admin/recruiters/:id
+  if (path.startsWith('admin/recruiters/')) {
+    const recId = path.replace('admin/recruiters/', '');
+    const recruiter = (platformData.recruiters || []).find((r: any) => r.id === recId);
+    if (recruiter) {
+      Object.assign(recruiter, body);
+      return NextResponse.json({ success: true, recruiter });
+    }
+    return NextResponse.json({ error: 'Recruiter not found' }, { status: 404 });
+  }
+
+  // 3. Admin: Update Company: admin/companies/:id
+  if (path.startsWith('admin/companies/')) {
+    const compId = path.replace('admin/companies/', '');
+    const company = (platformData.companies || []).find((c: any) => c.id === compId);
+    if (company) {
+      Object.assign(company, body);
+      return NextResponse.json({ success: true, company });
+    }
+    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
+}
+
+// =============================================================================
+// PUT HANDLER
+// =============================================================================
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  const resolvedParams = await params;
+  const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
+  const body = await req.json().catch(() => ({}));
+
+  // Update Student Profile
+  if (path === 'students/me') {
+    const currentStudent = studentsList[0];
+    if (currentStudent) {
+      Object.assign(currentStudent, body);
+      return NextResponse.json({ success: true, student: currentStudent });
+    }
+    return NextResponse.json({ success: true, student: body });
+  }
+
+  // Update Skills
+  if (path === 'students/me/skills') {
+    const currentStudent = studentsList[0];
+    if (currentStudent) {
+      currentStudent.skills = body.skills || [];
+      return NextResponse.json({ success: true, skills: currentStudent.skills });
+    }
+    return NextResponse.json({ success: true, skills: body.skills || [] });
+  }
+
+  // Update Preferences
+  if (path === 'students/me/preferences') {
+    const currentStudent = studentsList[0];
+    if (currentStudent) {
+      currentStudent.preferences = body;
+      return NextResponse.json({ success: true, preferences: currentStudent.preferences });
+    }
+    return NextResponse.json({ success: true, preferences: body });
+  }
+
+  return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
+}
+
+// =============================================================================
+// DELETE HANDLER
+// =============================================================================
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  const resolvedParams = await params;
+  const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
+
+  // 1. Delete Recruiter
+  if (path.startsWith('admin/recruiters/')) {
+    const recId = path.replace('admin/recruiters/', '');
+    const idx = (platformData.recruiters || []).findIndex((r: any) => r.id === recId);
+    if (idx >= 0) {
+      platformData.recruiters.splice(idx, 1);
+      if (platformData.analytics?.metrics) {
+        platformData.analytics.metrics.totalRecruiters = platformData.recruiters.length;
+      }
+      return NextResponse.json({ success: true });
+    }
+    return NextResponse.json({ error: 'Recruiter not found' }, { status: 404 });
+  }
+
+  // 2. Delete Student
+  if (path.startsWith('admin/students/')) {
+    const studentId = path.replace('admin/students/', '');
+    const idx = studentsList.findIndex((s: any) => s.id === studentId);
+    if (idx >= 0) {
+      studentsList.splice(idx, 1);
+      if (platformData.analytics?.metrics) {
+        platformData.analytics.metrics.totalStudents = studentsList.length;
+      }
+      return NextResponse.json({ success: true });
+    }
+    return NextResponse.json({ error: 'Student not found' }, { status: 404 });
+  }
+
+  // 3. Delete Company
+  if (path.startsWith('admin/companies/')) {
+    const compId = path.replace('admin/companies/', '');
+    const idx = (platformData.companies || []).findIndex((c: any) => c.id === compId);
+    if (idx >= 0) {
+      platformData.companies.splice(idx, 1);
+      if (platformData.analytics?.metrics) {
+        platformData.analytics.metrics.totalCompanies = platformData.companies.length;
+      }
+      return NextResponse.json({ success: true });
+    }
+    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
   }
 
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
