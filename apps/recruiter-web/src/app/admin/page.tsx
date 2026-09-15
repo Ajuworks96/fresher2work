@@ -61,6 +61,7 @@ import {
   Video,
   FolderGit2,
   Code2,
+  Trash2,
 } from 'lucide-react';
 
 type NavTab = 'candidates' | 'placements' | 'dashboard' | 'recruiters' | 'ledger';
@@ -129,6 +130,7 @@ export default function SuperAdminSidebarPage() {
   // Edit Recruiter / Company Modal State
   const [editingRecruiter, setEditingRecruiter] = useState<any | null>(null);
   const [updatingRecruiter, setUpdatingRecruiter] = useState(false);
+  const [deletingRecruiterId, setDeletingRecruiterId] = useState<string | null>(null);
 
   // Security & Audit Logs Modal State
   const [showAuditModal, setShowAuditModal] = useState(false);
@@ -452,6 +454,49 @@ export default function SuperAdminSidebarPage() {
       alert(err.message);
     } finally {
       setUpdatingRecruiter(false);
+    }
+  };
+
+  // Delete Recruiter
+  const handleDeleteRecruiter = async (rec: any) => {
+    const recName = rec.fullName || 'Recruiter';
+    const compName = rec.company?.name || rec.companyName || 'Company';
+    if (!confirm(`Are you sure you want to delete recruiter "${recName}" (${compName})? This will permanently remove the recruiter account.`)) {
+      return;
+    }
+    setDeletingRecruiterId(rec.id);
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/admin/recruiters/${rec.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error || 'Failed to delete recruiter');
+      }
+
+      // Optimistically remove from state and browser cache
+      setRecruiters((prev) => {
+        const updated = prev.filter((r) => r.id !== rec.id);
+        try { localStorage.setItem('ftw_admin_recruiters_cache', JSON.stringify(updated)); } catch (_) {}
+        return updated;
+      });
+      if (rec.companyId) {
+        setCompanies((prev) => {
+          const updated = prev.filter((c) => c.id !== rec.companyId);
+          try { localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(updated)); } catch (_) {}
+          return updated;
+        });
+      }
+
+      showToast(`✓ Recruiter "${recName}" deleted successfully`);
+      await fetchAdminData();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setDeletingRecruiterId(null);
     }
   };
 
@@ -864,7 +909,12 @@ export default function SuperAdminSidebarPage() {
                       }`}
                     >
                       <BadgeCheck className="w-4 h-4" />
-                      Placed Hires ({selectedCompanyHub.hiresCount || 2})
+                      Placed Hires ({students.filter(
+                        (s) =>
+                          (s.isHired || s.placement) &&
+                          ((s.placement?.company?.name || s.companyName || '').toLowerCase().includes((selectedCompanyHub.company?.name || selectedCompanyHub.companyName || '').toLowerCase()) ||
+                            (selectedCompanyHub.id && s.placement?.recruiterId === selectedCompanyHub.id))
+                      ).length})
                     </button>
                     <button
                       onClick={() => setCompanyHubTab('overview')}
@@ -897,25 +947,35 @@ export default function SuperAdminSidebarPage() {
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hires Placed</p>
                     <p className="font-extrabold text-emerald-700 text-base mt-0.5 flex items-center gap-1">
                       <BadgeCheck className="w-4 h-4" />
-                      {selectedCompanyHub.hiresCount || 2} Placed
+                      {students.filter(
+                        (s) =>
+                          (s.isHired || s.placement) &&
+                          ((s.placement?.company?.name || s.companyName || '').toLowerCase().includes((selectedCompanyHub.company?.name || selectedCompanyHub.companyName || '').toLowerCase()) ||
+                            (selectedCompanyHub.id && s.placement?.recruiterId === selectedCompanyHub.id))
+                      ).length} Placed
                     </p>
                   </div>
                   <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Contact Reveals</p>
                     <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                      12 Unlocks
+                      {selectedCompanyHub.revealsCount || 0} Unlocks
                     </p>
                   </div>
                   <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Shortlists</p>
                     <p className="font-extrabold text-slate-900 text-base mt-0.5">
-                      6 Candidates
+                      {selectedCompanyHub.shortlistsCount || 0} Candidates
                     </p>
                   </div>
                   <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hiring Success</p>
                     <p className="font-extrabold text-emerald-700 text-base mt-0.5">
-                      100% In-App
+                      {students.filter(
+                        (s) =>
+                          (s.isHired || s.placement) &&
+                          ((s.placement?.company?.name || s.companyName || '').toLowerCase().includes((selectedCompanyHub.company?.name || selectedCompanyHub.companyName || '').toLowerCase()) ||
+                            (selectedCompanyHub.id && s.placement?.recruiterId === selectedCompanyHub.id))
+                      ).length > 0 ? '100% In-App' : '0% (No hires)'}
                     </p>
                   </div>
                 </div>
@@ -2464,15 +2524,38 @@ export default function SuperAdminSidebarPage() {
                             )}
                           </td>
 
-                          {/* Column 3: Placed Hires */}
+                          {/* Column 3: Placed Hires (Real Data Calculation) */}
                           <td className="px-6 py-4">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-black shadow-2xs">
-                              <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
-                              {rec.hiresCount || 2} Placed
-                            </span>
-                            <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-                              Direct In-App
-                            </p>
+                            {(() => {
+                              const compName = rec.company?.name || rec.companyName || '';
+                              const realHires = students.filter(
+                                (s) =>
+                                  (s.isHired || s.placement) &&
+                                  ((s.placement?.company?.name || s.companyName || '').toLowerCase().includes(compName.toLowerCase()) ||
+                                    (rec.id && s.placement?.recruiterId === rec.id))
+                              ).length;
+
+                              return realHires > 0 ? (
+                                <>
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-black shadow-2xs">
+                                    <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                    {realHires} Placed
+                                  </span>
+                                  <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                                    Direct In-App
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold">
+                                    0 Placed
+                                  </span>
+                                  <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                                    No hires yet
+                                  </p>
+                                </>
+                              );
+                            })()}
                           </td>
 
                           {/* Column 4: Account Status */}
@@ -2502,6 +2585,14 @@ export default function SuperAdminSidebarPage() {
                                 title="Edit Recruiter Details"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteRecruiter(rec)}
+                                disabled={deletingRecruiterId === rec.id}
+                                className="p-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700 transition-colors cursor-pointer disabled:opacity-50"
+                                title="Delete Recruiter Account"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </td>
