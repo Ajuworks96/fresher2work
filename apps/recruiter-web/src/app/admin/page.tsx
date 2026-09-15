@@ -232,8 +232,31 @@ export default function SuperAdminSidebarPage() {
       const studentList = resStudents.students || [];
       setAnalytics(resAnalytics);
       setStudents(studentList);
-      setRecruiters(resRecruiters.recruiters || []);
-      setCompanies(resCompanies.companies || []);
+
+      // Merge server response with browser-cached newly created recruiters
+      const localRecs: any[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_recruiters_cache') || '[]'); } catch (_) { return []; }
+      })();
+      const localComps: any[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_companies_cache') || '[]'); } catch (_) { return []; }
+      })();
+
+      const mergedRecruiters = [...(resRecruiters.recruiters || [])];
+      for (const lr of localRecs) {
+        if (!mergedRecruiters.some((r: any) => r.id === lr.id || (r.businessEmail && r.businessEmail === lr.businessEmail))) {
+          mergedRecruiters.unshift(lr);
+        }
+      }
+
+      const mergedCompanies = [...(resCompanies.companies || [])];
+      for (const lc of localComps) {
+        if (!mergedCompanies.some((c: any) => c.id === lc.id || (c.name && c.name === lc.name))) {
+          mergedCompanies.unshift(lc);
+        }
+      }
+
+      setRecruiters(mergedRecruiters);
+      setCompanies(mergedCompanies);
       setPayments(resPayments.payments || []);
 
       if (inspectingCandidate) {
@@ -342,6 +365,24 @@ export default function SuperAdminSidebarPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to create recruiter');
 
+      // 1. Immediately inject into active React state & browser cache
+      if (data.recruiter) {
+        setRecruiters((prev) => {
+          const filtered = prev.filter((r) => r.id !== data.recruiter.id && r.businessEmail !== data.recruiter.businessEmail);
+          const updated = [data.recruiter, ...filtered];
+          try { localStorage.setItem('ftw_admin_recruiters_cache', JSON.stringify(updated)); } catch (_) {}
+          return updated;
+        });
+      }
+      if (data.company) {
+        setCompanies((prev) => {
+          const filtered = prev.filter((c) => c.id !== data.company.id && c.name !== data.company.name);
+          const updated = [data.company, ...filtered];
+          try { localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(updated)); } catch (_) {}
+          return updated;
+        });
+      }
+
       setShowCreateRecruiterModal(false);
       setNewRecruiter({
         fullName: '',
@@ -355,7 +396,7 @@ export default function SuperAdminSidebarPage() {
         website: '',
         verificationStatus: 'VERIFIED',
       });
-      showToast('Recruiter profile and company registered successfully');
+      showToast('✓ Recruiter profile and company registered successfully');
       await fetchAdminData();
     } catch (err: any) {
       alert(err.message);

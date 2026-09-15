@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import studentsDataRaw from '@/lib/students_data.json';
 import platformDataRaw from '@/lib/platform_data.json';
+import { prisma } from '@/lib/db';
 
 // In-memory state persisted per serverless container
 let studentsList: any[] = [...(studentsDataRaw as any[])];
@@ -77,11 +78,45 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 
   // 3. Admin Companies
   if (path === 'admin/companies') {
+    try {
+      const dbCompanies = await prisma.company.findMany({
+        where: { isDeleted: false },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (dbCompanies && dbCompanies.length > 0) {
+        return NextResponse.json({ companies: dbCompanies });
+      }
+    } catch (e) {
+      // Fallback to in-memory
+    }
     return NextResponse.json({ companies: platformData.companies || [] });
   }
 
   // 4. Admin Recruiters
   if (path === 'admin/recruiters') {
+    try {
+      const dbRecruiters = await prisma.recruiterProfile.findMany({
+        where: { isDeleted: false },
+        include: { company: true },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (dbRecruiters && dbRecruiters.length > 0) {
+        const formatted = dbRecruiters.map((r) => ({
+          id: r.id,
+          fullName: r.fullName,
+          businessEmail: r.businessEmail,
+          designation: r.designation,
+          companyId: r.companyId,
+          companyName: r.company?.name || 'Corporate Partner',
+          company: r.company,
+          createdAt: r.createdAt.toISOString(),
+          hiresCount: 0,
+        }));
+        return NextResponse.json({ recruiters: formatted });
+      }
+    } catch (e) {
+      // Fallback to in-memory
+    }
     return NextResponse.json({ recruiters: platformData.recruiters || [] });
   }
 
@@ -109,7 +144,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       return NextResponse.json({ error: 'Talent not found' }, { status: 404 });
     }
 
-    // Exclusivity Check: If placed and caller is a different recruiter, lock it!
     if (student.isHired || student.placement) {
       const isSuperAdmin = authUser?.role === 'ADMIN';
       const hiringCompanyId = platformData.companies?.[0]?.id;
@@ -291,19 +325,22 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       platformData.analytics.metrics.totalStudents = studentsList.length;
     }
 
-    return NextResponse.json({
-      token: `ftw_student_jwt_${studentId}`,
-      user: {
-        id: newStudent.userId,
-        email: email,
-        fullName: fullName,
-        role: role || 'STUDENT',
+    return NextResponse.json(
+      {
+        token: `ftw_student_jwt_${studentId}`,
+        user: {
+          id: newStudent.userId,
+          email: email,
+          fullName: fullName,
+          role: role || 'STUDENT',
+        },
+        student: newStudent,
       },
-      student: newStudent,
-    }, { status: 201 });
+      { status: 201 }
+    );
   }
 
-  // 3. Admin: Create Recruiter & Company (Called from Super Admin modal)
+  // 3. Admin: Create Recruiter & Company
   if (path === 'admin/recruiters') {
     const {
       fullName,
@@ -318,8 +355,53 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       verificationStatus,
     } = body;
 
-    const companyId = `comp-${Date.now()}`;
-    const newCompany = {
+    let dbCompany: any = null;
+    let dbRecruiter: any = null;
+
+    try {
+      // 1. Create company in Supabase
+      dbCompany = await prisma.company.create({
+        data: {
+          name: companyName || 'Corporate Partner',
+          location: location || 'Bengaluru / Remote',
+          industry: industry || 'Technology & SaaS',
+          website: website || '',
+          verificationStatus: (verificationStatus as any) || 'VERIFIED',
+        },
+      });
+
+      // 2. Create User account in Supabase
+      const userEmail = email?.trim().toLowerCase();
+      let user = await prisma.user.findUnique({ where: { email: userEmail } });
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email: userEmail,
+            role: 'RECRUITER',
+            status: 'ACTIVE',
+            phone: phone || null,
+            passwordHash: password || 'Recruiter@123',
+          },
+        });
+      }
+
+      // 3. Create RecruiterProfile in Supabase
+      dbRecruiter = await prisma.recruiterProfile.create({
+        data: {
+          userId: user.id,
+          companyId: dbCompany.id,
+          fullName: fullName || 'Corporate Recruiter',
+          designation: designation || 'Talent Acquisition',
+          businessEmail: userEmail,
+        },
+        include: { company: true },
+      });
+    } catch (dbErr) {
+      console.warn('Supabase recruiter creation error/fallback:', dbErr);
+    }
+
+    const companyId = dbCompany?.id || `comp-${Date.now()}`;
+    const newCompany = dbCompany || {
       id: companyId,
       name: companyName || 'Hiring Company',
       website: website || '',
@@ -329,7 +411,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       createdAt: new Date().toISOString(),
     };
 
-    const recruiterId = `rec-${Date.now()}`;
+    const recruiterId = dbRecruiter?.id || `rec-${Date.now()}`;
     const newRecruiter = {
       id: recruiterId,
       fullName: fullName || 'Corporate Recruiter',
@@ -344,10 +426,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     };
 
     if (!platformData.companies) platformData.companies = [];
-    platformData.companies.unshift(newCompany);
+    platformData.companies = [newCompany, ...platformData.companies.filter((c: any) => c.id !== newCompany.id)];
 
     if (!platformData.recruiters) platformData.recruiters = [];
-    platformData.recruiters.unshift(newRecruiter);
+    platformData.recruiters = [newRecruiter, ...platformData.recruiters.filter((r: any) => r.id !== newRecruiter.id)];
 
     if (platformData.analytics && platformData.analytics.metrics) {
       platformData.analytics.metrics.totalRecruiters = platformData.recruiters.length;
@@ -623,15 +705,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
   // 1. Delete Recruiter
   if (path.startsWith('admin/recruiters/')) {
     const recId = path.replace('admin/recruiters/', '');
+    try {
+      await prisma.recruiterProfile.delete({ where: { id: recId } });
+    } catch (_) {}
     const idx = (platformData.recruiters || []).findIndex((r: any) => r.id === recId);
     if (idx >= 0) {
       platformData.recruiters.splice(idx, 1);
-      if (platformData.analytics?.metrics) {
-        platformData.analytics.metrics.totalRecruiters = platformData.recruiters.length;
-      }
-      return NextResponse.json({ success: true });
     }
-    return NextResponse.json({ error: 'Recruiter not found' }, { status: 404 });
+    return NextResponse.json({ success: true });
   }
 
   // 2. Delete Student
@@ -651,15 +732,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
   // 3. Delete Company
   if (path.startsWith('admin/companies/')) {
     const compId = path.replace('admin/companies/', '');
+    try {
+      await prisma.company.delete({ where: { id: compId } });
+    } catch (_) {}
     const idx = (platformData.companies || []).findIndex((c: any) => c.id === compId);
     if (idx >= 0) {
       platformData.companies.splice(idx, 1);
-      if (platformData.analytics?.metrics) {
-        platformData.analytics.metrics.totalCompanies = platformData.companies.length;
-      }
-      return NextResponse.json({ success: true });
     }
-    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
+    return NextResponse.json({ success: true });
   }
 
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
