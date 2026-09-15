@@ -12,8 +12,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState('Recruiter');
-  const [companyName, setCompanyName] = useState('Company');
+  const [userName, setUserName] = useState('');
+  const [companyName, setCompanyName] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

@@ -5,8 +5,8 @@
       "activatedStudents": 0,
       "activationRatePercent": 0,
       "pendingModeration": 0,
-      "totalRecruiters": 0,
-      "totalCompanies": 0,
+      "totalRecruiters": 1,
+      "totalCompanies": 1,
       "successfulPaymentsCount": 0,
       "totalRevenueInRupees": 0,
       "totalHiredCandidates": 0,
@@ -24,7 +24,39 @@
       "recentHires": []
     }
   },
-  "companies": [],
-  "recruiters": [],
+  "companies": [
+    {
+      "id": "comp-velvetbyte-01",
+      "name": "Velvetbyte PVT Ltd",
+      "website": "https://velvetbyte.com",
+      "industry": "Web Development",
+      "location": "Calicut",
+      "verificationStatus": "VERIFIED",
+      "createdAt": "2026-09-15T10:00:00.000Z"
+    }
+  ],
+  "recruiters": [
+    {
+      "id": "rec-arjun-velvetbyte-01",
+      "fullName": "Arjun",
+      "businessEmail": "arjunworks96@gmail.com",
+      "email": "arjunworks96@gmail.com",
+      "phone": "+91 98765 43210",
+      "designation": "CEO",
+      "companyId": "comp-velvetbyte-01",
+      "companyName": "Velvetbyte PVT Ltd",
+      "company": {
+        "id": "comp-velvetbyte-01",
+        "name": "Velvetbyte PVT Ltd",
+        "website": "https://velvetbyte.com",
+        "industry": "Web Development",
+        "location": "Calicut",
+        "verificationStatus": "VERIFIED",
+        "createdAt": "2026-09-15T10:00:00.000Z"
+      },
+      "password": "Recruiter@123",
+      "createdAt": "2026-09-15T10:00:00.000Z"
+    }
+  ],
   "payments": []
 }
