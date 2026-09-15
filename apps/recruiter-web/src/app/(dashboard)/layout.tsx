@@ -17,22 +17,24 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('ftw_recruiter_token');
       const stored = localStorage.getItem('ftw_recruiter_user');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (parsed.recruiter?.fullName) {
-            setUserName(parsed.recruiter.fullName);
-          }
-          if (parsed.recruiter?.company?.name) {
-            setCompanyName(parsed.recruiter.company.name);
-          }
-        } catch (e) {
-          // ignore
-        }
+      if (!token || !stored) {
+        router.replace('/login');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(stored);
+        const r = parsed.recruiter || parsed;
+        const name = r.fullName || parsed.fullName || 'Hiring Manager';
+        const comp = r.company?.name || r.companyName || parsed.companyName || 'Corporate Partner';
+        setUserName(name);
+        setCompanyName(comp);
+      } catch (e) {
+        router.replace('/login');
       }
     }
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('ftw_recruiter_token');

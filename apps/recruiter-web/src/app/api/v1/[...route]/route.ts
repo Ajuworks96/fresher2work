@@ -227,7 +227,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
-    // Recruiter Authentication (Matching registered recruiters)
+    // Recruiter Authentication (Matching recruiters created by Super Admin)
     const existingRecruiter = (platformData.recruiters || []).find(
       (r: any) =>
         r.businessEmail?.toLowerCase() === email?.toLowerCase() ||
@@ -235,6 +235,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     );
 
     if (existingRecruiter) {
+      if (existingRecruiter.password && password && existingRecruiter.password !== password) {
+        return NextResponse.json({ error: 'Incorrect password for recruiter account.' }, { status: 401 });
+      }
       return NextResponse.json({
         token: `ftw_recruiter_jwt_${existingRecruiter.id}`,
         user: {
@@ -247,35 +250,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
-    // Generic recruiter login for demo
-    if (email?.toLowerCase().includes('recruiter')) {
-      return NextResponse.json({
-        token: 'ftw_recruiter_jwt_token_2026',
-        user: {
-          id: 'recruiter-session-user',
-          email: email,
-          role: 'RECRUITER',
-          fullName: 'Corporate Recruiter',
-        },
-        recruiter: {
-          id: 'recruiter-session-user',
-          fullName: 'Corporate Recruiter',
-          companyId: 'company-partner-01',
-          companyName: 'Hiring Partner',
-        },
-      });
-    }
-
-    // Generic fallback user login
-    return NextResponse.json({
-      token: 'ftw_authenticated_user_jwt_token',
-      user: {
-        id: `user-${Date.now()}`,
-        email: email || 'user@freshertowork.com',
-        role: email?.includes('admin') ? 'ADMIN' : 'STUDENT',
-        fullName: 'Registered User',
+    return NextResponse.json(
+      {
+        error:
+          'Access denied. Only recruiters created by Super Admin can access this dashboard.',
       },
-    });
+      { status: 401 }
+    );
   }
 
   // 2. Auth Register (Candidate signup from mobile app)

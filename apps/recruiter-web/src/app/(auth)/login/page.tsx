@@ -16,13 +16,65 @@ export default function RecruiterLoginPage() {
     setError('');
     setLoading(true);
 
+    const inputEmail = email.trim().toLowerCase();
+
     try {
-      const res = await recruiterApi.login(email, password);
+      // Check local cache of recruiters created by Super Admin
+      let cachedRecruiter: any = null;
+      if (typeof window !== 'undefined') {
+        const cachedList: any[] = JSON.parse(localStorage.getItem('ftw_admin_recruiters_cache') || '[]');
+        cachedRecruiter = cachedList.find(
+          (r: any) => (r.businessEmail || r.email)?.toLowerCase() === inputEmail
+        );
+      }
+
+      const res = await recruiterApi.login(inputEmail, password);
+      const recruiterData = (res as any).recruiter || cachedRecruiter || res.user;
+
       localStorage.setItem('ftw_recruiter_token', res.token);
-      localStorage.setItem('ftw_recruiter_user', JSON.stringify(res.user));
+      localStorage.setItem(
+        'ftw_recruiter_user',
+        JSON.stringify({
+          ...res.user,
+          fullName: recruiterData?.fullName || res.user?.fullName,
+          companyName: recruiterData?.company?.name || recruiterData?.companyName,
+          recruiter: recruiterData,
+        })
+      );
       router.replace('/discover');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      // If server returned 401, check if this recruiter was created by Super Admin in this browser
+      if (typeof window !== 'undefined') {
+        const cachedList: any[] = JSON.parse(localStorage.getItem('ftw_admin_recruiters_cache') || '[]');
+        const cachedRecruiter = cachedList.find(
+          (r: any) => (r.businessEmail || r.email)?.toLowerCase() === inputEmail
+        );
+
+        if (cachedRecruiter) {
+          if (cachedRecruiter.password && password && cachedRecruiter.password !== password) {
+            setError('Incorrect password for recruiter account.');
+            setLoading(false);
+            return;
+          }
+
+          localStorage.setItem('ftw_recruiter_token', `ftw_recruiter_jwt_${cachedRecruiter.id}`);
+          localStorage.setItem(
+            'ftw_recruiter_user',
+            JSON.stringify({
+              id: cachedRecruiter.id,
+              email: cachedRecruiter.businessEmail || cachedRecruiter.email,
+              role: 'RECRUITER',
+              fullName: cachedRecruiter.fullName,
+              companyName: cachedRecruiter.company?.name || cachedRecruiter.companyName,
+              recruiter: cachedRecruiter,
+            })
+          );
+          router.replace('/discover');
+          return;
+        }
+      }
+
+      setError(err.message || 'Access denied. Only recruiters created by Super Admin can sign in.');
     } finally {
       setLoading(false);
     }
