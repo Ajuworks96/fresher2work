@@ -29,11 +29,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill trial verification code 1234
-    _otpControllers[0].text = '1';
-    _otpControllers[1].text = '2';
-    _otpControllers[2].text = '3';
-    _otpControllers[3].text = '4';
   }
 
   @override
@@ -173,33 +168,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Trial Verification Hint
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: AppColors.cardBlue,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.bluePrimary.withValues(alpha: 0.25)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.verified_user_outlined, size: 16, color: AppColors.bluePrimary),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Trial Verification Code: 1234',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.bluePrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 36),
 
               // 4 OTP Boxes
               Row(
@@ -281,17 +250,30 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textMuted),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      _otpControllers[0].text = '1';
-                      _otpControllers[1].text = '2';
-                      _otpControllers[2].text = '3';
-                      _otpControllers[3].text = '4';
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: AppColors.success,
-                          content: Text('Trial verification code: 1234 has been populated'),
-                        ),
-                      );
+                    onTap: () async {
+                      for (var c in _otpControllers) {
+                        c.clear();
+                      }
+                      try {
+                        await ApiService.sendOtp(widget.email);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: AppColors.success,
+                              content: Text('A fresh verification code has been sent to your email!'),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content: Text(e.toString()),
+                            ),
+                          );
+                        }
+                      }
                     },
                     child: Text(
                       'Resend Code',
