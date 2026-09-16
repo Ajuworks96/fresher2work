@@ -5,14 +5,17 @@ import '../constants/domain_constants.dart';
 class StorageService {
   static const String _tokenKey = 'fresher2work_auth_token';
   static const String _userKey = 'fresher2work_user_data';
+  static const String _lastActiveKey = 'fresher2work_last_active_time';
   static const String _flaggedIssueKey = 'fresher2work_flagged_issue';
   static const String _activatedKey = 'fresher2work_activated';
   static const String _selectedDomainKey = 'fresher2work_selected_domain';
   static const String _proofsPrefix = 'fresher2work_proofs_';
+  static const int _sessionTimeoutMs = 7 * 24 * 60 * 60 * 1000; // 7 days
 
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
+    await prefs.setInt(_lastActiveKey, DateTime.now().millisecondsSinceEpoch);
   }
 
   static Future<String?> getToken() async {
@@ -23,6 +26,31 @@ class StorageService {
   static Future<void> removeToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
+    await prefs.remove(_lastActiveKey);
+  }
+
+  static Future<void> updateLastActive() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_lastActiveKey, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  static Future<bool> isSessionValid() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(_tokenKey);
+    if (token == null || token.isEmpty) {
+      return false;
+    }
+    final lastActive = prefs.getInt(_lastActiveKey);
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (lastActive != null && (now - lastActive) > _sessionTimeoutMs) {
+      // Over 7 days inactive: auto logout
+      await prefs.remove(_tokenKey);
+      await prefs.remove(_lastActiveKey);
+      return false;
+    }
+    // Valid session: refresh active timestamp
+    await prefs.setInt(_lastActiveKey, now);
+    return true;
   }
 
   static Future<void> saveUser(Map<String, dynamic> userData) async {

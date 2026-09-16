@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/domain_constants.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
+import '../profile/edit_profile_screen.dart';
 
 class HomeFeedScreen extends StatefulWidget {
   final Function(int) onNavigateTab;
@@ -18,6 +20,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   String _selectedPill = 'All';
   String _searchQuery = '';
   String _candidateName = '';
+  String? _avatarUrl;
+  String? _avatarLocalPath;
   final TextEditingController _searchController = TextEditingController();
   List<ProofItem> _storedProofs = [];
 
@@ -36,24 +40,31 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   Future<void> _loadState() async {
     final domain = await StorageService.getSelectedDomain();
     final proofs = await StorageService.getStoredProofs(domain);
+    final user = await StorageService.getUser() ?? {};
     
+    String name = (user['fullName'] as String?) ?? '';
+    String? avUrl = user['avatarUrl'] as String?;
+    String? avLocal = user['avatarLocalPath'] as String?;
+
     try {
       final profile = await ApiService.getStudentProfile();
-      final name = profile['fullName'] as String?;
-      if (mounted) {
-        setState(() {
-          _currentDomainId = domain;
-          _candidateName = name ?? '';
-          _storedProofs = proofs;
-        });
+      final st = profile['student'] ?? profile;
+      if (st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
+        name = st['fullName'];
       }
-    } catch (_) {
-      if (mounted) {
-        setState(() {
-          _currentDomainId = domain;
-          _storedProofs = proofs;
-        });
+      if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
+        avUrl = st['avatarUrl'];
       }
+    } catch (_) {}
+
+    if (mounted) {
+      setState(() {
+        _currentDomainId = domain;
+        _candidateName = name;
+        _avatarUrl = avUrl;
+        _avatarLocalPath = avLocal;
+        _storedProofs = proofs;
+      });
     }
   }
 
@@ -77,18 +88,16 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => widget.onNavigateTab(3),
+                        onTap: () => widget.onNavigateTab(2),
                         child: Container(
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
+                            color: const Color(0xFFEFF6FF),
                             border: Border.all(color: AppColors.bluePrimary, width: 2),
-                            image: DecorationImage(
-                              image: NetworkImage(currentDomain.avatarUrl),
-                              fit: BoxFit.cover,
-                            ),
                           ),
+                          child: _buildHomeAvatar(),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -194,6 +203,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                   ),
                 ],
               ),
+              if (_candidateName.isEmpty || (_avatarUrl == null && _avatarLocalPath == null))
+                _buildCompleteProfileCard(),
               const SizedBox(height: 18),
 
               // Hero Upgrade / Connect Banner (Matching Reference Image 1 & 2)
@@ -276,14 +287,17 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ),
                     const SizedBox(width: 10),
                     Container(
-                      width: 80,
-                      height: 90,
+                      width: 76,
+                      height: 84,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: NetworkImage(currentDomain.avatarUrl),
-                          fit: BoxFit.cover,
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.rocket_launch_rounded,
+                          color: Colors.white,
+                          size: 38,
                         ),
                       ),
                     ),
@@ -469,15 +483,29 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
               children: [
                 // Portrait Avatar
                 Container(
-                  width: 54,
-                  height: 54,
+                  width: 52,
+                  height: 52,
                   decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
                     borderRadius: BorderRadius.circular(16),
-                    image: DecorationImage(
-                      image: NetworkImage(proof.avatarUrl),
-                      fit: BoxFit.cover,
-                    ),
                   ),
+                  child: proof.avatarUrl.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.network(
+                            proof.avatarUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.person, color: AppColors.bluePrimary),
+                          ),
+                        )
+                      : const Center(
+                          child: Icon(
+                            Icons.work_outline_rounded,
+                            color: AppColors.bluePrimary,
+                            size: 24,
+                          ),
+                        ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -680,6 +708,99 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                 ],
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHomeAvatar() {
+    if (_avatarLocalPath != null && File(_avatarLocalPath!).existsSync()) {
+      return ClipOval(
+        child: Image.file(
+          File(_avatarLocalPath!),
+          fit: BoxFit.cover,
+          width: 44,
+          height: 44,
+        ),
+      );
+    }
+    if (_avatarUrl != null && _avatarUrl!.isNotEmpty) {
+      return ClipOval(
+        child: Image.network(
+          _avatarUrl!,
+          fit: BoxFit.cover,
+          width: 44,
+          height: 44,
+          errorBuilder: (context, error, stackTrace) =>
+              const Icon(Icons.person, color: AppColors.bluePrimary, size: 22),
+        ),
+      );
+    }
+    return const Icon(Icons.person, color: AppColors.bluePrimary, size: 22);
+  }
+
+  Widget _buildCompleteProfileCard() {
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF6FF),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFBFDBFE)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: AppColors.bluePrimary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Icons.edit_note_rounded,
+                color: Colors.white, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Complete Your Candidate Profile',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF1E3A8A)),
+                ),
+                Text(
+                  'Add photo, phone & proofs to get discovered by HRs.',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5, color: const Color(0xFF3B82F6)),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+              );
+              _loadState();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.bluePrimary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Complete',
+                style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

@@ -252,7 +252,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 
   // 10. Student Current Profile
   if (path === 'students/me') {
-    const currentStudent = studentsList[0] || null;
+    let currentStudent = studentsList[0] || null;
+    if (authUser?.email) {
+      const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
+      if (found) currentStudent = found;
+    }
     return NextResponse.json({ student: currentStudent });
   }
 
@@ -757,7 +761,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
 
   // Update Student Profile
   if (path === 'students/me') {
-    const currentStudent = studentsList[0];
+    const authUser = getAuthUser(req);
+    let currentStudent = studentsList[0];
+    if (authUser?.email) {
+      const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
+      if (found) currentStudent = found;
+    }
     if (currentStudent) {
       Object.assign(currentStudent, body);
       return NextResponse.json({ success: true, student: currentStudent });
