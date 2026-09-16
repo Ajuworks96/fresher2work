@@ -62,6 +62,8 @@ import {
   FolderGit2,
   Code2,
   Trash2,
+  Key,
+  Copy,
 } from 'lucide-react';
 
 type NavTab = 'candidates' | 'placements' | 'dashboard' | 'recruiters' | 'ledger';
@@ -135,6 +137,18 @@ export default function SuperAdminSidebarPage() {
   // Security & Audit Logs Modal State
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+
+  // Super Admin Direct Password Reset / Set State
+  const [passwordTarget, setPasswordTarget] = useState<{
+    type: 'CANDIDATE' | 'RECRUITER';
+    id: string;
+    name: string;
+    email: string;
+  } | null>(null);
+  const [newTargetPassword, setNewTargetPassword] = useState('');
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState<string | null>(null);
+  const [copiedPassword, setCopiedPassword] = useState(false);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -715,6 +729,55 @@ export default function SuperAdminSidebarPage() {
       alert(err.message);
     } finally {
       setDeletingRecruiterId(null);
+    }
+  };
+
+  // Direct Password Set / Reset for Candidate or Recruiter
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passwordTarget || !newTargetPassword.trim()) return;
+    setSavingPassword(true);
+    setPasswordSuccessMessage(null);
+    try {
+      const endpoint =
+        passwordTarget.type === 'CANDIDATE'
+          ? `${apiUrl}/api/v1/admin/students/${passwordTarget.id}/password`
+          : `${apiUrl}/api/v1/admin/recruiters/${passwordTarget.id}/password`;
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newPassword: newTargetPassword.trim() }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to update password');
+      }
+
+      setPasswordSuccessMessage(`✓ Password successfully updated for ${passwordTarget.name}! New password: "${newTargetPassword.trim()}"`);
+      showToast(`✓ Password updated for ${passwordTarget.name}`);
+
+      // Optimistically update local candidate/recruiter state
+      if (passwordTarget.type === 'CANDIDATE') {
+        setStudents((prev) =>
+          prev.map((s) => (s.id === passwordTarget.id ? { ...s, password: newTargetPassword.trim() } : s))
+        );
+        if (inspectingCandidate && inspectingCandidate.id === passwordTarget.id) {
+          setInspectingCandidate((prev: any) => ({ ...prev, password: newTargetPassword.trim() }));
+        }
+      } else {
+        setRecruiters((prev) =>
+          prev.map((r) => (r.id === passwordTarget.id ? { ...r, password: newTargetPassword.trim() } : r))
+        );
+      }
+    } catch (err: any) {
+      alert(err.message || 'Error setting password');
+    } finally {
+      setSavingPassword(false);
     }
   };
 
@@ -1464,6 +1527,24 @@ export default function SuperAdminSidebarPage() {
                     Approve & Activate
                   </button>
                 )}
+                <button
+                  onClick={() => {
+                    setPasswordTarget({
+                      type: 'CANDIDATE',
+                      id: inspectingCandidate.id,
+                      name: inspectingCandidate.fullName || 'Candidate',
+                      email: inspectingCandidate.email || inspectingCandidate.user?.email || '',
+                    });
+                    setNewTargetPassword('');
+                    setPasswordSuccessMessage(null);
+                    setCopiedPassword(false);
+                  }}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                  title="Directly Set or Reset Candidate Password"
+                >
+                  <Key className="w-3.5 h-3.5 text-amber-600" />
+                  Password
+                </button>
                 <button
                   onClick={() => setInspectorTab('moderation')}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 text-xs font-bold transition-colors cursor-pointer"
@@ -2264,6 +2345,24 @@ export default function SuperAdminSidebarPage() {
                                   <Eye className="w-3.5 h-3.5" />
                                   Details
                                 </button>
+                                <button
+                                  onClick={() => {
+                                    setPasswordTarget({
+                                      type: 'CANDIDATE',
+                                      id: st.id,
+                                      name: st.fullName || 'Candidate',
+                                      email: st.email || st.user?.email || '',
+                                    });
+                                    setNewTargetPassword('');
+                                    setPasswordSuccessMessage(null);
+                                    setCopiedPassword(false);
+                                  }}
+                                  title="Set or Reset Candidate Password"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold text-xs shadow-2xs transition-colors cursor-pointer"
+                                >
+                                  <Key className="w-3.5 h-3.5 text-amber-600" />
+                                  Password
+                                </button>
                               </div>
                             </td>
                           </tr>
@@ -2833,6 +2932,23 @@ export default function SuperAdminSidebarPage() {
                                 <ArrowUpRight className="w-3 h-3 text-emerald-400" />
                               </button>
                               <button
+                                onClick={() => {
+                                  setPasswordTarget({
+                                    type: 'RECRUITER',
+                                    id: rec.id,
+                                    name: rec.fullName || rec.company?.name || rec.companyName || 'Recruiter',
+                                    email: rec.email || '',
+                                  });
+                                  setNewTargetPassword('');
+                                  setPasswordSuccessMessage(null);
+                                  setCopiedPassword(false);
+                                }}
+                                className="p-1.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 hover:text-amber-800 transition-colors cursor-pointer"
+                                title="Set / Reset Recruiter Password"
+                              >
+                                <Key className="w-3.5 h-3.5 text-amber-600" />
+                              </button>
+                              <button
                                 onClick={() => setEditingRecruiter(rec)}
                                 className="p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                                 title="Edit Recruiter Details"
@@ -3197,6 +3313,26 @@ export default function SuperAdminSidebarPage() {
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
+                  onClick={() => {
+                    const rec = editingRecruiter;
+                    setEditingRecruiter(null);
+                    setPasswordTarget({
+                      type: 'RECRUITER',
+                      id: rec.id,
+                      name: rec.fullName || rec.company?.name || 'Recruiter',
+                      email: rec.email || '',
+                    });
+                    setNewTargetPassword('');
+                    setPasswordSuccessMessage(null);
+                    setCopiedPassword(false);
+                  }}
+                  className="mr-auto inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs transition-colors cursor-pointer"
+                >
+                  <Key className="w-3.5 h-3.5 text-amber-600" />
+                  Set / Change Password
+                </button>
+                <button
+                  type="button"
                   onClick={() => setEditingRecruiter(null)}
                   className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold transition-colors cursor-pointer"
                 >
@@ -3401,6 +3537,166 @@ export default function SuperAdminSidebarPage() {
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* MODAL: SUPER ADMIN PASSWORD RESET & OVERRIDE                 */}
+      {/* ============================================================ */}
+      {passwordTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center font-black">
+                  <Key className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-slate-900">
+                    Set / Reset Password
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Super Admin Password Override
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setPasswordTarget(null);
+                  setPasswordSuccessMessage(null);
+                }}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">Account Type:</span>
+                <span className="font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-800">
+                  {passwordTarget.type === 'CANDIDATE' ? '🎓 Candidate' : '🏢 Recruiter'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">Name:</span>
+                <span className="font-bold text-slate-900">{passwordTarget.name}</span>
+              </div>
+              {passwordTarget.email && (
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium">Email:</span>
+                  <span className="font-mono text-slate-700">{passwordTarget.email}</span>
+                </div>
+              )}
+            </div>
+
+            {passwordSuccessMessage ? (
+              <div className="space-y-4 py-2">
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold">{passwordSuccessMessage}</p>
+                    <p className="mt-1 text-[11px] text-emerald-700">
+                      The user can now immediately log in with this new password.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">New Password</span>
+                    <span className="font-mono font-black text-slate-900 text-sm">{newTargetPassword}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(newTargetPassword);
+                      setCopiedPassword(true);
+                      setTimeout(() => setCopiedPassword(false), 2000);
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    {copiedPassword ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-slate-500" />
+                        Copy
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => {
+                      setPasswordTarget(null);
+                      setPasswordSuccessMessage(null);
+                    }}
+                    className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-700">
+                      New Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const randomPass = 'F2W@' + Math.random().toString(36).slice(-6) + '!';
+                        setNewTargetPassword(randomPass);
+                      }}
+                      className="text-[11px] text-amber-700 hover:text-amber-800 font-bold underline cursor-pointer"
+                    >
+                      🎲 Generate Random
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    minLength={4}
+                    placeholder="Enter new password (e.g. Talent@123)"
+                    value={newTargetPassword}
+                    onChange={(e) => setNewTargetPassword(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm font-mono"
+                  />
+                  <p className="text-[11px] text-slate-400">
+                    This password will be immediately active for their account.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPasswordTarget(null);
+                      setPasswordSuccessMessage(null);
+                    }}
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingPassword || !newTargetPassword.trim()}
+                    className="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    {savingPassword ? 'Updating...' : 'Set New Password'}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

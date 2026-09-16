@@ -103,6 +103,32 @@ class ApiService {
     return _parseResponse(response);
   }
 
+  static Future<Map<String, dynamic>> forgotPassword(String email) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/forgot-password'),
+      headers: await _headers(withAuth: false),
+      body: jsonEncode({'email': email.trim()}),
+    );
+    return _parseResponse(response);
+  }
+
+  static Future<Map<String, dynamic>> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/reset-password'),
+      headers: await _headers(withAuth: false),
+      body: jsonEncode({
+        'email': email.trim(),
+        'otp': otp.trim(),
+        'newPassword': newPassword,
+      }),
+    );
+    return _parseResponse(response);
+  }
+
   // ===========================================================================
   // STUDENT PROFILE & SKILLS PERSISTENCE
   // ===========================================================================
