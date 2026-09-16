@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
@@ -15,11 +16,27 @@ class ActivationScreen extends StatefulWidget {
 class _ActivationScreenState extends State<ActivationScreen> {
   bool _isActivated = false;
   bool _processing = false;
+  late Razorpay _razorpay;
+  String? _currentOrderId;
 
   @override
   void initState() {
     super.initState();
     _checkStatus();
+    _initRazorpay();
+  }
+
+  void _initRazorpay() {
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
   }
 
   Future<void> _checkStatus() async {
@@ -38,15 +55,12 @@ class _ActivationScreenState extends State<ActivationScreen> {
     }
   }
 
-  Future<void> _handlePayment() async {
-    setState(() => _processing = true);
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    final orderId = response.orderId ?? _currentOrderId ?? '';
+    final paymentId = response.paymentId ?? '';
+    final signature = response.signature ?? '';
+
     try {
-      final order = await ApiService.createPaymentOrder();
-      final orderId = order['orderId'] as String;
-
-      final paymentId = 'pay_${orderId.replaceAll('order_', '')}_test';
-      final signature = 'sig_mock_${orderId.replaceAll('order_', '')}_test';
-
       final result = await ApiService.verifyPayment(
         orderId: orderId,
         paymentId: paymentId,
@@ -64,7 +78,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: AppColors.success,
-              content: Text('✓ ₹99 Discovery Pass Activated! Verified by Backend HMAC.'),
+              content: Text('✓ ₹99 Discovery Pass Activated! Verified by Razorpay.'),
             ),
           );
 
@@ -79,6 +93,63 @@ class _ActivationScreenState extends State<ActivationScreen> {
       } else {
         throw Exception(result['error'] ?? 'Payment verification failed');
       }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _processing = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Payment verification error: $e'),
+          ),
+        );
+      }
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    if (mounted) {
+      setState(() => _processing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Payment cancelled / failed: ${response.message ?? 'Unknown error'}'),
+        ),
+      );
+    }
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // External wallet callback
+  }
+
+  Future<void> _handlePayment() async {
+    setState(() => _processing = true);
+    try {
+      final order = await ApiService.createPaymentOrder();
+      final orderId = order['orderId'] as String;
+      _currentOrderId = orderId;
+      final keyId = (order['keyId'] as String?) ?? 'rzp_test_TchOu7JRRpZS37';
+      final amount = order['amount'] ?? 9900;
+      final profile = order['profile'] as Map<String, dynamic>?;
+
+      var options = {
+        'key': keyId,
+        'amount': amount,
+        'name': 'Fresher2Work',
+        'description': 'Direct HR Matching - ₹99 Discovery Pass',
+        'order_id': orderId,
+        'timeout': 300,
+        'prefill': {
+          'contact': profile?['phone'] ?? '',
+          'email': profile?['email'] ?? '',
+          'name': profile?['name'] ?? '',
+        },
+        'theme': {
+          'color': '#2563EB',
+        },
+      };
+
+      _razorpay.open(options);
     } on ApiException catch (e) {
       if (mounted) {
         setState(() => _processing = false);
