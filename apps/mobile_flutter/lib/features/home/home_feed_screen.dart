@@ -81,83 +81,77 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Bar with Logo & Notifications (Inspired by Reference UI)
+              // Top Bar with Logo & Notifications (Clean, collision-free alignment)
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => widget.onNavigateTab(2),
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFFEFF6FF),
-                            border: Border.all(color: AppColors.bluePrimary, width: 2),
-                          ),
-                          child: _buildHomeAvatar(),
-                        ),
+                  GestureDetector(
+                    onTap: () => widget.onNavigateTab(2),
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFEFF6FF),
+                        border: Border.all(color: AppColors.bluePrimary, width: 2),
                       ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hi, Welcome Back! 👋',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 12,
-                              color: AppColors.textMuted,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            _candidateName.isNotEmpty ? _candidateName : 'Fresher Candidate',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      child: _buildHomeAvatar(),
+                    ),
                   ),
-
-                  // Notification Bell & Track Pill
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardBlue,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.bluePrimary.withValues(alpha: 0.2)),
-                        ),
-                        child: Text(
-                          currentDomain.shortTitle,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hi, Welcome Back! 👋',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11.5,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.bluePrimary,
+                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.borderSubtle),
+                        Text(
+                          _candidateName.isNotEmpty ? _candidateName : 'Fresher Candidate',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.textDark,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        child: const Center(
-                          child: Icon(Icons.notifications_none_rounded, size: 20, color: AppColors.textDark),
-                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBlue,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.bluePrimary.withValues(alpha: 0.2)),
+                    ),
+                    child: Text(
+                      currentDomain.shortTitle,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.bluePrimary,
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.borderSubtle),
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.notifications_none_rounded, size: 19, color: AppColors.textDark),
+                    ),
                   ),
                 ],
               ),
@@ -290,15 +284,35 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                       width: 76,
                       height: 84,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.rocket_launch_rounded,
-                          color: Colors.white,
-                          size: 38,
-                        ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const Icon(
+                            Icons.folder_special_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                          Positioned(
+                            right: 14,
+                            top: 18,
+                            child: Container(
+                              padding: const EdgeInsets.all(2.5),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF10B981),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -310,20 +324,30 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${currentDomain.shortTitle} Categories',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textDark,
+                  Expanded(
+                    child: Text(
+                      'Categories',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textDark,
+                      ),
                     ),
                   ),
-                  Text(
-                    '${displayProofs.length} Proofs Available',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.bluePrimary,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFDBEAFE)),
+                    ),
+                    child: Text(
+                      '${displayProofs.length} Proofs Available',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.bluePrimary,
+                      ),
                     ),
                   ),
                 ],

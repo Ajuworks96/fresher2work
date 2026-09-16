@@ -27,6 +27,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> _skills = [];
   String? _avatarUrl;
   String? _avatarLocalPath;
+  String? _coverUrl;
+  String? _coverLocalPath;
   bool _isLoading = true;
   bool _isSaving = false;
 
@@ -73,6 +75,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _portfolioController.text = (user['portfolioUrl'] as String?) ?? '';
     _avatarUrl = user['avatarUrl'] as String?;
     _avatarLocalPath = user['avatarLocalPath'] as String?;
+    _coverUrl = user['coverUrl'] as String?;
+    _coverLocalPath = user['coverLocalPath'] as String?;
 
     final savedSkills = user['skills'];
     if (savedSkills is List) {
@@ -104,6 +108,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
         if (_avatarUrl == null && st['avatarUrl'] != null) {
           _avatarUrl = st['avatarUrl'];
+        }
+        if (_coverUrl == null && st['coverUrl'] != null) {
+          _coverUrl = st['coverUrl'];
         }
       }
     } catch (_) {}
@@ -302,6 +309,233 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  final List<Map<String, String>> _presetCovers = [
+    {'name': 'Royal Blue', 'path': 'assets/images/cover_default.png'},
+    {'name': 'Tech Mesh', 'path': 'assets/images/cover_tech.png'},
+    {'name': 'Career Path', 'path': 'assets/images/welcome_bg.jpg'},
+  ];
+
+  Widget _buildCoverPreviewWidget() {
+    if (_coverLocalPath != null && File(_coverLocalPath!).existsSync()) {
+      return Image.file(
+        File(_coverLocalPath!),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 100,
+      );
+    }
+    if (_coverUrl != null && _coverUrl!.isNotEmpty) {
+      if (_coverUrl!.startsWith('assets/')) {
+        return Image.asset(
+          _coverUrl!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 100,
+        );
+      }
+      return Image.network(
+        _coverUrl!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 100,
+        errorBuilder: (context, error, stackTrace) => Image.asset(
+          'assets/images/cover_default.png',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 100,
+        ),
+      );
+    }
+    return Image.asset(
+      'assets/images/cover_default.png',
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: 100,
+    );
+  }
+
+  void _showCoverPickerSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E8F0),
+                    borderRadius: BorderRadius.circular(2.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Background Cover Photo',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Upload a photo from your gallery or choose a preset background cover.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Option 1: Upload from Gallery
+              InkWell(
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  try {
+                    final res = await FilePicker.platform.pickFiles(type: FileType.image);
+                    if (res != null && res.files.single.path != null) {
+                      setState(() {
+                        _coverLocalPath = res.files.single.path;
+                        _coverUrl = null;
+                      });
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to pick cover: $e')),
+                      );
+                    }
+                  }
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFDBEAFE)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.bluePrimary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.add_photo_alternate_rounded,
+                            color: Colors.white, size: 20),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Choose from Gallery / Photos',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                            Text(
+                              'Select any wallpaper or banner from device',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios_rounded,
+                          size: 14, color: AppColors.bluePrimary),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              Text(
+                'Or Select a Curated Banner',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Row(
+                children: _presetCovers.map((preset) {
+                  final assetPath = preset['path']!;
+                  final label = preset['name']!;
+                  final isSelected = _coverUrl == assetPath;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        setState(() {
+                          _coverUrl = assetPath;
+                          _coverLocalPath = null;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 52,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isSelected ? AppColors.bluePrimary : const Color(0xFFE2E8F0),
+                                  width: isSelected ? 2.5 : 1,
+                                ),
+                                image: DecorationImage(
+                                  image: AssetImage(assetPath),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              label,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _handleSaveProfile() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -331,6 +565,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (_avatarUrl != null) {
         user['avatarUrl'] = _avatarUrl;
       }
+      if (_coverLocalPath != null) {
+        user['coverLocalPath'] = _coverLocalPath;
+      }
+      if (_coverUrl != null) {
+        user['coverUrl'] = _coverUrl;
+      }
       await StorageService.saveUser(user);
 
       // 2. Update remote API
@@ -342,6 +582,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'phone': phone,
           'portfolioUrl': portfolioUrl,
           if (_avatarUrl != null) 'avatarUrl': _avatarUrl,
+          if (_coverUrl != null) 'coverUrl': _coverUrl,
         });
 
         if (_skills.isNotEmpty) {
@@ -501,6 +742,71 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Background Cover Photo Option
+              _buildSectionHeader('Profile Background Cover'),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: _showCoverPickerSheet,
+                child: Container(
+                  width: double.infinity,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFDBEAFE), width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _buildCoverPreviewWidget(),
+                        Container(
+                          color: Colors.black.withValues(alpha: 0.3),
+                        ),
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.camera_alt_rounded, size: 16, color: AppColors.bluePrimary),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Change Background Cover',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.bluePrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 24),

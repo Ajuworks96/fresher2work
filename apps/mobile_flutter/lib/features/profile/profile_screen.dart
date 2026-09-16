@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _portfolioUrl = '';
   String? _avatarUrl;
   String? _avatarLocalPath;
+  String? _coverUrl;
+  String? _coverLocalPath;
   List<String> _skills = [];
 
   int _activeTabIndex = 0; // 0: About, 1: Proof Works, 2: Portfolio Links, 3: Resume
@@ -56,6 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String portfolio = (user['portfolioUrl'] as String?) ?? '';
     String? avUrl = user['avatarUrl'] as String?;
     String? avLocal = user['avatarLocalPath'] as String?;
+    String? cvUrl = user['coverUrl'] as String?;
+    String? cvLocal = user['coverLocalPath'] as String?;
     List<String> loadedSkills = [];
     if (user['skills'] is List) {
       loadedSkills = (user['skills'] as List).map((e) => e.toString()).toList();
@@ -85,6 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
       }
+      if (st['coverUrl'] != null && (st['coverUrl'] as String).isNotEmpty) {
+        cvUrl = st['coverUrl'];
+      }
 
       if (mounted) {
         setState(() {
@@ -96,6 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _portfolioUrl = portfolio;
           _avatarUrl = avUrl;
           _avatarLocalPath = avLocal;
+          _coverUrl = cvUrl;
+          _coverLocalPath = cvLocal;
           _skills = loadedSkills.isNotEmpty
               ? loadedSkills
               : DomainConstants.getDomainById(domain).skills;
@@ -115,6 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _portfolioUrl = portfolio;
           _avatarUrl = avUrl;
           _avatarLocalPath = avLocal;
+          _coverUrl = cvUrl;
+          _coverLocalPath = cvLocal;
           _skills = loadedSkills.isNotEmpty
               ? loadedSkills
               : DomainConstants.getDomainById(domain).skills;
@@ -187,6 +199,265 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _buildCoverWidget() {
+    if (_coverLocalPath != null && File(_coverLocalPath!).existsSync()) {
+      return Image.file(
+        File(_coverLocalPath!),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 210,
+      );
+    }
+    if (_coverUrl != null && _coverUrl!.isNotEmpty) {
+      if (_coverUrl!.startsWith('assets/')) {
+        return Image.asset(
+          _coverUrl!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 210,
+        );
+      }
+      return Image.network(
+        _coverUrl!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 210,
+        errorBuilder: (context, error, stackTrace) => Image.asset(
+          'assets/images/cover_default.png',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 210,
+        ),
+      );
+    }
+    return Image.asset(
+      'assets/images/cover_default.png',
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: 210,
+      errorBuilder: (context, error, stackTrace) => Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1E3A8A), Color(0xFF2563EB), Color(0xFF3B82F6)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCoverPresetItem(BuildContext ctx, String assetPath, String label) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () async {
+          Navigator.pop(ctx);
+          setState(() {
+            _coverUrl = assetPath;
+            _coverLocalPath = null;
+          });
+          final user = await StorageService.getUser() ?? {};
+          user['coverUrl'] = assetPath;
+          user.remove('coverLocalPath');
+          await StorageService.saveUser(user);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$label cover applied!'),
+                backgroundColor: const Color(0xFF10B981),
+              ),
+            );
+          }
+        },
+        child: Column(
+          children: [
+            Container(
+              height: 52,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: _coverUrl == assetPath
+                      ? AppColors.bluePrimary
+                      : const Color(0xFFE2E8F0),
+                  width: _coverUrl == assetPath ? 2.5 : 1,
+                ),
+                image: DecorationImage(
+                  image: AssetImage(assetPath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textDark,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showCoverPickerSheet() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E8F0),
+                    borderRadius: BorderRadius.circular(2.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Background Cover Photo',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Upload a photo from your gallery or choose a preset background cover.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Option 1: Upload from Gallery
+              InkWell(
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  try {
+                    final res = await FilePicker.platform.pickFiles(type: FileType.image);
+                    if (res != null && res.files.single.path != null) {
+                      final path = res.files.single.path!;
+                      setState(() {
+                        _coverLocalPath = path;
+                        _coverUrl = null;
+                      });
+                      final user = await StorageService.getUser() ?? {};
+                      user['coverLocalPath'] = path;
+                      user.remove('coverUrl');
+                      await StorageService.saveUser(user);
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Background cover updated!'),
+                            backgroundColor: Color(0xFF10B981),
+                          ),
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to pick cover: $e')),
+                      );
+                    }
+                  }
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFDBEAFE)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.bluePrimary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.add_photo_alternate_rounded,
+                            color: Colors.white, size: 20),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Choose from Gallery / Photos',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                            Text(
+                              'Select any wallpaper or banner from device',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios_rounded,
+                          size: 14, color: AppColors.bluePrimary),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              Text(
+                'Or Select a Curated Banner',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  _buildCoverPresetItem(ctx, 'assets/images/cover_default.png', 'Royal Blue'),
+                  const SizedBox(width: 10),
+                  _buildCoverPresetItem(ctx, 'assets/images/cover_tech.png', 'Tech Mesh'),
+                  const SizedBox(width: 10),
+                  _buildCoverPresetItem(ctx, 'assets/images/welcome_bg.jpg', 'Career Path'),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   bool get _isProfileIncomplete {
     return _candidateFullName.isEmpty ||
         _aboutText.isEmpty ||
@@ -206,23 +477,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 1. Premium Hero Header Banner with Gradient
+            // 1. Premium Hero Header Banner with Background Cover Photo
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
-                  height: 200,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF1E3A8A),
-                        Color(0xFF2563EB),
-                        Color(0xFF3B82F6),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                  height: 210,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      _buildCoverWidget(),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withValues(alpha: 0.45),
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.5),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -358,6 +637,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+
+                // Change Cover Photo Pill Button
+                Positioned(
+                  bottom: 12,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: _showCoverPickerSheet,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.65),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Edit Cover',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
