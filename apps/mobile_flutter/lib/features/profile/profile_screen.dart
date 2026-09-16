@@ -69,9 +69,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cachedActivated = await StorageService.isActivated();
     bool activated = cachedActivated;
 
+    // Immediately display saved local profile data without blocking on network
+    if (mounted) {
+      setState(() {
+        _currentDomainId = domain;
+        _candidateFullName = name;
+        _userRoleTitle = role;
+        _aboutText = about;
+        _phoneNumber = phone;
+        _portfolioUrl = portfolio;
+        _avatarUrl = avUrl;
+        _avatarLocalPath = avLocal;
+        _coverUrl = cvUrl;
+        _coverLocalPath = cvLocal;
+        _skills = loadedSkills.isNotEmpty
+            ? loadedSkills
+            : DomainConstants.getDomainById(domain).skills;
+        _isActivated = activated;
+        _storedProofs = proofs;
+      });
+    }
+
     try {
       final profile = await ApiService.getStudentProfile();
-      final st = profile['student'] ?? profile;
+      final st = profile['student'] ?? profile['profile'] ?? profile;
       final serverActivated = profile['activation']?['isActivated'] == true ||
           profile['isActivated'] == true ||
           st['isActivated'] == true ||
@@ -84,27 +105,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await StorageService.setActivated(true);
       }
 
-      if (st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
+      // ONLY fill in from server if local field is empty (preserves user customizations)
+      if (name.isEmpty && st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
         name = st['fullName'];
       }
-      if (st['headline'] != null && (st['headline'] as String).isNotEmpty) {
+      if (role.isEmpty && st['headline'] != null && (st['headline'] as String).isNotEmpty) {
         role = st['headline'];
       }
-      if (st['about'] != null && (st['about'] as String).isNotEmpty) {
+      if (about.isEmpty && st['about'] != null && (st['about'] as String).isNotEmpty) {
         about = st['about'];
       }
-      if (st['phone'] != null && (st['phone'] as String).isNotEmpty) {
+      if (phone.isEmpty && st['phone'] != null && (st['phone'] as String).isNotEmpty) {
         phone = st['phone'];
       }
-      if (st['portfolioUrl'] != null && (st['portfolioUrl'] as String).isNotEmpty) {
+      if (portfolio.isEmpty && st['portfolioUrl'] != null && (st['portfolioUrl'] as String).isNotEmpty) {
         portfolio = st['portfolioUrl'];
       }
-      if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
+      if (avUrl == null && avLocal == null && st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
       }
-      if (st['coverUrl'] != null && (st['coverUrl'] as String).isNotEmpty) {
+      if (cvUrl == null && cvLocal == null && st['coverUrl'] != null && (st['coverUrl'] as String).isNotEmpty) {
         cvUrl = st['coverUrl'];
       }
+
+      // Sync user profile to backend in background if backend has default or stale data
+      if (name.isNotEmpty && name != st['fullName']) {
+        ApiService.updateStudentProfile({
+          'fullName': name,
+          'headline': role,
+          'about': about,
+          'phone': phone,
+          'portfolioUrl': portfolio,
+          'avatarUrl': ?avUrl,
+          'coverUrl': ?cvUrl,
+        }).catchError((_) => <String, dynamic>{});
+      }
+
+      await StorageService.saveUser({
+        'fullName': name,
+        'headline': role,
+        'roleTitle': role,
+        'about': about,
+        'phone': phone,
+        'portfolioUrl': portfolio,
+        'avatarUrl': ?avUrl,
+        'coverUrl': ?cvUrl,
+      });
 
       if (mounted) {
         setState(() {

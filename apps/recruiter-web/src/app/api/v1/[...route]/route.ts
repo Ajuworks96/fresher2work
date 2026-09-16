@@ -243,18 +243,23 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
   // 2. Admin Students
   if (path === 'admin/students') {
     const list = studentsList.map((s) => {
+      const override =
+        (s.id && globalStore.__ftw_student_profile_overrides?.[s.id]) ||
+        (s.email && globalStore.__ftw_student_profile_overrides?.[s.email.toLowerCase()]) ||
+        (s.id === 'student-arjun-quadcubes-01' ? globalStore.__ftw_student_profile_overrides?.['default'] : null);
+      const st = override ? { ...s, ...override } : s;
       const isAct = Boolean(
-        s.isActivated === true ||
-        (s.id && globalStore.__ftw_activations?.[s.id]) ||
-        (s.userId && globalStore.__ftw_activations?.[s.userId]) ||
-        (s.email && globalStore.__ftw_activations?.[s.email.toLowerCase()]) ||
-        s.verificationStatus === 'VERIFIED'
+        st.isActivated === true ||
+        (st.id && globalStore.__ftw_activations?.[st.id]) ||
+        (st.userId && globalStore.__ftw_activations?.[st.userId]) ||
+        (st.email && globalStore.__ftw_activations?.[st.email.toLowerCase()]) ||
+        st.verificationStatus === 'VERIFIED'
       );
       return {
-        ...s,
+        ...st,
         isActivated: isAct,
-        verificationStatus: isAct ? 'VERIFIED' : (s.verificationStatus || 'READY'),
-        moderationStatus: isAct ? 'APPROVED' : (s.moderationStatus || 'APPROVED'),
+        verificationStatus: isAct ? 'VERIFIED' : (st.verificationStatus || 'READY'),
+        moderationStatus: isAct ? 'APPROVED' : (st.moderationStatus || 'APPROVED'),
       };
     });
     return NextResponse.json({ students: list });
@@ -346,6 +351,17 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
       if (found) currentStudent = found;
     }
+
+    if (currentStudent) {
+      const override =
+        (currentStudent.id && globalStore.__ftw_student_profile_overrides?.[currentStudent.id]) ||
+        (currentStudent.email && globalStore.__ftw_student_profile_overrides?.[currentStudent.email.toLowerCase()]) ||
+        globalStore.__ftw_student_profile_overrides?.['default'];
+      if (override) {
+        Object.assign(currentStudent, override);
+      }
+    }
+
     const isAct = Boolean(
       currentStudent?.isActivated === true ||
       (currentStudent?.id && globalStore.__ftw_activations?.[currentStudent.id]) ||
@@ -364,7 +380,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       : null;
 
     return NextResponse.json({
+      success: true,
       student: enrichedStudent,
+      profile: enrichedStudent,
+      completeness: {
+        score: enrichedStudent?.completenessScore || 85,
+        canActivate: true,
+        missingFields: [],
+      },
       isActivated: isAct,
       verificationStatus: isAct ? 'VERIFIED' : (currentStudent?.verificationStatus ?? 'READY'),
       activation: {
@@ -1048,11 +1071,42 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
       const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
       if (found) currentStudent = found;
     }
+
+    if (!globalStore.__ftw_student_profile_overrides) {
+      globalStore.__ftw_student_profile_overrides = {};
+    }
+
     if (currentStudent) {
       Object.assign(currentStudent, body);
-      return NextResponse.json({ success: true, student: currentStudent });
+      if (currentStudent.id) {
+        globalStore.__ftw_student_profile_overrides[currentStudent.id] = {
+          ...(globalStore.__ftw_student_profile_overrides[currentStudent.id] || {}),
+          ...body,
+        };
+      }
+      if (currentStudent.email) {
+        globalStore.__ftw_student_profile_overrides[currentStudent.email.toLowerCase()] = {
+          ...(globalStore.__ftw_student_profile_overrides[currentStudent.email.toLowerCase()] || {}),
+          ...body,
+        };
+      }
+      globalStore.__ftw_student_profile_overrides['default'] = {
+        ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
+        ...body,
+      };
+
+      return NextResponse.json({
+        success: true,
+        student: currentStudent,
+        profile: currentStudent,
+      });
     }
-    return NextResponse.json({ success: true, student: body });
+
+    globalStore.__ftw_student_profile_overrides['default'] = {
+      ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
+      ...body,
+    };
+    return NextResponse.json({ success: true, student: body, profile: body });
   }
 
   // Update Skills
@@ -1060,7 +1114,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
     const currentStudent = studentsList[0];
     if (currentStudent) {
       currentStudent.skills = body.skills || [];
-      return NextResponse.json({ success: true, skills: currentStudent.skills });
+      if (!globalStore.__ftw_student_profile_overrides) globalStore.__ftw_student_profile_overrides = {};
+      globalStore.__ftw_student_profile_overrides['default'] = {
+        ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
+        skills: currentStudent.skills,
+      };
+      return NextResponse.json({
+        success: true,
+        skills: currentStudent.skills,
+        student: currentStudent,
+        profile: currentStudent,
+      });
     }
     return NextResponse.json({ success: true, skills: body.skills || [] });
   }
@@ -1070,7 +1134,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
     const currentStudent = studentsList[0];
     if (currentStudent) {
       currentStudent.preferences = body;
-      return NextResponse.json({ success: true, preferences: currentStudent.preferences });
+      if (!globalStore.__ftw_student_profile_overrides) globalStore.__ftw_student_profile_overrides = {};
+      globalStore.__ftw_student_profile_overrides['default'] = {
+        ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
+        preferences: currentStudent.preferences,
+      };
+      return NextResponse.json({
+        success: true,
+        preferences: currentStudent.preferences,
+        student: currentStudent,
+        profile: currentStudent,
+      });
     }
     return NextResponse.json({ success: true, preferences: body });
   }

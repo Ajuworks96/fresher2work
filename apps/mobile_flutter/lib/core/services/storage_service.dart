@@ -55,7 +55,9 @@ class StorageService {
 
   static Future<void> saveUser(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_userKey, jsonEncode(userData));
+    final existing = await getUser() ?? {};
+    final merged = Map<String, dynamic>.from(existing)..addAll(userData);
+    await prefs.setString(_userKey, jsonEncode(merged));
   }
 
   static Future<Map<String, dynamic>?> getUser() async {

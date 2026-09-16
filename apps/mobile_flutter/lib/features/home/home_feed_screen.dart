@@ -49,13 +49,24 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
     bool isAct = await StorageService.isActivated();
 
+    if (mounted) {
+      setState(() {
+        _currentDomainId = domain;
+        _candidateName = name;
+        _avatarUrl = avUrl;
+        _avatarLocalPath = avLocal;
+        _storedProofs = proofs;
+        _isActivated = isAct;
+      });
+    }
+
     try {
       final profile = await ApiService.getStudentProfile();
-      final st = profile['student'] ?? profile;
-      if (st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
+      final st = profile['student'] ?? profile['profile'] ?? profile;
+      if (name.isEmpty && st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
         name = st['fullName'];
       }
-      if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
+      if (avUrl == null && avLocal == null && st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
       }
       if (st['isActivated'] == true ||
