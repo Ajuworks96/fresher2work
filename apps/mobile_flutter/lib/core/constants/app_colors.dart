@@ -29,6 +29,7 @@ class AppColors {
   static const Color borderLight = Color(0xFFCBD5E1);
 
   // Status Colors
+  static const Color primaryGreen = Color(0xFF10B981);
   static const Color success = Color(0xFF10B981);
   static const Color successBg = Color(0xFFECFDF5);
   static const Color successBorder = Color(0xFFA7F3D0);

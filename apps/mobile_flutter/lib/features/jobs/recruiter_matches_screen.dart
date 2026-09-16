@@ -213,6 +213,7 @@ class _RecruiterMatchesScreenState extends State<RecruiterMatchesScreen> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildJobCard({
     required String companyName,
     required IconData logoIcon,
