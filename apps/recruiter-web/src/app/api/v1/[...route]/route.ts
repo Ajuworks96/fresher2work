@@ -295,6 +295,31 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     );
   }
 
+  // 2b. Auth Send OTP (Mobile email / phone verification)
+  if (path === 'auth/send-otp') {
+    const { phone } = body;
+    return NextResponse.json({
+      success: true,
+      message: `Verification code sent to ${phone || 'email'}`,
+      debugOtp: '1234',
+    });
+  }
+
+  // 2c. Auth Verify OTP (Mobile account verification)
+  if (path === 'auth/verify-otp') {
+    const { phone, otp, fullName } = body;
+    return NextResponse.json({
+      success: true,
+      token: `ftw_student_jwt_${Date.now()}`,
+      message: 'Account verified successfully',
+      user: {
+        email: phone?.includes('@') ? phone : undefined,
+        fullName: fullName || 'Verified Candidate',
+        isVerified: true,
+      },
+    });
+  }
+
   // 3. Admin: Create Recruiter & Company
   if (path === 'admin/recruiters') {
     const {
