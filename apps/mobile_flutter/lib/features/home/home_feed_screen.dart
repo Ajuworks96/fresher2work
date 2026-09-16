@@ -58,7 +58,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
       }
-      if (st['isActivated'] == true || profile['activation']?['isActivated'] == true) {
+      if (st['isActivated'] == true ||
+          profile['activation']?['isActivated'] == true ||
+          profile['isActivated'] == true ||
+          profile['verificationStatus'] == 'VERIFIED' ||
+          st['verificationStatus'] == 'VERIFIED' ||
+          st['moderationStatus'] == 'APPROVED') {
         isAct = true;
         await StorageService.setActivated(true);
       }
@@ -84,9 +89,13 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: Column(
+        child: RefreshIndicator(
+          onRefresh: _loadState,
+          color: AppColors.bluePrimary,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Bar with Logo & Notifications (Clean, collision-free alignment)
@@ -475,6 +484,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
               const SizedBox(height: 24),
             ],
           ),
+        ),
         ),
       ),
     );

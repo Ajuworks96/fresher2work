@@ -42,10 +42,16 @@ class _ActivationScreenState extends State<ActivationScreen> {
   Future<void> _checkStatus() async {
     try {
       final profile = await ApiService.getStudentProfile();
+      final st = profile['student'] ?? profile;
       final isAct = profile['activation']?['isActivated'] == true ||
           profile['isActivated'] == true ||
-          profile['student']?['isActivated'] == true;
-      await StorageService.setActivated(isAct);
+          st['isActivated'] == true ||
+          profile['verificationStatus'] == 'VERIFIED' ||
+          st['verificationStatus'] == 'VERIFIED' ||
+          st['moderationStatus'] == 'APPROVED';
+      if (isAct) {
+        await StorageService.setActivated(true);
+      }
       if (mounted) {
         setState(() => _isActivated = isAct);
         if (isAct) {

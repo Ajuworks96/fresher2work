@@ -8,9 +8,10 @@
     "phone": "+918921658090",
     "headline": "Digital Marketing Specialist",
     "about": "Specialized in Digital Marketing, SEO, and Brand Growth.",
-    "isActivated": false,
-    "completenessScore": 50,
+    "isActivated": true,
+    "verificationStatus": "VERIFIED",
     "moderationStatus": "APPROVED",
+    "completenessScore": 85,
     "createdAt": "2026-09-16T10:00:00.000Z",
     "education": [],
     "skills": [

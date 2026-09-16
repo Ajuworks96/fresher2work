@@ -38,6 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
         if (res['user'] != null) {
           await StorageService.saveUser(res['user']);
         }
+        final st = res['student'];
+        if (res['isActivated'] == true ||
+            st?['isActivated'] == true ||
+            st?['verificationStatus'] == 'VERIFIED' ||
+            st?['moderationStatus'] == 'APPROVED') {
+          await StorageService.setActivated(true);
+        }
       }
       setState(() => _loading = false);
 

@@ -66,12 +66,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       loadedSkills = (user['skills'] as List).map((e) => e.toString()).toList();
     }
 
+    final cachedActivated = await StorageService.isActivated();
+    bool activated = cachedActivated;
+
     try {
       final profile = await ApiService.getStudentProfile();
-      final activated = profile['activation']?['isActivated'] == true ||
-          profile['isActivated'] == true ||
-          profile['student']?['isActivated'] == true;
       final st = profile['student'] ?? profile;
+      final serverActivated = profile['activation']?['isActivated'] == true ||
+          profile['isActivated'] == true ||
+          st['isActivated'] == true ||
+          profile['verificationStatus'] == 'VERIFIED' ||
+          st['verificationStatus'] == 'VERIFIED' ||
+          st['moderationStatus'] == 'APPROVED';
+
+      activated = serverActivated || cachedActivated;
+      if (activated) {
+        await StorageService.setActivated(true);
+      }
+
       if (st['fullName'] != null && (st['fullName'] as String).isNotEmpty) {
         name = st['fullName'];
       }
@@ -114,7 +126,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } catch (_) {
-      final activated = await StorageService.isActivated();
+      final localAct = await StorageService.isActivated();
+      activated = localAct || cachedActivated;
       if (mounted) {
         setState(() {
           _currentDomainId = domain;
@@ -474,8 +487,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: SingleChildScrollView(
-        child: Column(
+      body: RefreshIndicator(
+        onRefresh: _loadData,
+        color: AppColors.bluePrimary,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
           children: [
             // 1. Premium Hero Header Banner with Background Cover Photo
             Stack(
@@ -541,6 +558,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // Right Circle Action Buttons (Share & Logout)
                         Row(
                           children: [
+                            Container(
+                              width: 42,
+                              height: 42,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.sync_rounded,
+                                  size: 20,
+                                  color: AppColors.bluePrimary,
+                                ),
+                                tooltip: 'Sync Status',
+                                onPressed: () async {
+                                  await _loadData();
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(_isActivated
+                                          ? '✓ Candidate Verified & Active'
+                                          : 'Profile synced with server'),
+                                      duration: const Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
                             Container(
                               width: 42,
                               height: 42,
@@ -943,6 +998,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

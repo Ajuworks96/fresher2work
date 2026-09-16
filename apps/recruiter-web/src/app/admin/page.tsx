@@ -233,7 +233,18 @@ export default function SuperAdminSidebarPage() {
 
       const studentList = resStudents.students || [];
       setAnalytics(resAnalytics);
-      setStudents(studentList);
+
+      // Merge server student response with browser-persisted overrides
+      const localStudentOverrides: Record<string, any> = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_student_overrides') || '{}'); } catch (_) { return {}; }
+      })();
+
+      const mergedStudents = studentList.map((st: any) => {
+        const override = localStudentOverrides[st.id] || (st.email ? localStudentOverrides[st.email.toLowerCase()] : null);
+        return override ? { ...st, ...override } : st;
+      });
+
+      setStudents(mergedStudents);
 
       // Merge server response with browser-cached newly created recruiters
       const localRecs: any[] = (() => {
@@ -276,19 +287,65 @@ export default function SuperAdminSidebarPage() {
   const handleModerateStudent = async (studentId: string, status: string, isActivated?: boolean, moderationNotes?: string | null) => {
     setModeratingId(studentId);
     try {
+      const isApproved = status === 'VERIFIED' || status === 'APPROVED' || isActivated === true;
+      const targetStatus = isApproved ? 'VERIFIED' : status;
+      const targetActivated = isApproved ? true : (isActivated ?? false);
+
+      // 1. Immediately persist to localStorage for zero-latency local durability
+      const currentOverrides: Record<string, any> = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_student_overrides') || '{}'); } catch (_) { return {}; }
+      })();
+      currentOverrides[studentId] = {
+        verificationStatus: targetStatus,
+        moderationStatus: isApproved ? 'APPROVED' : status,
+        isActivated: targetActivated,
+        moderationNotes: moderationNotes ?? null,
+      };
+      localStorage.setItem('ftw_admin_student_overrides', JSON.stringify(currentOverrides));
+
+      // 2. Immediately update state so UI switches instantly
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.id === studentId
+            ? {
+                ...s,
+                verificationStatus: targetStatus,
+                moderationStatus: isApproved ? 'APPROVED' : status,
+                isActivated: targetActivated,
+                moderationNotes: moderationNotes ?? null,
+              }
+            : s
+        )
+      );
+
+      // 3. Update modal state if open
+      setInspectingCandidate((prev: any) =>
+        prev && prev.id === studentId
+          ? {
+              ...prev,
+              verificationStatus: targetStatus,
+              moderationStatus: isApproved ? 'APPROVED' : status,
+              isActivated: targetActivated,
+              moderationNotes: moderationNotes ?? null,
+            }
+          : prev
+      );
+
+      showToast(targetActivated ? '✓ Candidate Activated & Verified' : `Candidate status: ${status}`);
+
+      // 4. Send API request
       const res = await fetch(`${apiUrl}/api/v1/admin/students/${studentId}/moderate`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status, isActivated, moderationNotes }),
+        body: JSON.stringify({ status: targetStatus, isActivated: targetActivated, moderationNotes }),
       });
       if (!res.ok) throw new Error('Action failed');
-      showToast(`Candidate status updated: ${status}`);
       await fetchAdminData();
     } catch (err: any) {
-      alert(err.message);
+      showToast(`⚠️ ${err.message}`);
     } finally {
       setModeratingId(null);
     }
@@ -1226,14 +1283,26 @@ export default function SuperAdminSidebarPage() {
                     Public Web Profile ↗
                   </Link>
                 )}
-                <button
-                  onClick={() => handleModerateStudent(inspectingCandidate.id, 'VERIFIED', true)}
-                  disabled={moderatingId === inspectingCandidate.id}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  Approve & Activate
-                </button>
+                {inspectingCandidate.isActivated ? (
+                  <button
+                    onClick={() => handleModerateStudent(inspectingCandidate.id, 'PENDING', false)}
+                    disabled={moderatingId === inspectingCandidate.id}
+                    title="Candidate is active. Click to deactivate/set pending."
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 border border-emerald-300 text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    ✓ Active & Verified
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleModerateStudent(inspectingCandidate.id, 'VERIFIED', true)}
+                    disabled={moderatingId === inspectingCandidate.id}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    Approve & Activate
+                  </button>
+                )}
                 <button
                   onClick={() => setInspectorTab('moderation')}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 text-xs font-bold transition-colors cursor-pointer"
@@ -2002,16 +2071,39 @@ export default function SuperAdminSidebarPage() {
 
                             {/* Actions */}
                             <td className="px-4 py-3.5 text-right">
-                              <button
-                                onClick={() => {
-                                  setInspectingCandidate(st);
-                                  setInspectorTab(st.isPlaced ? 'placement' : 'overview');
-                                }}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
-                              >
-                                <Eye className="w-3.5 h-3.5" />
-                                View Details
-                              </button>
+                              <div className="inline-flex items-center gap-1.5 justify-end">
+                                {st.isActivated ? (
+                                  <button
+                                    onClick={() => handleModerateStudent(st.id, 'PENDING', false)}
+                                    disabled={moderatingId === st.id}
+                                    title="Candidate is active. Click to deactivate/revoke pass."
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold text-[11px] shadow-2xs transition-colors cursor-pointer"
+                                  >
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                    Active
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleModerateStudent(st.id, 'VERIFIED', true)}
+                                    disabled={moderatingId === st.id}
+                                    title="Click to instantly approve & activate candidate"
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                                  >
+                                    <Zap className="w-3.5 h-3.5" />
+                                    Activate
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    setInspectingCandidate(st);
+                                    setInspectorTab(st.isPlaced ? 'placement' : 'overview');
+                                  }}
+                                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                  Details
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );

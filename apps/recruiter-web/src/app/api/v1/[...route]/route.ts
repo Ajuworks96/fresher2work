@@ -160,18 +160,57 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 
   // 1. Admin Analytics
   if (path === 'admin/analytics') {
-    return NextResponse.json(platformData.analytics || {
-      totalCandidates: studentsList.length,
-      verifiedCandidates: studentsList.filter((s) => s.verificationStatus === 'VERIFIED').length,
-      placedCount: studentsList.filter((s) => s.isHired).length,
-      totalRevenue: 0,
+    const list = studentsList.map((s) => {
+      const isAct = Boolean(
+        s.isActivated === true ||
+        (s.id && globalStore.__ftw_activations?.[s.id]) ||
+        (s.userId && globalStore.__ftw_activations?.[s.userId]) ||
+        (s.email && globalStore.__ftw_activations?.[s.email.toLowerCase()]) ||
+        s.verificationStatus === 'VERIFIED'
+      );
+      return {
+        ...s,
+        isActivated: isAct,
+        verificationStatus: isAct ? 'VERIFIED' : (s.verificationStatus || 'READY'),
+      };
+    });
+    const verifiedCount = list.filter((s) => s.verificationStatus === 'VERIFIED').length;
+    const activatedCount = list.filter((s) => s.isActivated).length;
+
+    return NextResponse.json({
+      ...(platformData.analytics || {}),
+      metrics: {
+        ...(platformData.analytics?.metrics || {}),
+        totalStudents: list.length,
+        activatedStudents: activatedCount,
+        activationRatePercent: list.length > 0 ? Math.round((activatedCount / list.length) * 100) : 0,
+      },
+      totalCandidates: list.length,
+      verifiedCandidates: verifiedCount,
+      placedCount: list.filter((s) => s.isHired).length,
+      totalRevenue: platformData.analytics?.metrics?.totalRevenueInRupees || 0,
       activeRecruiters: platformData.recruiters?.length || 0,
     });
   }
 
   // 2. Admin Students
   if (path === 'admin/students') {
-    return NextResponse.json({ students: studentsList });
+    const list = studentsList.map((s) => {
+      const isAct = Boolean(
+        s.isActivated === true ||
+        (s.id && globalStore.__ftw_activations?.[s.id]) ||
+        (s.userId && globalStore.__ftw_activations?.[s.userId]) ||
+        (s.email && globalStore.__ftw_activations?.[s.email.toLowerCase()]) ||
+        s.verificationStatus === 'VERIFIED'
+      );
+      return {
+        ...s,
+        isActivated: isAct,
+        verificationStatus: isAct ? 'VERIFIED' : (s.verificationStatus || 'READY'),
+        moderationStatus: isAct ? 'APPROVED' : (s.moderationStatus || 'APPROVED'),
+      };
+    });
+    return NextResponse.json({ students: list });
   }
 
   // 3. Admin Companies
@@ -257,13 +296,30 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
       if (found) currentStudent = found;
     }
+    const isAct = Boolean(
+      currentStudent?.isActivated === true ||
+      (currentStudent?.id && globalStore.__ftw_activations?.[currentStudent.id]) ||
+      (currentStudent?.userId && globalStore.__ftw_activations?.[currentStudent.userId]) ||
+      (currentStudent?.email && globalStore.__ftw_activations?.[currentStudent.email.toLowerCase()]) ||
+      currentStudent?.verificationStatus === 'VERIFIED'
+    );
+
+    const enrichedStudent = currentStudent
+      ? {
+          ...currentStudent,
+          isActivated: isAct,
+          verificationStatus: isAct ? 'VERIFIED' : (currentStudent.verificationStatus || 'READY'),
+          moderationStatus: isAct ? 'APPROVED' : (currentStudent.moderationStatus || 'APPROVED'),
+        }
+      : null;
+
     return NextResponse.json({
-      student: currentStudent,
-      isActivated: currentStudent?.isActivated ?? false,
-      verificationStatus: currentStudent?.verificationStatus ?? 'READY',
+      student: enrichedStudent,
+      isActivated: isAct,
+      verificationStatus: isAct ? 'VERIFIED' : (currentStudent?.verificationStatus ?? 'READY'),
       activation: {
-        isActivated: currentStudent?.isActivated ?? false,
-        activatedAt: currentStudent?.isActivated ? new Date().toISOString() : null,
+        isActivated: isAct,
+        activatedAt: isAct ? (currentStudent?.activatedAt || new Date().toISOString()) : null,
       },
     });
   }
@@ -787,12 +843,59 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
   // 1. Moderate Student: admin/students/:id/moderate
   if (path.includes('admin/students/') && path.includes('/moderate')) {
     const studentId = path.split('/')[2];
-    const student = studentsList.find((s) => s.id === studentId);
+    const student = studentsList.find((s) => s.id === studentId || s.userId === studentId);
     if (!student) return NextResponse.json({ error: 'Student not found' }, { status: 404 });
 
-    if (body.status) student.moderationStatus = body.status;
-    if (typeof body.isActivated === 'boolean') student.isActivated = body.isActivated;
-    if (body.moderationNotes !== undefined) student.moderationNotes = body.moderationNotes;
+    const isApprove = body.status === 'VERIFIED' || body.status === 'APPROVED' || body.isActivated === true;
+    const isReject = body.status === 'REJECTED';
+
+    if (isApprove) {
+      student.moderationStatus = 'APPROVED';
+      student.verificationStatus = 'VERIFIED';
+      student.isActivated = true;
+    } else if (isReject) {
+      student.moderationStatus = 'REJECTED';
+      student.verificationStatus = 'REJECTED';
+      student.isActivated = false;
+    } else if (body.status === 'FLAGGED') {
+      student.moderationStatus = 'FLAGGED';
+      student.verificationStatus = 'PENDING';
+    } else if (body.status) {
+      student.moderationStatus = body.status;
+      student.verificationStatus = body.status;
+    }
+
+    if (typeof body.isActivated === 'boolean') {
+      student.isActivated = body.isActivated;
+      if (body.isActivated) {
+        student.verificationStatus = 'VERIFIED';
+        student.moderationStatus = 'APPROVED';
+      }
+    }
+    if (body.moderationNotes !== undefined) {
+      student.moderationNotes = body.moderationNotes;
+    }
+
+    // Persist activation across all identifiers in global store
+    if (!globalStore.__ftw_activations) globalStore.__ftw_activations = {};
+    if (student.isActivated) {
+      globalStore.__ftw_activations[student.id] = true;
+      if (student.userId) globalStore.__ftw_activations[student.userId] = true;
+      if (student.email) globalStore.__ftw_activations[student.email.toLowerCase()] = true;
+    } else {
+      delete globalStore.__ftw_activations[student.id];
+      if (student.userId) delete globalStore.__ftw_activations[student.userId];
+      if (student.email) delete globalStore.__ftw_activations[student.email.toLowerCase()];
+    }
+
+    // Sync in globalStore.__ftw_users if candidate is registered
+    if (globalStore.__ftw_users && student.email) {
+      const u = globalStore.__ftw_users[student.email.toLowerCase()];
+      if (u) {
+        u.student = { ...student };
+        u.isActivated = student.isActivated;
+      }
+    }
 
     return NextResponse.json({ success: true, student });
   }
