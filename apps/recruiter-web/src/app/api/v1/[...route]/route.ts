@@ -761,7 +761,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
 
   // 9. Payment verify
   if (path === 'payments/verify-payment') {
-    const { orderId, paymentId, signature } = body;
+    const { orderId, paymentId, signature, candidateName, email, studentId } = body;
+    const authUser = getAuthUser(req);
     const keySecret = process.env.RAZORPAY_KEY_SECRET || 'H6fhPAbNIVsPGg8P6gy9reUU';
 
     let isSignatureValid = false;
@@ -781,29 +782,53 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     // Also accept test/mock signatures for dev/testing
     const isValid = isSignatureValid || (signature && (signature.startsWith('sig_mock_') || signature.length > 10));
 
+    const targetEmail = (email || authUser?.email || '').toLowerCase().trim();
+    const matchedStudent = studentsList.find((s: any) =>
+      (studentId && (s.id === studentId || s.userId === studentId)) ||
+      (targetEmail && s.email && s.email.toLowerCase() === targetEmail)
+    ) || studentsList[0];
+
+    const studentDisplayName = candidateName || matchedStudent?.fullName || 'Candidate';
+    const studentDisplayEmail = targetEmail || matchedStudent?.email || 'candidate@freshertowork.com';
+
     const newPayment = {
       id: `pay-${Date.now()}`,
       gatewayOrderId: orderId,
+      razorpayOrderId: orderId,
       gatewayPaymentId: paymentId,
+      razorpayPaymentId: paymentId,
       amountPaise: 9900,
       currency: 'INR',
       status: 'SUCCESS',
       createdAt: new Date().toISOString(),
+      studentId: matchedStudent?.id || studentId,
+      candidateName: studentDisplayName,
+      candidateEmail: studentDisplayEmail,
+      user: {
+        id: matchedStudent?.userId || matchedStudent?.id || `user-${Date.now()}`,
+        email: studentDisplayEmail,
+        fullName: studentDisplayName,
+      },
+      isTest: true,
     };
+
     if (!platformData.payments) platformData.payments = [];
     platformData.payments.unshift(newPayment);
     globalStore.__ftw_payments = platformData.payments;
 
     if (platformData.analytics?.metrics) {
       platformData.analytics.metrics.successfulPaymentsCount = platformData.payments.length;
-      platformData.analytics.metrics.totalRevenueInRupees += 99;
+      platformData.analytics.metrics.totalRevenueInRupees = (platformData.analytics.metrics.totalRevenueInRupees || 0) + 99;
     }
 
     // Mark candidate as verified & activated in platform data and admin dashboard
-    for (const student of studentsList) {
-      student.isActivated = true;
-      student.verificationStatus = 'VERIFIED';
-      student.moderationStatus = 'APPROVED';
+    if (matchedStudent) {
+      matchedStudent.isActivated = true;
+      matchedStudent.verificationStatus = 'VERIFIED';
+      matchedStudent.moderationStatus = 'APPROVED';
+      if (!globalStore.__ftw_activations) globalStore.__ftw_activations = {};
+      globalStore.__ftw_activations[matchedStudent.id] = true;
+      if (matchedStudent.email) globalStore.__ftw_activations[matchedStudent.email.toLowerCase()] = true;
     }
 
     return NextResponse.json({
@@ -1011,6 +1036,38 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
     }
     globalStore.__ftw_companies = platformData.companies;
     return NextResponse.json({ success: true });
+  }
+
+  // 4. Delete Single Payment Transaction (admin/payments/:id)
+  if (path.startsWith('admin/payments/')) {
+    const payId = path.replace('admin/payments/', '');
+    const paymentsList: any[] = platformData.payments || [];
+    const idx = paymentsList.findIndex(
+      (p: any) => p.id === payId || p.gatewayPaymentId === payId || p.razorpayPaymentId === payId
+    );
+    if (idx >= 0) {
+      paymentsList.splice(idx, 1);
+      if (platformData.analytics?.metrics) {
+        platformData.analytics.metrics.successfulPaymentsCount = Math.max(0, paymentsList.length);
+        platformData.analytics.metrics.totalRevenueInRupees = Math.max(
+          0,
+          (platformData.analytics.metrics.totalRevenueInRupees || 99) - 99
+        );
+      }
+    }
+    globalStore.__ftw_payments = platformData.payments;
+    return NextResponse.json({ success: true, payments: platformData.payments });
+  }
+
+  // 5. Clear All Test Payments (admin/payments)
+  if (path === 'admin/payments') {
+    platformData.payments = [];
+    globalStore.__ftw_payments = [];
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.successfulPaymentsCount = 0;
+      platformData.analytics.metrics.totalRevenueInRupees = 0;
+    }
+    return NextResponse.json({ success: true, payments: [] });
   }
 
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });

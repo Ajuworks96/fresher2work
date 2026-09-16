@@ -81,10 +81,18 @@ class _ActivationScreenState extends State<ActivationScreen> {
     final signature = response.signature ?? '';
 
     try {
+      final user = await StorageService.getUser() ?? {};
+      final candidateName = (user['fullName'] ?? user['name'] ?? '') as String;
+      final email = (user['email'] ?? '') as String;
+      final studentId = (user['id'] ?? user['studentId'] ?? '') as String;
+
       final result = await ApiService.verifyPayment(
         orderId: orderId,
         paymentId: paymentId,
         signature: signature,
+        candidateName: candidateName.isNotEmpty ? candidateName : null,
+        email: email.isNotEmpty ? email : null,
+        studentId: studentId.isNotEmpty ? studentId : null,
       );
 
       if (result['success'] == true) {

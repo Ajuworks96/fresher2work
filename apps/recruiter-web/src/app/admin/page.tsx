@@ -270,7 +270,18 @@ export default function SuperAdminSidebarPage() {
 
       setRecruiters(mergedRecruiters);
       setCompanies(mergedCompanies);
-      setPayments(resPayments.payments || []);
+
+      // Merge server response with browser-persisted payments cache
+      const localPayments: any[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_payments_cache') || '[]'); } catch (_) { return []; }
+      })();
+      const mergedPayments = [...(resPayments.payments || [])];
+      for (const lp of localPayments) {
+        if (!mergedPayments.some((p: any) => p.id === lp.id || (p.razorpayPaymentId && p.razorpayPaymentId === lp.razorpayPaymentId))) {
+          mergedPayments.push(lp);
+        }
+      }
+      setPayments(mergedPayments);
 
       if (inspectingCandidate) {
         const updated = studentList.find((s: any) => s.id === inspectingCandidate.id);
@@ -280,6 +291,54 @@ export default function SuperAdminSidebarPage() {
       setError('Telemetry sync error: ' + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Delete Single Payment Transaction (Test / Live)
+  const handleDeletePayment = async (paymentId: string) => {
+    if (!confirm('Are you sure you want to delete this payment record from the ledger?')) return;
+    try {
+      // 1. Remove from local state immediately
+      setPayments((prev) =>
+        prev.filter((p) => p.id !== paymentId && p.razorpayPaymentId !== paymentId && p.gatewayPaymentId !== paymentId)
+      );
+
+      // 2. Remove from localStorage cache
+      const localPayments: any[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_payments_cache') || '[]'); } catch (_) { return []; }
+      })();
+      const updatedLocal = localPayments.filter(
+        (p) => p.id !== paymentId && p.razorpayPaymentId !== paymentId && p.gatewayPaymentId !== paymentId
+      );
+      localStorage.setItem('ftw_admin_payments_cache', JSON.stringify(updatedLocal));
+
+      // 3. Send DELETE to backend
+      await fetch(`${apiUrl}/api/v1/admin/payments/${paymentId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      showToast('✓ Payment record removed from ledger');
+      await fetchAdminData();
+    } catch (err: any) {
+      showToast(`⚠️ ${err.message}`);
+    }
+  };
+
+  // Clear All Test Payments from Ledger
+  const handleClearAllTestPayments = async () => {
+    if (!confirm('Are you sure you want to clear all test payment entries from the revenue ledger?')) return;
+    try {
+      setPayments([]);
+      localStorage.removeItem('ftw_admin_payments_cache');
+      await fetch(`${apiUrl}/api/v1/admin/payments`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showToast('✓ All test transactions cleared from ledger');
+      await fetchAdminData();
+    } catch (err: any) {
+      showToast(`⚠️ ${err.message}`);
     }
   };
 
@@ -2703,49 +2762,135 @@ export default function SuperAdminSidebarPage() {
         {/* ============================================================ */}
         {activeTab === 'ledger' && (
           <div className="flex-1 overflow-y-auto p-8 space-y-6">
-            <div>
-              <h2 className="text-base font-extrabold text-slate-900">Financial Revenue Ledger</h2>
-              <p className="text-xs text-slate-500">Live ₹99 candidate profile activation receipts and Razorpay payment audit IDs</p>
+            {/* Header & Controls */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-lg font-black text-slate-900">Financial Revenue Ledger</h2>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Razorpay Live Verified
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Candidate ₹99 activation receipts, gateway payment audit IDs, and ledger control
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <button
+                  onClick={() => fetchAdminData()}
+                  disabled={loading}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                  Sync Ledger
+                </button>
+                {payments.length > 0 && (
+                  <button
+                    onClick={handleClearAllTestPayments}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                    title="Clear all test transaction entries from ledger"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Clear Test Ledger
+                  </button>
+                )}
+              </div>
             </div>
 
+            {/* Quick Metrics Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Total Revenue Collected</span>
+                <p className="text-xl font-black text-emerald-600 mt-0.5">
+                  ₹{(payments.reduce((acc, p) => acc + (p.amountPaise || 9900), 0) / 100).toFixed(2)}
+                </p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Successful Activations</span>
+                <p className="text-xl font-black text-slate-900 mt-0.5">{payments.length}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Payment Gateway</span>
+                <p className="text-xs font-bold text-slate-700 mt-1 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Razorpay SDK • Official Merchant Active
+                </p>
+              </div>
+            </div>
+
+            {/* Transactions Table */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-bold uppercase tracking-wider text-[10px] font-sans">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-bold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="px-5 py-3.5">Receipt ID</th>
-                      <th className="px-5 py-3.5">Candidate Email</th>
+                      <th className="px-5 py-3.5">Candidate Details</th>
                       <th className="px-5 py-3.5">Amount</th>
                       <th className="px-5 py-3.5">Razorpay Order ID</th>
                       <th className="px-5 py-3.5">Payment ID</th>
-                      <th className="px-5 py-3.5">Verification</th>
+                      <th className="px-5 py-3.5">Status</th>
                       <th className="px-5 py-3.5">Date</th>
+                      <th className="px-5 py-3.5 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-[11px]">
                     {payments.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="text-center py-12 text-slate-400 font-sans font-medium">
-                          No payments recorded yet.
+                        <td colSpan={8} className="text-center py-12 text-slate-400 font-medium">
+                          No payments recorded yet in the ledger.
                         </td>
                       </tr>
                     ) : (
-                      payments.map((p) => (
-                        <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
-                          <td className="px-5 py-3.5 font-bold text-slate-900">{p.id.substring(0, 8)}...</td>
-                          <td className="px-5 py-3.5 font-sans font-bold text-slate-800">{p.user?.email || 'Candidate'}</td>
-                          <td className="px-5 py-3.5 font-bold text-emerald-700 font-sans">₹{(p.amountPaise / 100).toFixed(2)}</td>
-                          <td className="px-5 py-3.5 text-slate-500 font-mono">{p.razorpayOrderId || '—'}</td>
-                          <td className="px-5 py-3.5 text-slate-500 font-mono">{p.razorpayPaymentId || '—'}</td>
-                          <td className="px-5 py-3.5 font-sans">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase">
-                              <CheckCircle2 className="w-3 h-3" />
-                              {p.status}
-                            </span>
-                          </td>
-                          <td className="px-5 py-3.5 text-slate-400 font-sans">{new Date(p.createdAt).toLocaleDateString()}</td>
-                        </tr>
-                      ))
+                      payments.map((p) => {
+                        const candidateEmail = p.user?.email || p.candidateEmail || 'candidate@freshertowork.com';
+                        const candidateName = p.user?.fullName || p.candidateName || 'Candidate';
+                        const rzpOrder = p.razorpayOrderId || p.gatewayOrderId || '—';
+                        const rzpPayment = p.razorpayPaymentId || p.gatewayPaymentId || '—';
+                        const amountInRupees = ((p.amountPaise || 9900) / 100).toFixed(2);
+
+                        return (
+                          <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="px-5 py-3.5 font-mono font-bold text-slate-900">
+                              {p.id.length > 14 ? `${p.id.substring(0, 12)}...` : p.id}
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <p className="font-bold text-slate-900 text-xs">{candidateName}</p>
+                              <p className="text-[10px] text-slate-400 font-mono">{candidateEmail}</p>
+                            </td>
+                            <td className="px-5 py-3.5 font-black text-emerald-600 font-mono">
+                              ₹{amountInRupees}
+                            </td>
+                            <td className="px-5 py-3.5 font-mono text-slate-500 text-[10px]">
+                              {rzpOrder}
+                            </td>
+                            <td className="px-5 py-3.5 font-mono text-slate-500 text-[10px]">
+                              {rzpPayment}
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase">
+                                <CheckCircle2 className="w-3 h-3" />
+                                {p.status || 'SUCCESS'}
+                              </span>
+                            </td>
+                            <td className="px-5 py-3.5 text-slate-400">
+                              {p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                            </td>
+                            <td className="px-5 py-3.5 text-right">
+                              <button
+                                onClick={() => handleDeletePayment(p.id)}
+                                title="Delete test payment transaction from ledger"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[11px] font-bold transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>

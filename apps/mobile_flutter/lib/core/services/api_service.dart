@@ -257,6 +257,9 @@ class ApiService {
     required String orderId,
     required String paymentId,
     required String signature,
+    String? candidateName,
+    String? email,
+    String? studentId,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/payments/verify-payment'),
@@ -265,6 +268,9 @@ class ApiService {
         'orderId': orderId,
         'paymentId': paymentId,
         'signature': signature,
+        if (candidateName != null && candidateName.isNotEmpty) 'candidateName': candidateName,
+        if (email != null && email.isNotEmpty) 'email': email,
+        if (studentId != null && studentId.isNotEmpty) 'studentId': studentId,
       }),
     );
     return _parseResponse(response);
