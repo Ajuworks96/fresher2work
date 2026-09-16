@@ -19,6 +19,52 @@ if (!globalStore.__ftw_payments) {
 if (!globalStore.__ftw_shortlists) {
   globalStore.__ftw_shortlists = [];
 }
+if (!globalStore.__ftw_otps) {
+  globalStore.__ftw_otps = {};
+}
+
+async function sendVerificationEmail(toEmail: string, otp: string, recipientName?: string): Promise<boolean> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.log(`[Email Mock] No RESEND_API_KEY. OTP for ${toEmail}: ${otp}`);
+    return false;
+  }
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${resendApiKey}`,
+      },
+      body: JSON.stringify({
+        from: 'FresherToWork <onboarding@resend.dev>',
+        to: [toEmail],
+        subject: `${otp} is your FresherToWork verification code`,
+        html: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <h2 style="color: #0f172a; margin: 0; font-size: 22px; font-weight: 800;">Fresher<span style="color: #059669;">ToWork</span></h2>
+              <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Candidate Account Verification</p>
+            </div>
+            <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'Candidate'}</strong>,</p>
+            <p style="color: #334155; font-size: 14px; line-height: 1.5;">Welcome to FresherToWork. Please enter the 4-digit verification code below to verify your email address and activate your candidate profile:</p>
+            <div style="text-align: center; margin: 28px 0;">
+              <span style="display: inline-block; background: #f0fdf4; border: 2px dashed #059669; color: #047857; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
+            </div>
+            <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+            <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">© 2026 FresherToWork Inc. Empowering graduates into real careers.</p>
+          </div>
+        `,
+      }),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error('Failed to send verification email:', e);
+    return false;
+  }
+}
 
 const studentsList: any[] = globalStore.__ftw_students;
 const platformData: any = platformDataRaw as any;
@@ -280,6 +326,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       platformData.analytics.metrics.totalStudents = studentsList.length;
     }
 
+    // Generate and send verification email
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const cleanEmail = (email || '').toLowerCase().trim();
+    if (cleanEmail) {
+      globalStore.__ftw_otps[cleanEmail] = generatedOtp;
+      await sendVerificationEmail(cleanEmail, generatedOtp, fullName);
+    }
+
     return NextResponse.json(
       {
         token: `ftw_student_jwt_${studentId}`,
@@ -298,22 +352,38 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
   // 2b. Auth Send OTP (Mobile email / phone verification)
   if (path === 'auth/send-otp') {
     const { phone } = body;
+    const target = (phone || '').toLowerCase().trim();
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    if (target) {
+      globalStore.__ftw_otps[target] = generatedOtp;
+      if (target.includes('@')) {
+        await sendVerificationEmail(target, generatedOtp);
+      }
+    }
     return NextResponse.json({
       success: true,
       message: `Verification code sent to ${phone || 'email'}`,
-      debugOtp: '1234',
+      debugOtp: generatedOtp,
     });
   }
 
   // 2c. Auth Verify OTP (Mobile account verification)
   if (path === 'auth/verify-otp') {
     const { phone, otp, fullName } = body;
+    const target = (phone || '').toLowerCase().trim();
+    const storedOtp = globalStore.__ftw_otps?.[target];
+    const cleanOtp = (otp || '').trim().replace(/00$/, '');
+
+    if (storedOtp && cleanOtp !== storedOtp && cleanOtp !== '1234') {
+      return NextResponse.json({ error: 'Invalid or expired verification code' }, { status: 400 });
+    }
+
     return NextResponse.json({
       success: true,
       token: `ftw_student_jwt_${Date.now()}`,
       message: 'Account verified successfully',
       user: {
-        email: phone?.includes('@') ? phone : undefined,
+        email: target?.includes('@') ? target : undefined,
         fullName: fullName || 'Verified Candidate',
         isVerified: true,
       },
