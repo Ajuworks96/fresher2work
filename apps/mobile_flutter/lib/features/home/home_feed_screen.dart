@@ -22,6 +22,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   String _candidateName = '';
   String? _avatarUrl;
   String? _avatarLocalPath;
+  bool _isActivated = false;
   final TextEditingController _searchController = TextEditingController();
   List<ProofItem> _storedProofs = [];
 
@@ -46,6 +47,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     String? avUrl = user['avatarUrl'] as String?;
     String? avLocal = user['avatarLocalPath'] as String?;
 
+    bool isAct = await StorageService.isActivated();
+
     try {
       final profile = await ApiService.getStudentProfile();
       final st = profile['student'] ?? profile;
@@ -54,6 +57,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       }
       if (st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
+      }
+      if (st['isActivated'] == true || profile['activation']?['isActivated'] == true) {
+        isAct = true;
+        await StorageService.setActivated(true);
       }
     } catch (_) {}
 
@@ -64,6 +71,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         _avatarUrl = avUrl;
         _avatarLocalPath = avLocal;
         _storedProofs = proofs;
+        _isActivated = isAct;
       });
     }
   }
@@ -110,15 +118,25 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          _candidateName.isNotEmpty ? _candidateName : 'Fresher Candidate',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.textDark,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                _candidateName.isNotEmpty ? _candidateName : 'Fresher Candidate',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 15.5,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.textDark,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (_isActivated) ...[
+                              const SizedBox(width: 4),
+                              const Icon(Icons.verified_rounded, size: 15, color: Color(0xFF10B981)),
+                            ],
+                          ],
                         ),
                       ],
                     ),

@@ -5,6 +5,7 @@ import '../../core/constants/domain_constants.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
 import '../activation/activation_screen.dart';
+import '../navigation/main_navigation_screen.dart';
 import '../projects/widgets/file_upload_zone.dart';
 
 class CompleteProfileSetupScreen extends StatefulWidget {
@@ -123,10 +124,11 @@ class _CompleteProfileSetupScreenState extends State<CompleteProfileSetupScreen>
 
       setState(() => _saving = false);
 
+      final isAct = await StorageService.isActivated();
       if (mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => const ActivationScreen(),
+            builder: (_) => isAct ? const MainNavigationScreen() : const ActivationScreen(),
           ),
         );
       }

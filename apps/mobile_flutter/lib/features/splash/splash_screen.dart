@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
 import '../navigation/main_navigation_screen.dart';
 import '../welcome/welcome_screen.dart';
@@ -45,12 +46,24 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthAndProceed() async {
-    // Wait 1800ms for smooth brand flash and readability of core journey
-    await Future.delayed(const Duration(milliseconds: 1800));
-
-    if (!mounted) return;
+    // Give user 3.0 seconds to comfortably read the brand positioning and core journey
+    final timerFuture = Future.delayed(const Duration(milliseconds: 3000));
 
     final isSessionValid = await StorageService.isSessionValid();
+    if (isSessionValid) {
+      // Refresh activation status from API in background
+      try {
+        final profile = await ApiService.getStudentProfile();
+        final isAct = profile['activation']?['isActivated'] == true ||
+            profile['isActivated'] == true ||
+            profile['student']?['isActivated'] == true;
+        if (isAct) {
+          await StorageService.setActivated(true);
+        }
+      } catch (_) {}
+    }
+
+    await timerFuture;
 
     if (!mounted) return;
 

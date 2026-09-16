@@ -697,16 +697,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              _candidateFullName.isNotEmpty
-                                  ? _candidateFullName
-                                  : 'Candidate Profile',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.textDark,
-                                letterSpacing: -0.5,
-                              ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    _candidateFullName.isNotEmpty
+                                        ? _candidateFullName
+                                        : 'Candidate Profile',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.textDark,
+                                      letterSpacing: -0.5,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (_isActivated) ...[
+                                  const SizedBox(width: 6),
+                                  const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 20),
+                                ],
+                              ],
                             ),
                             const SizedBox(height: 2),
                             Text(
@@ -886,7 +897,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildStatBox(
                             title: 'Proofs', value: '${proofs.length}+ Live'),
                         _buildDivider(),
-                        _buildStatBox(title: 'Status', value: 'Ready'),
+                        _buildStatBox(
+                            title: 'Status',
+                            value: _isActivated ? 'Verified' : 'Ready',
+                            isVerified: _isActivated),
                       ],
                     ),
                   ),
@@ -933,28 +947,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildStatBox({required String title, required String value}) {
+  Widget _buildStatBox({required String title, required String value, bool isVerified = false}) {
     return Expanded(
       child: Column(
         children: [
           Text(
             title,
             style: GoogleFonts.plusJakartaSans(
-              fontSize: 10.5,
-              fontWeight: FontWeight.w700,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
               color: AppColors.textMuted,
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textDark,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (isVerified) ...[
+                const Icon(Icons.verified_rounded, size: 13, color: Color(0xFF10B981)),
+                const SizedBox(width: 3),
+              ],
+              Text(
+                value,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: isVerified ? const Color(0xFF10B981) : AppColors.textDark,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -1284,27 +1305,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildDiscoveryPassCard() {
+    if (_isActivated) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFECFDF5),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFFA7F3D0)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: const BoxDecoration(
+                color: Color(0xFF10B981),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.verified_rounded,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Verified Candidate Profile',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF065F46),
+                    ),
+                  ),
+                  Text(
+                    'Admin Verified • Direct HR Discovery Active',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      color: const Color(0xFF047857),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: const Color(0xFFD1FAE5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'ACTIVE',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF065F46),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isActivated ? const Color(0xFFEFF6FF) : const Color(0xFFFFFBEB),
+        color: const Color(0xFFFFFBEB),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color:
-              _isActivated ? const Color(0xFFBFDBFE) : const Color(0xFFFDE68A),
-        ),
+        border: Border.all(color: const Color(0xFFFDE68A)),
       ),
       child: Row(
         children: [
           Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(
-              color: _isActivated ? AppColors.bluePrimary : const Color(0xFFD97706),
+            decoration: const BoxDecoration(
+              color: Color(0xFFD97706),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              _isActivated ? Icons.verified_rounded : Icons.lock_outline_rounded,
+            child: const Icon(
+              Icons.lock_outline_rounded,
               color: Colors.white,
               size: 22,
             ),
@@ -1315,9 +1400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _isActivated
-                      ? '₹99 Discovery Pass Active'
-                      : 'Unlock ₹99 Discovery Pass',
+                  'Unlock ₹99 Discovery Pass',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -1325,9 +1408,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Text(
-                  _isActivated
-                      ? 'Lifetime direct HR matching active'
-                      : 'Get direct outreach from verified hiring managers',
+                  'Get direct outreach from verified hiring managers',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: AppColors.textMuted,
@@ -1336,30 +1417,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          if (!_isActivated)
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                          builder: (_) => const ActivationScreen()),
-                    )
-                    .then((_) => _loadData());
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.bluePrimary,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-              ),
-              child: Text(
-                'Activate',
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 11, fontWeight: FontWeight.w800),
-              ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(
+                    MaterialPageRoute(
+                        builder: (_) => const ActivationScreen()),
+                  )
+                  .then((_) => _loadData());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.bluePrimary,
+              foregroundColor: Colors.white,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
             ),
+            child: Text(
+              'Activate',
+              style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11, fontWeight: FontWeight.w800),
+            ),
+          ),
         ],
       ),
     );

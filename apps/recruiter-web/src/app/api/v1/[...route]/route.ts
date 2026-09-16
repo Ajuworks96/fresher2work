@@ -257,7 +257,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
       if (found) currentStudent = found;
     }
-    return NextResponse.json({ student: currentStudent });
+    return NextResponse.json({
+      student: currentStudent,
+      isActivated: currentStudent?.isActivated ?? false,
+      verificationStatus: currentStudent?.verificationStatus ?? 'READY',
+      activation: {
+        isActivated: currentStudent?.isActivated ?? false,
+        activatedAt: currentStudent?.isActivated ? new Date().toISOString() : null,
+      },
+    });
   }
 
   // 11. Auth Me
@@ -735,11 +743,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       platformData.analytics.metrics.totalRevenueInRupees += 99;
     }
 
+    // Mark candidate as verified & activated in platform data and admin dashboard
+    for (const student of studentsList) {
+      student.isActivated = true;
+      student.verificationStatus = 'VERIFIED';
+      student.moderationStatus = 'APPROVED';
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Payment verified and profile activated successfully',
       payment: newPayment,
       verifiedByRazorpay: isSignatureValid,
+      isActivated: true,
+      verificationStatus: 'VERIFIED',
     });
   }
 
