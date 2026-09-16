@@ -19,21 +19,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final List<Map<String, String>> _onboardingData = [
     {
       'image': 'assets/images/onboard_1.png',
-      'title': 'Proof Over Resume',
+      'title': 'Learn & Build Proofs',
       'subtitle':
-          'Showcase course projects, live campaigns & portfolios instead of empty paper resumes.',
+          'Transform your skills into real project proofs, live campaigns & portfolio showcases.',
     },
     {
       'image': 'assets/images/onboard_2.png',
-      'title': 'Direct Recruiter Match',
+      'title': 'Prove & Get Discovered',
       'subtitle':
-          'Verified proof-of-work badges connect you directly with active hiring managers and HRs.',
+          'The bridge from learning to employment. Verified proofs get discovered by top HRs directly.',
     },
     {
       'image': 'assets/images/onboard_3.png',
-      'title': 'Get Hired Fast',
+      'title': 'Connect & Start Working',
       'subtitle':
-          'Direct WhatsApp & interview calls with top companies. Zero prior experience needed.',
+          'Direct recruiter inquiries, chats and interviews. International proof-of-work hiring standard.',
     },
   ];
 

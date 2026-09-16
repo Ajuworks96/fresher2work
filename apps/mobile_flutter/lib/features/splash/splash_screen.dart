@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnim = CurvedAnimation(
@@ -45,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthAndProceed() async {
-    // Wait minimum 900ms for smooth brand flash
-    await Future.delayed(const Duration(milliseconds: 900));
+    // Wait 1800ms for smooth brand flash and readability of core journey
+    await Future.delayed(const Duration(milliseconds: 1800));
 
     if (!mounted) return;
 
@@ -74,6 +74,40 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  Widget _buildJourneyStep(String label, {bool isHighlighted = false}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: isHighlighted ? const Color(0xFFEFF6FF) : Colors.white,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isHighlighted ? AppColors.bluePrimary : const Color(0xFFE2E8F0),
+          width: isHighlighted ? 1.3 : 1,
+        ),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 9.5,
+          fontWeight: FontWeight.w800,
+          color: isHighlighted ? AppColors.bluePrimary : const Color(0xFF334155),
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArrow() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      child: Icon(
+        Icons.arrow_forward_rounded,
+        size: 11,
+        color: Color(0xFF94A3B8),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -84,108 +118,197 @@ class _SplashScreenState extends State<SplashScreen>
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: AnimatedBuilder(
-            animation: _animController,
-            builder: (context, child) {
-              return Opacity(
-                opacity: _fadeAnim.value,
-                child: Transform.scale(
-                  scale: _scaleAnim.value,
-                  child: child,
-                ),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // App Logo Icon inside soft blue circle
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEFF6FF),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xFFDBEAFE),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.bluePrimary.withValues(alpha: 0.12),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+        body: SafeArea(
+          child: Center(
+            child: AnimatedBuilder(
+              animation: _animController,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: _fadeAnim.value,
+                  child: Transform.scale(
+                    scale: _scaleAnim.value,
+                    child: child,
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.work_rounded,
-                      size: 38,
-                      color: AppColors.bluePrimary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                );
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 20),
 
-                // Brand Typography
-                RichText(
-                  text: TextSpan(
+                  // Center Content
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextSpan(
-                        text: 'Fresher',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFF0F172A),
-                          letterSpacing: -0.6,
+                      // App Logo Icon inside soft blue circle
+                      Container(
+                        width: 82,
+                        height: 82,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFFDBEAFE),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.bluePrimary.withValues(alpha: 0.12),
+                              blurRadius: 28,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.work_rounded,
+                            size: 40,
+                            color: AppColors.bluePrimary,
+                          ),
                         ),
                       ),
-                      TextSpan(
-                        text: 'ToWork',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.bluePrimary,
-                          letterSpacing: -0.6,
+                      const SizedBox(height: 22),
+
+                      // Brand Name
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Fresher',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFF0F172A),
+                                letterSpacing: -0.6,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'ToWork',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.bluePrimary,
+                                letterSpacing: -0.6,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Brand Positioning Tagline
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          'The bridge from learning to employment.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF475569),
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // Core Journey Pipeline Card
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.02),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.bluePrimary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'CORE JOURNEY',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.2,
+                                    color: const Color(0xFF64748B),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 2,
+                              runSpacing: 6,
+                              children: [
+                                _buildJourneyStep('LEARN'),
+                                _buildArrow(),
+                                _buildJourneyStep('BUILD'),
+                                _buildArrow(),
+                                _buildJourneyStep('PROVE'),
+                                _buildArrow(),
+                                _buildJourneyStep('DISCOVER'),
+                                _buildArrow(),
+                                _buildJourneyStep('CONNECT'),
+                                _buildArrow(),
+                                _buildJourneyStep('WORK', isHighlighted: true),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 8),
 
-                // Minimal Subtitle Tag
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'PROOF OVER RESUME',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF64748B),
-                      letterSpacing: 0.8,
+                  // Bottom Footer & Progress
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(AppColors.bluePrimary),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          'GLOBAL PROOF-OF-WORK PLATFORM',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.0,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 36),
-
-                // Subtle smooth progress indicator
-                const SizedBox(
-                  width: 28,
-                  height: 28,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColors.bluePrimary),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
