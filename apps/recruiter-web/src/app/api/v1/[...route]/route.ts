@@ -3,6 +3,45 @@ import nodemailer from 'nodemailer';
 import studentsDataRaw from '@/lib/students_data.json';
 import platformDataRaw from '@/lib/platform_data.json';
 
+function normalizeCompanyName(name?: string): string {
+  return (name || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+}
+
+function deduplicateCompaniesList(companies: any[]): any[] {
+  const map = new Map<string, any>();
+  for (const c of companies || []) {
+    if (!c || !c.name) continue;
+    let norm = normalizeCompanyName(c.name);
+    if (norm.includes('velvetbyte')) {
+      norm = 'velvetbyte';
+    }
+    if (!map.has(norm)) {
+      if (norm === 'velvetbyte') {
+        map.set(norm, {
+          id: 'comp-velvetbyte-01',
+          name: 'Velvetbyte PVT Ltd',
+          website: c.website || 'https://velvetbyte.com',
+          industry: 'Web Development',
+          location: c.location || 'Calicut',
+          verificationStatus: 'VERIFIED',
+          createdAt: c.createdAt || '2026-09-15T10:00:00.000Z',
+        });
+      } else {
+        map.set(norm, { ...c });
+      }
+    } else {
+      const existing = map.get(norm);
+      map.set(norm, {
+        ...existing,
+        website: existing.website || c.website,
+        industry: existing.industry || c.industry,
+        location: existing.location || c.location,
+      });
+    }
+  }
+  return Array.from(map.values());
+}
+
 // Global cache shared within Node / serverless memory
 const globalStore = globalThis as any;
 if (!globalStore.__ftw_students) {
@@ -12,7 +51,9 @@ if (!globalStore.__ftw_recruiters) {
   globalStore.__ftw_recruiters = [...((platformDataRaw as any).recruiters || [])];
 }
 if (!globalStore.__ftw_companies) {
-  globalStore.__ftw_companies = [...((platformDataRaw as any).companies || [])];
+  globalStore.__ftw_companies = deduplicateCompaniesList((platformDataRaw as any).companies || []);
+} else {
+  globalStore.__ftw_companies = deduplicateCompaniesList(globalStore.__ftw_companies);
 }
 if (!globalStore.__ftw_payments) {
   globalStore.__ftw_payments = [...((platformDataRaw as any).payments || [])];
@@ -177,6 +218,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     const verifiedCount = list.filter((s) => s.verificationStatus === 'VERIFIED').length;
     const activatedCount = list.filter((s) => s.isActivated).length;
 
+    const deduplicatedComps = deduplicateCompaniesList(globalStore.__ftw_companies || platformData.companies || []);
+    globalStore.__ftw_companies = deduplicatedComps;
+    platformData.companies = deduplicatedComps;
+
     return NextResponse.json({
       ...(platformData.analytics || {}),
       metrics: {
@@ -184,6 +229,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         totalStudents: list.length,
         activatedStudents: activatedCount,
         activationRatePercent: list.length > 0 ? Math.round((activatedCount / list.length) * 100) : 0,
+        totalCompanies: deduplicatedComps.length,
+        totalRecruiters: (platformData.recruiters || []).length,
       },
       totalCandidates: list.length,
       verifiedCandidates: verifiedCount,
@@ -215,7 +262,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 
   // 3. Admin Companies
   if (path === 'admin/companies') {
-    return NextResponse.json({ companies: platformData.companies || [] });
+    const deduplicatedComps = deduplicateCompaniesList(globalStore.__ftw_companies || platformData.companies || []);
+    globalStore.__ftw_companies = deduplicatedComps;
+    platformData.companies = deduplicatedComps;
+    return NextResponse.json({ companies: deduplicatedComps });
   }
 
   // 4. Admin Recruiters
@@ -557,16 +607,34 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       verificationStatus,
     } = body;
 
-    const companyId = `comp-${Date.now()}`;
-    const newCompany = {
-      id: companyId,
-      name: companyName || 'Hiring Company',
-      website: website || '',
-      industry: industry || 'Technology & SaaS',
-      location: location || 'Bengaluru / Remote',
-      verificationStatus: verificationStatus || 'VERIFIED',
-      createdAt: new Date().toISOString(),
-    };
+    const comps = deduplicateCompaniesList(globalStore.__ftw_companies || platformData.companies || []);
+    const norm = normalizeCompanyName(companyName);
+    const isVelvet = norm.includes('velvetbyte');
+
+    let matchedCompany = comps.find((c: any) => {
+      const cNorm = normalizeCompanyName(c.name);
+      return isVelvet ? cNorm.includes('velvetbyte') : cNorm === norm;
+    });
+
+    if (!matchedCompany) {
+      const companyId = `comp-${Date.now()}`;
+      matchedCompany = {
+        id: companyId,
+        name: companyName || 'Hiring Company',
+        website: website || '',
+        industry: industry || 'Technology & SaaS',
+        location: location || 'Bengaluru / Remote',
+        verificationStatus: verificationStatus || 'VERIFIED',
+        createdAt: new Date().toISOString(),
+      };
+      comps.unshift(matchedCompany);
+    } else {
+      if (website && !matchedCompany.website) matchedCompany.website = website;
+      if (industry && !matchedCompany.industry) matchedCompany.industry = industry;
+    }
+
+    platformData.companies = comps;
+    globalStore.__ftw_companies = comps;
 
     const recruiterId = `rec-${Date.now()}`;
     const newRecruiter = {
@@ -575,19 +643,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       businessEmail: email,
       phone: phone || '',
       designation: designation || 'Talent Acquisition Manager',
-      companyId: companyId,
-      companyName: newCompany.name,
-      company: newCompany,
+      companyId: matchedCompany.id,
+      companyName: matchedCompany.name,
+      company: matchedCompany,
       password: password || 'Recruiter@123',
       createdAt: new Date().toISOString(),
     };
 
-    if (!platformData.companies) platformData.companies = [];
-    platformData.companies = [newCompany, ...platformData.companies.filter((c: any) => c.id !== newCompany.id)];
-    globalStore.__ftw_companies = platformData.companies;
-
     if (!platformData.recruiters) platformData.recruiters = [];
-    platformData.recruiters = [newRecruiter, ...platformData.recruiters.filter((r: any) => r.id !== newRecruiter.id)];
+    platformData.recruiters = [
+      newRecruiter,
+      ...platformData.recruiters.filter(
+        (r: any) => (r.businessEmail || '').toLowerCase() !== (email || '').toLowerCase() && r.id !== recruiterId
+      ),
+    ];
     globalStore.__ftw_recruiters = platformData.recruiters;
 
     if (platformData.analytics && platformData.analytics.metrics) {
@@ -599,7 +668,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       {
         success: true,
         recruiter: newRecruiter,
-        company: newCompany,
+        company: matchedCompany,
       },
       { status: 201 }
     );
@@ -607,6 +676,19 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
 
   // 4. Admin: Create Company
   if (path === 'admin/companies') {
+    const comps = deduplicateCompaniesList(globalStore.__ftw_companies || platformData.companies || []);
+    const norm = normalizeCompanyName(body.name || body.companyName);
+    const isVelvet = norm.includes('velvetbyte');
+
+    let matchedCompany = comps.find((c: any) => {
+      const cNorm = normalizeCompanyName(c.name);
+      return isVelvet ? cNorm.includes('velvetbyte') : cNorm === norm;
+    });
+
+    if (matchedCompany) {
+      return NextResponse.json({ success: true, company: matchedCompany });
+    }
+
     const companyId = `comp-${Date.now()}`;
     const newCompany = {
       id: companyId,
@@ -618,12 +700,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       createdAt: new Date().toISOString(),
     };
 
-    if (!platformData.companies) platformData.companies = [];
-    platformData.companies.unshift(newCompany);
-    globalStore.__ftw_companies = platformData.companies;
+    comps.unshift(newCompany);
+    platformData.companies = comps;
+    globalStore.__ftw_companies = comps;
 
     if (platformData.analytics?.metrics) {
-      platformData.analytics.metrics.totalCompanies = platformData.companies.length;
+      platformData.analytics.metrics.totalCompanies = comps.length;
     }
 
     return NextResponse.json({ success: true, company: newCompany }, { status: 201 });

@@ -254,19 +254,110 @@ export default function SuperAdminSidebarPage() {
         try { return JSON.parse(localStorage.getItem('ftw_admin_companies_cache') || '[]'); } catch (_) { return []; }
       })();
 
-      const mergedRecruiters = [...(resRecruiters.recruiters || [])];
-      for (const lr of localRecs) {
-        if (!mergedRecruiters.some((r: any) => r.id === lr.id || (r.businessEmail && r.businessEmail === lr.businessEmail))) {
-          mergedRecruiters.unshift(lr);
-        }
-      }
+      const normalizeCompanyName = (name?: string) => (name || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
 
-      const mergedCompanies = [...(resCompanies.companies || [])];
-      for (const lc of localComps) {
-        if (!mergedCompanies.some((c: any) => c.id === lc.id || (c.name && c.name === lc.name))) {
-          mergedCompanies.unshift(lc);
+      // Deduplicate and canonicalize companies
+      const rawComps = [...(resCompanies.companies || []), ...localComps];
+      const compMap = new Map<string, any>();
+      for (const c of rawComps) {
+        if (!c || !c.name) continue;
+        let norm = normalizeCompanyName(c.name);
+        if (norm.includes('velvetbyte')) {
+          norm = 'velvetbyte';
+        }
+        if (!compMap.has(norm)) {
+          if (norm === 'velvetbyte') {
+            compMap.set(norm, {
+              id: 'comp-velvetbyte-01',
+              name: 'Velvetbyte PVT Ltd',
+              website: c.website || 'https://velvetbyte.com',
+              industry: 'Web Development',
+              location: c.location || 'Calicut',
+              verificationStatus: 'VERIFIED',
+              createdAt: c.createdAt || '2026-09-15T10:00:00.000Z',
+            });
+          } else {
+            compMap.set(norm, { ...c });
+          }
+        } else {
+          const existing = compMap.get(norm);
+          compMap.set(norm, {
+            ...existing,
+            website: existing.website || c.website,
+            industry: existing.industry || c.industry,
+            location: existing.location || c.location,
+            verificationStatus: 'VERIFIED',
+          });
         }
       }
+      const mergedCompanies = Array.from(compMap.values());
+
+      // Cleanse local storage so duplicate velvetbyte or already-seeded companies are purged
+      try {
+        const seenLocal = new Set<string>();
+        const cleansedLocalComps = localComps.filter((lc: any) => {
+          const norm = normalizeCompanyName(lc.name);
+          if (!norm || norm.includes('velvetbyte') || seenLocal.has(norm)) return false;
+          const inServer = (resCompanies.companies || []).some((sc: any) => normalizeCompanyName(sc.name) === norm);
+          if (inServer) return false;
+          seenLocal.add(norm);
+          return true;
+        });
+        localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(cleansedLocalComps));
+      } catch (_) {}
+
+      // Deduplicate recruiters and link to canonical company
+      const recMap = new Map<string, any>();
+      const rawRecs = [...(resRecruiters.recruiters || []), ...localRecs];
+      for (const r of rawRecs) {
+        if (!r) continue;
+        const emailKey = (r.businessEmail || r.email || r.id || '').toLowerCase().trim();
+        if (!emailKey) continue;
+
+        let compId = r.companyId;
+        let compName = r.companyName;
+        if (normalizeCompanyName(compName).includes('velvetbyte') || compId === 'comp-velvetbyte-01') {
+          compId = 'comp-velvetbyte-01';
+          compName = 'Velvetbyte PVT Ltd';
+        } else {
+          const matched = mergedCompanies.find((c: any) => c.id === compId || normalizeCompanyName(c.name) === normalizeCompanyName(compName));
+          if (matched) {
+            compId = matched.id;
+            compName = matched.name;
+          }
+        }
+
+        const updatedRec = {
+          ...r,
+          companyId: compId,
+          companyName: compName,
+          company: mergedCompanies.find((c: any) => c.id === compId) || r.company,
+        };
+
+        if (!recMap.has(emailKey)) {
+          recMap.set(emailKey, updatedRec);
+        } else {
+          const existing = recMap.get(emailKey);
+          recMap.set(emailKey, { ...existing, ...updatedRec });
+        }
+      }
+      const mergedRecruiters = Array.from(recMap.values());
+
+      // Cleanse local recruiters cache
+      try {
+        const seenRecKey = new Set<string>();
+        const cleansedLocalRecs = localRecs.filter((lr: any) => {
+          const key = (lr.businessEmail || lr.email || lr.id || '').toLowerCase().trim();
+          if (!key || seenRecKey.has(key)) return false;
+          const inServer = (resRecruiters.recruiters || []).some(
+            (sr: any) => (sr.businessEmail || sr.email || '').toLowerCase().trim() === key
+          );
+          if (inServer) return false;
+          seenRecKey.add(key);
+          return true;
+        });
+        localStorage.setItem('ftw_admin_recruiters_cache', JSON.stringify(cleansedLocalRecs));
+      } catch (_) {}
 
       setRecruiters(mergedRecruiters);
       setCompanies(mergedCompanies);
@@ -494,9 +585,18 @@ export default function SuperAdminSidebarPage() {
       }
       if (data.company) {
         setCompanies((prev) => {
-          const filtered = prev.filter((c) => c.id !== data.company.id && c.name !== data.company.name);
+          const normNew = (data.company.name || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+          const isVelvet = normNew.includes('velvetbyte');
+          const filtered = prev.filter((c) => {
+            const cNorm = (c.name || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+            if (isVelvet && cNorm.includes('velvetbyte')) return false;
+            return c.id !== data.company.id && cNorm !== normNew;
+          });
           const updated = [data.company, ...filtered];
-          try { localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(updated)); } catch (_) {}
+          try {
+            const nonVelvet = updated.filter((c) => !(c.name || '').toLowerCase().includes('velvetbyte'));
+            localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(nonVelvet));
+          } catch (_) {}
           return updated;
         });
       }
@@ -599,8 +699,10 @@ export default function SuperAdminSidebarPage() {
         try { localStorage.setItem('ftw_admin_recruiters_cache', JSON.stringify(updated)); } catch (_) {}
         return updated;
       });
-      if (rec.companyId) {
+      if (rec.companyId && rec.companyId !== 'comp-velvetbyte-01' && !(rec.companyName || '').toLowerCase().includes('velvetbyte')) {
         setCompanies((prev) => {
+          const isOther = recruiters.some((r) => r.id !== rec.id && r.companyId === rec.companyId);
+          if (isOther) return prev;
           const updated = prev.filter((c) => c.id !== rec.companyId);
           try { localStorage.setItem('ftw_admin_companies_cache', JSON.stringify(updated)); } catch (_) {}
           return updated;
