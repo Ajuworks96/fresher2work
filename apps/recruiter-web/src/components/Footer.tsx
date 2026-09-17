@@ -4,16 +4,8 @@ import {
   ShieldCheck, 
   Mail, 
   Phone, 
-  MapPin, 
-  ExternalLink, 
-  Sparkles, 
   CheckCircle2, 
   Lock, 
-  FileText, 
-  Scale, 
-  RotateCcw, 
-  Briefcase, 
-  Users, 
   ArrowUpRight 
 } from 'lucide-react';
 
@@ -26,18 +18,13 @@ export default function Footer() {
       {/* Hero / Value Proposition Strip */}
       <div className="border-b border-slate-800/60 bg-gradient-to-r from-slate-900/50 via-slate-900/80 to-slate-900/50 px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 sm:flex-row">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/30 shadow-lg shadow-emerald-500/10">
-              <Sparkles className="h-6 w-6" />
-            </div>
-            <div>
-              <h4 className="text-base font-bold text-white tracking-tight">
-                India&apos;s Dedicated Proof-of-Work Fresher Hiring Ecosystem
-              </h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Connecting genuine, project-verified talent directly with proactive engineering & design recruiters.
-              </p>
-            </div>
+          <div className="text-center sm:text-left">
+            <h4 className="text-base font-bold text-white tracking-tight">
+              India&apos;s Dedicated Proof-of-Work Fresher Hiring Ecosystem
+            </h4>
+            <p className="text-xs text-slate-400 mt-1">
+              Connecting genuine, project-verified talent directly with proactive engineering & design recruiters.
+            </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -105,8 +92,8 @@ export default function Footer() {
 
           {/* Column 1: Candidates & Recruiters */}
           <div>
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5 text-emerald-400" /> Platform
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white">
+              Platform
             </h3>
             <ul className="mt-4 space-y-2.5 text-xs">
               <li>
@@ -145,8 +132,8 @@ export default function Footer() {
 
           {/* Column 2: Legal & Trust Policies */}
           <div>
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
-              <Scale className="h-3.5 w-3.5 text-emerald-400" /> Legal & Safety
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white">
+              Legal & Safety
             </h3>
             <ul className="mt-4 space-y-2.5 text-xs">
               <li>
@@ -177,8 +164,8 @@ export default function Footer() {
 
           {/* Column 3: Contact & Support */}
           <div>
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
-              <Phone className="h-3.5 w-3.5 text-emerald-400" /> Direct Contact
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-white">
+              Direct Contact
             </h3>
             <ul className="mt-4 space-y-3 text-xs">
               <li>
