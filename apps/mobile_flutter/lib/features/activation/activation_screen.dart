@@ -256,29 +256,6 @@ class _ActivationScreenState extends State<ActivationScreen> {
           'confirm_close': true,
           'animation': true,
         },
-        'config': {
-          'display': {
-            'blocks': {
-              'upi': {
-                'name': 'Pay with UPI (GPay, PhonePe, QR Code, UPI ID)',
-                'instruments': [
-                  {'method': 'upi'},
-                  {'method': 'qr'},
-                ],
-              },
-              'cards_netbanking': {
-                'name': 'Cards, Netbanking & Wallets',
-                'instruments': [
-                  {'method': 'card'},
-                  {'method': 'netbanking'},
-                  {'method': 'wallet'},
-                ],
-              },
-            },
-            'sequence': ['block.upi', 'block.cards_netbanking'],
-            'preferences': {'show_default_blocks': true},
-          },
-        },
       };
 
       _razorpay.open(options);

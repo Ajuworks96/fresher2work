@@ -47,7 +47,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadResumeDocs() async {
-    final saved = await StorageService.getResumeDocs();
+    var saved = await StorageService.getResumeDocs();
+    if (saved.isEmpty) {
+      final user = await StorageService.getUser();
+      if (user != null && user['resumeDocs'] is List && (user['resumeDocs'] as List).isNotEmpty) {
+        saved = (user['resumeDocs'] as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        await StorageService.saveResumeDocs(saved);
+      }
+    }
     if (mounted && saved.isNotEmpty) {
       final docs = saved.map((m) => UploadedFileModel(
         name: m['name'] as String? ?? '',
@@ -66,6 +73,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'extension': f.extension,
     }).toList();
     await StorageService.saveResumeDocs(data);
+
+    // Merge into local cached user
+    final user = await StorageService.getUser() ?? {};
+    user['resumeDocs'] = data;
+    if (data.isNotEmpty) {
+      user['cvFileName'] = data.first['name'];
+      user['cvFileUrl'] = 'https://assets.fresher2work.com/resumes/${Uri.encodeComponent(data.first['name'] as String)}';
+    }
+    await StorageService.saveUser(user);
+
+    // Sync to backend
+    if (data.isNotEmpty) {
+      ApiService.updateStudentProfile({
+        'resumeDocs': data,
+        'cvFileName': data.first['name'],
+        'cvFileUrl': user['cvFileUrl'],
+      }).catchError((_) => <String, dynamic>{});
+    }
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -175,16 +201,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }).catchError((_) => <String, dynamic>{});
       }
 
-      await StorageService.saveUser({
-        'fullName': name,
-        'headline': role,
-        'roleTitle': role,
-        'about': about,
-        'phone': phone,
-        'portfolioUrl': portfolio,
-        'avatarUrl': ?avUrl,
-        'coverUrl': ?cvUrl,
-      });
+      // Check if backend has resume documents and populate local cache if currently empty
+      if (_resumeDocs.isEmpty) {
+        if (st['resumeDocs'] is List && (st['resumeDocs'] as List).isNotEmpty) {
+          final serverDocs = (st['resumeDocs'] as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+          await StorageService.saveResumeDocs(serverDocs);
+          if (mounted) {
+            setState(() {
+              _resumeDocs = serverDocs.map((m) => UploadedFileModel(
+                name: m['name'] as String? ?? '',
+                size: m['size'] as String? ?? '',
+                extension: m['extension'] as String? ?? 'pdf',
+                isUploaded: true,
+              )).toList();
+            });
+          }
+        } else if (st['cvFileUrl'] != null && (st['cvFileUrl'] as String).isNotEmpty) {
+          final doc = {
+            'name': st['cvFileName'] ?? 'Resume_${name.isNotEmpty ? name.replaceAll(' ', '_') : 'Document'}.pdf',
+            'size': 'PDF Document',
+            'extension': 'PDF',
+            'url': st['cvFileUrl'],
+          };
+          await StorageService.saveResumeDocs([doc]);
+          if (mounted) {
+            setState(() {
+              _resumeDocs = [
+                UploadedFileModel(
+                  name: doc['name']!,
+                  size: doc['size']!,
+                  extension: doc['extension']!,
+                  isUploaded: true,
+                )
+              ];
+            });
+          }
+        }
+      }
+
+      // Merge into existing user cache so resumeDocs, skills, etc. are preserved
+      final existingUser = await StorageService.getUser() ?? {};
+      existingUser['fullName'] = name;
+      existingUser['headline'] = role;
+      existingUser['roleTitle'] = role;
+      existingUser['about'] = about;
+      existingUser['phone'] = phone;
+      existingUser['portfolioUrl'] = portfolio;
+      if (avUrl != null) existingUser['avatarUrl'] = avUrl;
+      if (cvUrl != null) existingUser['coverUrl'] = cvUrl;
+      await StorageService.saveUser(existingUser);
 
       if (mounted) {
         setState(() {
@@ -1521,7 +1586,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     if (mounted) {
                       setState(() => _storedProofs = updatedList);
-                      Navigator.of(ctx).pop();
+                      if (ctx.mounted) Navigator.of(ctx).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: const Color(0xFF10B981),

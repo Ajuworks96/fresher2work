@@ -36,6 +36,21 @@ class _CompleteProfileSetupScreenState extends State<CompleteProfileSetupScreen>
     _roleTitleController.text = '';
     _selectedNiche = '';
     _selectedSkills = [];
+    _loadExistingResume();
+  }
+
+  Future<void> _loadExistingResume() async {
+    final docs = await StorageService.getResumeDocs();
+    if (mounted && docs.isNotEmpty) {
+      setState(() {
+        _attachedCv = docs.map((m) => UploadedFileModel(
+          name: m['name'] as String? ?? '',
+          size: m['size'] as String? ?? '',
+          extension: m['extension'] as String? ?? 'PDF',
+          isUploaded: true,
+        )).toList();
+      });
+    }
   }
 
   @override
@@ -101,12 +116,29 @@ class _CompleteProfileSetupScreenState extends State<CompleteProfileSetupScreen>
     setState(() => _saving = true);
 
     try {
+      // 0. Persist Resume documents if uploaded during onboarding
+      List<Map<String, dynamic>> resumeDocsData = [];
+      if (_attachedCv.isNotEmpty) {
+        resumeDocsData = _attachedCv.map((f) => {
+          'name': f.name,
+          'size': f.size,
+          'extension': f.extension,
+        }).toList();
+        await StorageService.saveResumeDocs(resumeDocsData);
+      }
+
       // 1. Persist Profile details to Express API -> Prisma -> Supabase PostgreSQL
-      await ApiService.updateStudentProfile({
+      final profilePayload = <String, dynamic>{
         'headline': roleTitle,
         'portfolioUrl': portfolio,
         'about': 'Specialized in $_selectedNiche',
-      });
+      };
+      if (resumeDocsData.isNotEmpty) {
+        profilePayload['resumeDocs'] = resumeDocsData;
+        profilePayload['cvFileName'] = resumeDocsData.first['name'];
+        profilePayload['cvFileUrl'] = 'https://assets.fresher2work.com/resumes/${Uri.encodeComponent(resumeDocsData.first['name'] as String)}';
+      }
+      await ApiService.updateStudentProfile(profilePayload);
 
       // 2. Persist Skills
       await ApiService.updateSkills(
@@ -121,6 +153,11 @@ class _CompleteProfileSetupScreenState extends State<CompleteProfileSetupScreen>
       user['roleTitle'] = roleTitle;
       user['college'] = _collegeController.text.trim();
       user['skills'] = _selectedSkills;
+      if (resumeDocsData.isNotEmpty) {
+        user['resumeDocs'] = resumeDocsData;
+        user['cvFileName'] = resumeDocsData.first['name'];
+        user['cvFileUrl'] = profilePayload['cvFileUrl'];
+      }
       await StorageService.saveUser(user);
 
       setState(() => _saving = false);

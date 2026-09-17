@@ -1717,7 +1717,7 @@ export default function SuperAdminSidebarPage() {
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
-                      PDF Resume {inspectingCandidate.cvFileUrl ? '✓' : ''}
+                      PDF Resume {(inspectingCandidate.cvFileUrl || inspectingCandidate.resumeDocs?.length) ? '✓' : ''}
                     </button>
                     <button
                       onClick={() => setInspectorTab('academics')}
@@ -2085,35 +2085,39 @@ export default function SuperAdminSidebarPage() {
               )}
 
               {/* TAB: PDF RESUME */}
-              {inspectorTab === 'resume' && (
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Candidate PDF Document</h4>
-                  {inspectingCandidate.cvFileUrl ? (
-                    <div className="p-10 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4 text-center">
-                      <div className="h-14 w-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-200">
-                        <FileText className="w-7 h-7 stroke-[1.75]" />
+              {inspectorTab === 'resume' && (() => {
+                const cvUrl = inspectingCandidate.cvFileUrl || (inspectingCandidate.resumeDocs?.[0]?.name ? `https://assets.fresher2work.com/resumes/${encodeURIComponent(inspectingCandidate.resumeDocs[0].name)}` : null);
+                const cvName = inspectingCandidate.cvFileName || inspectingCandidate.resumeDocs?.[0]?.name || 'Original PDF CV Uploaded';
+                return (
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Candidate PDF Document</h4>
+                    {cvUrl ? (
+                      <div className="p-10 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4 text-center">
+                        <div className="h-14 w-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-200">
+                          <FileText className="w-7 h-7 stroke-[1.75]" />
+                        </div>
+                        <div>
+                          <h4 className="text-base font-bold text-slate-900">{cvName}</h4>
+                          <p className="text-xs text-slate-500 mt-0.5">Authentic resume uploaded during candidate onboarding</p>
+                        </div>
+                        <a
+                          href={cvUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-xs font-bold text-white hover:bg-emerald-700 shadow-xs"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          Open Original PDF Resume ↗
+                        </a>
                       </div>
-                      <div>
-                        <h4 className="text-base font-bold text-slate-900">Original PDF CV Uploaded</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">Authentic resume uploaded during candidate onboarding</p>
+                    ) : (
+                      <div className="p-12 text-center text-slate-400 text-xs font-medium border border-dashed rounded-2xl bg-white">
+                        Candidate has not attached a PDF CV yet.
                       </div>
-                      <a
-                        href={inspectingCandidate.cvFileUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-xs font-bold text-white hover:bg-emerald-700 shadow-xs"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        Open Original PDF Resume ↗
-                      </a>
-                    </div>
-                  ) : (
-                    <div className="p-12 text-center text-slate-400 text-xs font-medium border border-dashed rounded-2xl bg-white">
-                      Candidate has not attached a PDF CV yet.
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* TAB: ACADEMICS */}
               {inspectorTab === 'academics' && (
