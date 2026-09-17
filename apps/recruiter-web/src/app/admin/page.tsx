@@ -430,6 +430,24 @@ export default function SuperAdminSidebarPage() {
     }
   };
 
+  // Delete Candidate
+  const handleDeleteCandidate = async (candidateId: string, candidateName: string) => {
+    if (!confirm(`Are you sure you want to permanently delete candidate "${candidateName}"?`)) return;
+    try {
+      await fetch(`${apiUrl}/api/v1/admin/students/${candidateId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showToast('✓ Candidate deleted successfully');
+      if (inspectingCandidate?.id === candidateId) {
+        setInspectingCandidate(null);
+      }
+      await fetchAdminData();
+    } catch (err: any) {
+      showToast(`⚠️ ${err.message}`);
+    }
+  };
+
   // Clear All Test Payments from Ledger
   const handleClearAllTestPayments = async () => {
     if (!confirm('Are you sure you want to clear all test payment entries from the revenue ledger?')) return;
@@ -1560,6 +1578,14 @@ export default function SuperAdminSidebarPage() {
                   <XCircle className="w-3.5 h-3.5" />
                   Reject Profile
                 </button>
+                <button
+                  onClick={() => handleDeleteCandidate(inspectingCandidate.id, inspectingCandidate.fullName || 'Candidate')}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-100 hover:bg-red-200 text-red-800 border border-red-300 text-xs font-black transition-colors cursor-pointer"
+                  title="Permanently Delete Candidate"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-red-700" />
+                  Delete
+                </button>
               </div>
             </header>
 
@@ -2362,6 +2388,14 @@ export default function SuperAdminSidebarPage() {
                                 >
                                   <Key className="w-3.5 h-3.5 text-amber-600" />
                                   Password
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteCandidate(st.id, st.fullName || 'Candidate')}
+                                  title="Permanently delete candidate"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-800 border border-red-200 font-bold text-xs shadow-2xs transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                                  Delete
                                 </button>
                               </div>
                             </td>

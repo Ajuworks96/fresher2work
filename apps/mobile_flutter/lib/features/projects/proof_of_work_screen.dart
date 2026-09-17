@@ -110,17 +110,23 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
     );
   }
 
-  void _showAddProofModal(FresherDomain currentDomain) {
-    String selectedSubcategory = currentDomain.subjectPills.length > 1 ? currentDomain.subjectPills[1] : 'Meta Ads';
-    final titleCtrl = TextEditingController();
-    final subtitleCtrl = TextEditingController();
-    final personalPortfolioCtrl = TextEditingController();
-    final clientProjectCtrl = TextEditingController();
-    final metric1LabelCtrl = TextEditingController();
-    final metric1ValCtrl = TextEditingController();
-    final metric2LabelCtrl = TextEditingController();
-    final metric2ValCtrl = TextEditingController();
+  void _showAddProofModal(FresherDomain currentDomain, {ProofItem? existingProof, int? editIndex}) {
+    String selectedSubcategory = existingProof?.categoryBadge ??
+        (currentDomain.subjectPills.length > 1 ? currentDomain.subjectPills[1] : 'Meta Ads');
+    final titleCtrl = TextEditingController(text: existingProof?.title ?? '');
+    final subtitleCtrl = TextEditingController(text: existingProof?.subtitle ?? '');
+    final personalPortfolioCtrl = TextEditingController(text: existingProof?.personalPortfolioUrl ?? '');
+    final clientProjectCtrl = TextEditingController(text: existingProof?.clientProjectUrl ?? '');
+    final metric1LabelCtrl = TextEditingController(
+        text: existingProof != null && existingProof.metrics.isNotEmpty ? existingProof.metrics[0]['label'] ?? '' : '');
+    final metric1ValCtrl = TextEditingController(
+        text: existingProof != null && existingProof.metrics.isNotEmpty ? existingProof.metrics[0]['val'] ?? '' : '');
+    final metric2LabelCtrl = TextEditingController(
+        text: existingProof != null && existingProof.metrics.length > 1 ? existingProof.metrics[1]['label'] ?? '' : '');
+    final metric2ValCtrl = TextEditingController(
+        text: existingProof != null && existingProof.metrics.length > 1 ? existingProof.metrics[1]['val'] ?? '' : '');
     List<UploadedFileModel> attachedFiles = [];
+    final isEditing = editIndex != null;
 
     showModalBottomSheet(
       context: context,
@@ -128,50 +134,52 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setModalState) => Container(
-          height: MediaQuery.of(context).size.height * 0.88,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
-          padding: EdgeInsets.only(
-            top: 20,
-            left: 20,
-            right: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.borderLight,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drag handle
+              const SizedBox(height: 12),
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 20, right: 20, top: 12,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                   ),
-                ),
-                const SizedBox(height: 16),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Add ${currentDomain.shortTitle} Proof',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textDark,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            isEditing ? 'Edit Proof of Work' : 'Add New ${currentDomain.shortTitle} Proof',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded),
+                            onPressed: () => Navigator.of(ctx).pop(),
+                          ),
+                        ],
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded),
-                      onPressed: () => Navigator.of(ctx).pop(),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 14),
 
                 // Select Subject Sub-Category
@@ -390,7 +398,11 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
 
                       if (mounted) {
                         setState(() {
-                          _activeProofs.insert(0, newProof);
+                          if (isEditing) {
+                            _activeProofs[editIndex!] = newProof;
+                          } else {
+                            _activeProofs.insert(0, newProof);
+                          }
                         });
                         _saveProofs();
                         nav.pop();
@@ -398,7 +410,9 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                         messenger.showSnackBar(
                           SnackBar(
                             backgroundColor: AppColors.success,
-                            content: Text('✓ Added new "$title" proof successfully!'),
+                            content: Text(isEditing
+                                ? '✓ Proof updated successfully!'
+                                : '✓ Added new "$title" proof successfully!'),
                           ),
                         );
                       }
@@ -408,11 +422,15 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                     ),
-                    child: Text('Publish Proof to HR Dashboard →', style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800)),
+                    child: Text(isEditing ? 'Update Proof →' : 'Publish Proof to HR Dashboard →',
+                      style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800)),
                   ),
                 ),
-              ],
-            ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -481,6 +499,7 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
           IconButton(
             icon: const Icon(Icons.add_circle_rounded, color: AppColors.bluePrimary, size: 26),
             onPressed: () => _showAddProofModal(currentDomain),
+            tooltip: 'Add Proof',
           ),
           const SizedBox(width: 8),
         ],
@@ -636,7 +655,7 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row with Category Badge & Delete 'X' Button
+          // Header Row with Category Badge, Edit & Delete Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -655,11 +674,39 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.close_rounded, size: 18, color: AppColors.textLight),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () => _deleteProof(index),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Edit button
+                  GestureDetector(
+                    onTap: () => _showAddProofModal(
+                      DomainConstants.getDomainById(_selectedCategory),
+                      existingProof: proof,
+                      editIndex: index,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      margin: const EdgeInsets.only(right: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.edit_rounded, size: 15, color: AppColors.bluePrimary),
+                    ),
+                  ),
+                  // Delete button
+                  GestureDetector(
+                    onTap: () => _deleteProof(index),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.close_rounded, size: 15, color: Colors.red.shade400),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

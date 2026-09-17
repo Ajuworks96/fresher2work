@@ -16,6 +16,7 @@ class ActivationScreen extends StatefulWidget {
 class _ActivationScreenState extends State<ActivationScreen> {
   bool _isActivated = false;
   bool _processing = false;
+  bool _showVerifyingDialog = false;
   late Razorpay _razorpay;
   String? _currentOrderId;
 
@@ -40,16 +41,22 @@ class _ActivationScreenState extends State<ActivationScreen> {
   }
 
   Future<void> _checkStatus() async {
+    // IMPORTANT: Only check isActivated (payment flag).
+    // verificationStatus/moderationStatus are ADMIN fields — they must NOT bypass payment.
     try {
       final profile = await ApiService.getStudentProfile();
       final st = profile['student'] ?? profile;
-      final isAct = profile['activation']?['isActivated'] == true ||
+
+      // Payment is confirmed ONLY if isActivated == true from backend
+      final hasPaid = profile['activation']?['isActivated'] == true ||
           profile['isActivated'] == true ||
-          st['isActivated'] == true ||
-          profile['verificationStatus'] == 'VERIFIED' ||
-          st['verificationStatus'] == 'VERIFIED' ||
-          st['moderationStatus'] == 'APPROVED';
-      if (isAct) {
+          st['isActivated'] == true;
+
+      // Also check local cache (set only after successful Razorpay verification)
+      final localPaid = await StorageService.isActivated();
+      final isAct = hasPaid || localPaid;
+
+      if (hasPaid) {
         await StorageService.setActivated(true);
       }
       if (mounted) {
@@ -62,6 +69,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
         }
       }
     } catch (_) {
+      // On network error: only trust local storage (set after real payment)
       final act = await StorageService.isActivated();
       if (mounted) {
         setState(() => _isActivated = act);
@@ -75,10 +83,68 @@ class _ActivationScreenState extends State<ActivationScreen> {
     }
   }
 
+  void _showVerifyingOverlay() {
+    if (!mounted) return;
+    setState(() => _showVerifyingDialog = true);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              const CircularProgressIndicator(
+                color: Color(0xFF2563EB),
+                strokeWidth: 3,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Verifying Payment…',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF0F172A),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Please wait while we confirm your ₹99 payment with Razorpay and activate your Discovery Pass.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  color: const Color(0xFF64748B),
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    ).then((_) {
+      if (mounted) setState(() => _showVerifyingDialog = false);
+    });
+  }
+
+  void _dismissVerifyingOverlay() {
+    if (mounted && _showVerifyingDialog) {
+      Navigator.of(context, rootNavigator: true).pop();
+      setState(() => _showVerifyingDialog = false);
+    }
+  }
+
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     final orderId = response.orderId ?? _currentOrderId ?? '';
     final paymentId = response.paymentId ?? '';
     final signature = response.signature ?? '';
+
+    // Show verifying dialog immediately after payment captured, before API call
+    _showVerifyingOverlay();
 
     try {
       final user = await StorageService.getUser() ?? {};
@@ -97,10 +163,12 @@ class _ActivationScreenState extends State<ActivationScreen> {
 
       if (result['success'] == true) {
         await StorageService.setActivated(true);
-        final user = await StorageService.getUser() ?? {};
-        user['isActivated'] = true;
-        user['verificationStatus'] = 'VERIFIED';
-        await StorageService.saveUser(user);
+        final savedUser = await StorageService.getUser() ?? {};
+        savedUser['isActivated'] = true;
+        savedUser['verificationStatus'] = 'VERIFIED';
+        await StorageService.saveUser(savedUser);
+
+        _dismissVerifyingOverlay();
 
         if (mounted) {
           setState(() {
@@ -127,12 +195,13 @@ class _ActivationScreenState extends State<ActivationScreen> {
         throw Exception(result['error'] ?? 'Payment verification failed');
       }
     } catch (e) {
+      _dismissVerifyingOverlay();
       if (mounted) {
         setState(() => _processing = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Payment verification error: $e'),
+            content: Text('Payment verification error: ${e.toString().replaceAll("Exception: ", "")}'),
           ),
         );
       }

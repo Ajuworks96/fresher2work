@@ -25,6 +25,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   bool _isActivated = false;
   final TextEditingController _searchController = TextEditingController();
   List<ProofItem> _storedProofs = [];
+  bool _showFilterSheet = false;
+  String _filterCategory = 'All';
+
+  static const List<String> _filterOptions = ['All', 'Meta Ads', 'SEO', 'Website', 'Video', 'Design', 'Analytics', 'Content'];
 
   @override
   void initState() {
@@ -69,12 +73,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       if (avUrl == null && avLocal == null && st['avatarUrl'] != null && (st['avatarUrl'] as String).isNotEmpty) {
         avUrl = st['avatarUrl'];
       }
+      // Payment check: ONLY isActivated (payment flag). Admin moderation/verification does NOT bypass payment.
       if (st['isActivated'] == true ||
           profile['activation']?['isActivated'] == true ||
-          profile['isActivated'] == true ||
-          profile['verificationStatus'] == 'VERIFIED' ||
-          st['verificationStatus'] == 'VERIFIED' ||
-          st['moderationStatus'] == 'APPROVED') {
+          profile['isActivated'] == true) {
         isAct = true;
         await StorageService.setActivated(true);
       }
@@ -162,6 +164,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
+                  // Domain badge
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                     decoration: BoxDecoration(
@@ -179,16 +182,20 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.borderSubtle),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.notifications_none_rounded, size: 19, color: AppColors.textDark),
+                  // Notification Button — navigates to notification sheet
+                  GestureDetector(
+                    onTap: () => _showNotificationsSheet(),
+                    child: Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.borderSubtle),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.notifications_none_rounded, size: 19, color: AppColors.textDark),
+                      ),
                     ),
                   ),
                 ],
@@ -221,16 +228,28 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.cardBlue,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: AppColors.bluePrimary.withValues(alpha: 0.3)),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.tune_rounded, size: 20, color: AppColors.bluePrimary),
+                  // Filter Button — opens filter sheet
+                  GestureDetector(
+                    onTap: () => _showFilterOptions(currentDomain),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: _filterCategory != 'All' ? AppColors.bluePrimary : AppColors.cardBlue,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: _filterCategory != 'All'
+                              ? AppColors.bluePrimary
+                              : AppColors.bluePrimary.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.tune_rounded,
+                          size: 20,
+                          color: _filterCategory != 'All' ? Colors.white : AppColors.bluePrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -508,6 +527,13 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       list = list.where((p) => p.categoryBadge.toLowerCase().contains(_selectedPill.toLowerCase())).toList();
     }
 
+    if (_filterCategory != 'All') {
+      list = list.where((p) =>
+        p.categoryBadge.toLowerCase().contains(_filterCategory.toLowerCase()) ||
+        p.tags.any((t) => t.toLowerCase().contains(_filterCategory.toLowerCase()))
+      ).toList();
+    }
+
     if (_searchQuery.isNotEmpty) {
       list = list.where((p) {
         final query = _searchQuery.toLowerCase();
@@ -518,6 +544,248 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     }
 
     return list;
+  }
+
+  void _showNotificationsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Icon(Icons.notifications_rounded, color: AppColors.bluePrimary, size: 22),
+                const SizedBox(width: 10),
+                Text(
+                  'Notifications',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textDark,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.bluePrimary.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline_rounded, color: AppColors.bluePrimary, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'You will receive notifications here when recruiters shortlist or view your profile.',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13,
+                        color: AppColors.bluePrimary,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.borderSubtle),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFECFDF5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your profile is now discoverable!',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                        Text(
+                          'HRs can now view and shortlist your profile.',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11.5,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFilterOptions(FresherDomain domain) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Filter Proofs',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setSheetState(() {});
+                      setState(() => _filterCategory = 'All');
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text(
+                      'Clear All',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.bluePrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Select a category to filter your proof cards:',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  color: AppColors.textMuted,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _filterOptions.map((opt) {
+                  final isSelected = _filterCategory == opt;
+                  return GestureDetector(
+                    onTap: () {
+                      setSheetState(() {});
+                      setState(() => _filterCategory = opt);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.bluePrimary : Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected ? AppColors.bluePrimary : AppColors.borderSubtle,
+                        ),
+                      ),
+                      child: Text(
+                        opt,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: isSelected ? Colors.white : AppColors.textDark,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.bluePrimary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  ),
+                  child: Text(
+                    'Apply Filter',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildReferenceShowcaseCard(ProofItem proof, FresherDomain domain) {

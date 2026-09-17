@@ -42,6 +42,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadData();
+    _loadResumeDocs();
+  }
+
+  Future<void> _loadResumeDocs() async {
+    final saved = await StorageService.getResumeDocs();
+    if (mounted && saved.isNotEmpty) {
+      final docs = saved.map((m) => UploadedFileModel(
+        name: m['name'] as String? ?? '',
+        size: m['size'] as String? ?? '',
+        extension: m['extension'] as String? ?? 'pdf',
+        isUploaded: true,
+      )).toList();
+      setState(() => _resumeDocs = docs);
+    }
+  }
+
+  Future<void> _saveResumeDocs() async {
+    final data = _resumeDocs.map((f) => {
+      'name': f.name,
+      'size': f.size,
+      'extension': f.extension,
+    }).toList();
+    await StorageService.saveResumeDocs(data);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color(0xFF10B981),
+          content: Text('✓ Resume saved successfully!',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   Future<void> _loadData() async {
@@ -93,15 +128,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final profile = await ApiService.getStudentProfile();
       final st = profile['student'] ?? profile['profile'] ?? profile;
+      // Payment check: ONLY isActivated (payment flag). Admin verification/moderation does NOT bypass payment.
       final serverActivated = profile['activation']?['isActivated'] == true ||
           profile['isActivated'] == true ||
-          st['isActivated'] == true ||
-          profile['verificationStatus'] == 'VERIFIED' ||
-          st['verificationStatus'] == 'VERIFIED' ||
-          st['moderationStatus'] == 'APPROVED';
+          st['isActivated'] == true;
 
       activated = serverActivated || cachedActivated;
-      if (activated) {
+      if (serverActivated) {
         await StorageService.setActivated(true);
       }
 
@@ -206,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _handleLogout() async {
-    await StorageService.removeToken();
+    await StorageService.clearAll();
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -1240,7 +1273,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Column(
-      children: proofs.map((proof) {
+      children: proofs.asMap().entries.map((entry) {
+        final index = entry.key;
+        final proof = entry.value;
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
@@ -1252,21 +1287,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  proof.categoryBadge,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.bluePrimary,
+              // Header row: Badge + Edit button
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      proof.categoryBadge,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.bluePrimary,
+                      ),
+                    ),
                   ),
-                ),
+                  const Spacer(),
+                  // Edit button
+                  GestureDetector(
+                    onTap: () => _showEditProofModal(proof, index),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.edit_rounded, size: 14, color: AppColors.bluePrimary),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               Text(
@@ -1281,12 +1333,185 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(
                 proof.subtitle,
                 style: GoogleFonts.plusJakartaSans(
-                    fontSize: 12, color: AppColors.textMuted),
+                    fontSize: 12, color: AppColors.textMuted, height: 1.4),
               ),
+              if (proof.personalPortfolioUrl.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.link_rounded, size: 13, color: AppColors.bluePrimary),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        proof.personalPortfolioUrl,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 11.5,
+                          color: AppColors.bluePrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         );
       }).toList(),
+    );
+  }
+
+  void _showEditProofModal(ProofItem proof, int index) {
+    final titleCtrl = TextEditingController(text: proof.title);
+    final subtitleCtrl = TextEditingController(text: proof.subtitle);
+    final urlCtrl = TextEditingController(text: proof.personalPortfolioUrl);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(ctx).viewInsets.bottom,
+        ),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Edit Proof of Work',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text('Project Title *',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: titleCtrl,
+                style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                decoration: InputDecoration(
+                  hintText: 'e.g. Meta Ads Campaign for Restaurant',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  isDense: true,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text('Description',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: subtitleCtrl,
+                maxLines: 2,
+                style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                decoration: InputDecoration(
+                  hintText: 'Brief description with measurable results',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  isDense: true,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text('Portfolio / Live URL',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: urlCtrl,
+                style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  hintText: 'https://...',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  isDense: true,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final title = titleCtrl.text.trim();
+                    if (title.isEmpty) return;
+
+                    final updatedProof = ProofItem(
+                      categoryBadge: proof.categoryBadge,
+                      title: title,
+                      subtitle: subtitleCtrl.text.trim().isNotEmpty
+                          ? subtitleCtrl.text.trim()
+                          : proof.subtitle,
+                      metrics: proof.metrics,
+                      personalPortfolioUrl: urlCtrl.text.trim(),
+                      clientProjectUrl: proof.clientProjectUrl,
+                      linkText: proof.linkText,
+                      tags: proof.tags,
+                      attachedFiles: proof.attachedFiles,
+                      candidateName: proof.candidateName,
+                      avatarUrl: proof.avatarUrl,
+                      rating: proof.rating,
+                      reviewCount: proof.reviewCount,
+                    );
+
+                    final updatedList = List<ProofItem>.from(_storedProofs);
+                    updatedList[index] = updatedProof;
+
+                    final jsonList = updatedList.map((p) => p.toJson()).toList();
+                    await StorageService.saveStoredProofs(_currentDomainId, jsonList);
+
+                    if (mounted) {
+                      setState(() => _storedProofs = updatedList);
+                      Navigator.of(ctx).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: const Color(0xFF10B981),
+                          content: Text('✓ Proof updated successfully!',
+                              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.bluePrimary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                  child: Text('Save Changes',
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14, fontWeight: FontWeight.w800)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -1380,13 +1605,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Upload Verified Resume / CV',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textDark,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Upload Verified Resume / CV',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textDark,
+                ),
+              ),
+              if (_resumeDocs.isNotEmpty)
+                GestureDetector(
+                  onTap: _saveResumeDocs,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: AppColors.bluePrimary,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      'Save',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 6),
           Text(
@@ -1399,8 +1648,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Resume Document (PDF/DOCX)',
             isResumeMode: true,
             initialFiles: _resumeDocs,
-            onFilesChanged: (files) => setState(() => _resumeDocs = files),
+            onFilesChanged: (files) {
+              setState(() => _resumeDocs = files);
+              // Auto-save after upload
+              _saveResumeDocs();
+            },
           ),
+          if (_resumeDocs.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _saveResumeDocs,
+                icon: const Icon(Icons.save_alt_rounded, size: 17),
+                label: Text('Save Resume',
+                    style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13.5, fontWeight: FontWeight.w800)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.bluePrimary,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

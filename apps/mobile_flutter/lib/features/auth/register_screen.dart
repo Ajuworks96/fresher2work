@@ -76,6 +76,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         phone: phone.isNotEmpty ? fullPhone : null,
       );
 
+      // Wipe out any old data from previous sessions or cloud backups
+      await StorageService.clearAll();
+
       if (res['token'] != null) {
         await StorageService.saveToken(res['token']);
       }

@@ -29,6 +29,12 @@ class StorageService {
     await prefs.remove(_lastActiveKey);
   }
 
+  static Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+
   static Future<void> updateLastActive() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_lastActiveKey, DateTime.now().millisecondsSinceEpoch);
@@ -126,5 +132,27 @@ class StorageService {
   static Future<void> resetStoredProofs(String domainId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('$_proofsPrefix$domainId');
+  }
+
+  // --- Resume Persistence ---
+  static const String _resumeKey = 'fresher2work_resume_docs';
+
+  static Future<List<Map<String, dynamic>>> getResumeDocs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString(_resumeKey);
+    if (data != null) {
+      try {
+        final list = jsonDecode(data) as List;
+        return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      } catch (_) {
+        return [];
+      }
+    }
+    return [];
+  }
+
+  static Future<void> saveResumeDocs(List<Map<String, dynamic>> docs) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_resumeKey, jsonEncode(docs));
   }
 }

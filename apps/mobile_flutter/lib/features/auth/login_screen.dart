@@ -34,16 +34,19 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
     try {
       final res = await ApiService.login(email, password);
+      
+      // Wipe out any old data from previous sessions or cloud backups
+      await StorageService.clearAll();
+
       if (res['token'] != null) {
         await StorageService.saveToken(res['token']);
         if (res['user'] != null) {
           await StorageService.saveUser(res['user']);
         }
         final st = res['student'];
+        // Payment flag check ONLY (not admin verification)
         if (res['isActivated'] == true ||
-            st?['isActivated'] == true ||
-            st?['verificationStatus'] == 'VERIFIED' ||
-            st?['moderationStatus'] == 'APPROVED') {
+            st?['isActivated'] == true) {
           await StorageService.setActivated(true);
         }
       }
