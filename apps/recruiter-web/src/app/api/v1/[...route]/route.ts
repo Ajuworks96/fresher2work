@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import studentsDataRaw from '@/lib/students_data.json';
 import platformDataRaw from '@/lib/platform_data.json';
+import { getDbState, setDbState, getDeletedStudentIds, markStudentDeleted } from '@/lib/db_storage';
 
 function normalizeCompanyName(name?: string): string {
   return (name || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
@@ -45,7 +46,7 @@ function deduplicateCompaniesList(companies: any[]): any[] {
 // Global cache shared within Node / serverless memory
 const globalStore = globalThis as any;
 if (!globalStore.__ftw_students) {
-  globalStore.__ftw_students = [...(studentsDataRaw as any[])];
+  globalStore.__ftw_students = [];
 }
 if (!globalStore.__ftw_recruiters) {
   globalStore.__ftw_recruiters = [...((platformDataRaw as any).recruiters || [])];
@@ -254,10 +255,62 @@ function getAuthUser(req: NextRequest): { id: string; email: string; role: strin
   return null;
 }
 
+let lastDbSync = 0;
+const DB_SYNC_INTERVAL_MS = 2000;
+
+async function syncFromDb(): Promise<void> {
+  const now = Date.now();
+  if (now - lastDbSync < DB_SYNC_INTERVAL_MS && globalStore.__ftw_db_initialized) {
+    return;
+  }
+  try {
+    const [dbStudents, dbRecruiters, dbCompanies, dbPayments, deletedIds] = await Promise.all([
+      getDbState<any[]>('students', []),
+      getDbState<any[]>('recruiters', (platformDataRaw as any).recruiters || []),
+      getDbState<any[]>('companies', deduplicateCompaniesList((platformDataRaw as any).companies || [])),
+      getDbState<any[]>('payments', (platformDataRaw as any).payments || []),
+      getDeletedStudentIds(),
+    ]);
+
+    const deletedSet = new Set(deletedIds || []);
+
+    // Filter out any deleted students
+    const activeStudents = (dbStudents || []).filter(
+      (s: any) => s && !deletedSet.has(s.id) && !deletedSet.has(s.userId)
+    );
+
+    globalStore.__ftw_students = activeStudents;
+    globalStore.__ftw_recruiters = dbRecruiters || [];
+    globalStore.__ftw_companies = deduplicateCompaniesList(dbCompanies || []);
+    globalStore.__ftw_payments = dbPayments || [];
+    globalStore.__ftw_deleted_student_ids = deletedIds || [];
+    globalStore.__ftw_db_initialized = true;
+    lastDbSync = now;
+
+    // Mutate existing arrays in place so references remain valid
+    studentsList.length = 0;
+    studentsList.push(...activeStudents);
+
+    platformData.recruiters = globalStore.__ftw_recruiters;
+    platformData.companies = globalStore.__ftw_companies;
+    platformData.payments = globalStore.__ftw_payments;
+
+    if (platformData.analytics?.metrics) {
+      platformData.analytics.metrics.totalStudents = activeStudents.length;
+      platformData.analytics.metrics.totalRecruiters = platformData.recruiters.length;
+      platformData.analytics.metrics.totalCompanies = platformData.companies.length;
+      platformData.analytics.metrics.successfulPaymentsCount = platformData.payments.length;
+    }
+  } catch (err) {
+    console.error('[syncFromDb Error]', err);
+  }
+}
+
 // =============================================================================
 // GET HANDLER
 // =============================================================================
 export async function GET(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
   const authUser = getAuthUser(req);
@@ -474,6 +527,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 // POST HANDLER
 // =============================================================================
 export async function POST(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
   const body = await req.json().catch(() => ({}));
@@ -600,6 +654,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     if (platformData.analytics?.metrics) {
       platformData.analytics.metrics.totalStudents = studentsList.length;
     }
+    await setDbState('students', studentsList);
 
     const cleanEmail = (email || '').toLowerCase().trim();
     if (!globalStore.__ftw_users) globalStore.__ftw_users = {};
@@ -915,6 +970,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       platformData.analytics.metrics.totalCompanies = platformData.companies.length;
     }
 
+    await setDbState('recruiters', platformData.recruiters);
+    await setDbState('companies', platformData.companies);
+
     return NextResponse.json(
       {
         success: true,
@@ -958,6 +1016,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     if (platformData.analytics?.metrics) {
       platformData.analytics.metrics.totalCompanies = comps.length;
     }
+
+    await setDbState('companies', platformData.companies);
 
     return NextResponse.json({ success: true, company: newCompany }, { status: 201 });
   }
@@ -1164,6 +1224,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       if (matchedStudent.email) globalStore.__ftw_activations[matchedStudent.email.toLowerCase()] = true;
     }
 
+    await setDbState('payments', platformData.payments);
+    await setDbState('students', studentsList);
+
     return NextResponse.json({
       success: true,
       message: 'Payment verified and profile activated successfully',
@@ -1182,6 +1245,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       if (!currentStudent[sub]) currentStudent[sub] = [];
       const newItem = { id: `item-${Date.now()}`, ...body, createdAt: new Date().toISOString() };
       currentStudent[sub].push(newItem);
+      await setDbState('students', studentsList);
       return NextResponse.json({ success: true, item: newItem }, { status: 201 });
     }
     return NextResponse.json({ success: true, item: body }, { status: 201 });
@@ -1194,6 +1258,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
 // PATCH HANDLER
 // =============================================================================
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
   const body = await req.json().catch(() => ({}));
@@ -1255,6 +1320,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
       }
     }
 
+    await setDbState('students', studentsList);
+
     return NextResponse.json({ success: true, student });
   }
 
@@ -1264,6 +1331,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
     const recruiter = (platformData.recruiters || []).find((r: any) => r.id === recId);
     if (recruiter) {
       Object.assign(recruiter, body);
+      await setDbState('recruiters', platformData.recruiters);
       return NextResponse.json({ success: true, recruiter });
     }
     return NextResponse.json({ error: 'Recruiter not found' }, { status: 404 });
@@ -1275,6 +1343,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
     const company = (platformData.companies || []).find((c: any) => c.id === compId);
     if (company) {
       Object.assign(company, body);
+      await setDbState('companies', platformData.companies);
       return NextResponse.json({ success: true, company });
     }
     return NextResponse.json({ error: 'Company not found' }, { status: 404 });
@@ -1287,6 +1356,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ro
 // PUT HANDLER
 // =============================================================================
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
   const body = await req.json().catch(() => ({}));
@@ -1323,6 +1393,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
         ...body,
       };
 
+      await setDbState('students', studentsList);
+
       return NextResponse.json({
         success: true,
         student: currentStudent,
@@ -1347,6 +1419,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
         ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
         skills: currentStudent.skills,
       };
+      await setDbState('students', studentsList);
       return NextResponse.json({
         success: true,
         skills: currentStudent.skills,
@@ -1367,6 +1440,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
         ...(globalStore.__ftw_student_profile_overrides['default'] || {}),
         preferences: currentStudent.preferences,
       };
+      await setDbState('students', studentsList);
       return NextResponse.json({
         success: true,
         preferences: currentStudent.preferences,
@@ -1384,6 +1458,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
 // DELETE HANDLER
 // =============================================================================
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ route: string[] }> }) {
+  await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
 
@@ -1395,19 +1470,22 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       platformData.recruiters.splice(idx, 1);
     }
     globalStore.__ftw_recruiters = platformData.recruiters;
+    await setDbState('recruiters', platformData.recruiters);
     return NextResponse.json({ success: true });
   }
 
-  // 2. Delete Student
+  // 2. Delete Student (Candidate)
   if (path.startsWith('admin/students/')) {
     const studentId = path.replace('admin/students/', '');
-    const idx = studentsList.findIndex((s: any) => s.id === studentId);
+    await markStudentDeleted(studentId);
+    const idx = studentsList.findIndex((s: any) => s.id === studentId || s.userId === studentId);
     if (idx >= 0) {
       studentsList.splice(idx, 1);
       if (platformData.analytics?.metrics) {
         platformData.analytics.metrics.totalStudents = studentsList.length;
       }
     }
+    await setDbState('students', studentsList);
     return NextResponse.json({ success: true });
   }
 
@@ -1419,6 +1497,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       platformData.companies.splice(idx, 1);
     }
     globalStore.__ftw_companies = platformData.companies;
+    await setDbState('companies', platformData.companies);
     return NextResponse.json({ success: true });
   }
 
@@ -1440,6 +1519,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       }
     }
     globalStore.__ftw_payments = platformData.payments;
+    await setDbState('payments', platformData.payments);
     return NextResponse.json({ success: true, payments: platformData.payments });
   }
 
@@ -1451,6 +1531,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       platformData.analytics.metrics.successfulPaymentsCount = 0;
       platformData.analytics.metrics.totalRevenueInRupees = 0;
     }
+    await setDbState('payments', []);
     return NextResponse.json({ success: true, payments: [] });
   }
 

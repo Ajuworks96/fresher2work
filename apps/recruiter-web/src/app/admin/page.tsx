@@ -253,10 +253,17 @@ export default function SuperAdminSidebarPage() {
         try { return JSON.parse(localStorage.getItem('ftw_admin_student_overrides') || '{}'); } catch (_) { return {}; }
       })();
 
-      const mergedStudents = studentList.map((st: any) => {
-        const override = localStudentOverrides[st.id] || (st.email ? localStudentOverrides[st.email.toLowerCase()] : null);
-        return override ? { ...st, ...override } : st;
-      });
+      const localDeletedIds: string[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_deleted_students') || '[]'); } catch (_) { return []; }
+      })();
+      const localDeletedSet = new Set(localDeletedIds);
+
+      const mergedStudents = studentList
+        .filter((st: any) => !localDeletedSet.has(st.id) && !localDeletedSet.has(st.userId))
+        .map((st: any) => {
+          const override = localStudentOverrides[st.id] || (st.email ? localStudentOverrides[st.email.toLowerCase()] : null);
+          return override ? { ...st, ...override } : st;
+        });
 
       setStudents(mergedStudents);
 
@@ -434,14 +441,32 @@ export default function SuperAdminSidebarPage() {
   const handleDeleteCandidate = async (candidateId: string, candidateName: string) => {
     if (!confirm(`Are you sure you want to permanently delete candidate "${candidateName}"?`)) return;
     try {
+      // 1. Optimistically update local UI state immediately
+      setStudents((prev) => prev.filter((s) => s.id !== candidateId && s.userId !== candidateId));
+      if (inspectingCandidate?.id === candidateId || inspectingCandidate?.userId === candidateId) {
+        setInspectingCandidate(null);
+      }
+
+      // 2. Persist deleted ID in browser cache
+      const localDeletedIds: string[] = (() => {
+        try { return JSON.parse(localStorage.getItem('ftw_admin_deleted_students') || '[]'); } catch (_) { return []; }
+      })();
+      if (!localDeletedIds.includes(candidateId)) {
+        localDeletedIds.push(candidateId);
+        localStorage.setItem('ftw_admin_deleted_students', JSON.stringify(localDeletedIds));
+      }
+      try {
+        const overrides = JSON.parse(localStorage.getItem('ftw_admin_student_overrides') || '{}');
+        delete overrides[candidateId];
+        localStorage.setItem('ftw_admin_student_overrides', JSON.stringify(overrides));
+      } catch (_) {}
+
+      // 3. Delete from backend & Supabase DB
       await fetch(`${apiUrl}/api/v1/admin/students/${candidateId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      showToast('✓ Candidate deleted successfully');
-      if (inspectingCandidate?.id === candidateId) {
-        setInspectingCandidate(null);
-      }
+      showToast('✓ Candidate deleted permanently');
       await fetchAdminData();
     } catch (err: any) {
       showToast(`⚠️ ${err.message}`);
