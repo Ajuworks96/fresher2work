@@ -198,7 +198,7 @@ export default function PrivacyPolicyPage() {
               <p><strong className="text-slate-950">Corporate Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
               <p><strong className="text-slate-950">Official Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 hover:underline">infovelvetbyte@gmail.com</a></p>
               <p><strong className="text-slate-950">Helpline Phone:</strong> <a href="tel:+918921658090" className="text-emerald-700 hover:underline">+91 8921658090</a></p>
-              <p><strong className="text-slate-950">Operating Locations:</strong> Calicut, Kerala & Bengaluru, Karnataka, India</p>
+              <p><strong className="text-slate-950">Operating Locations:</strong> Calicut and Kochi, Kerala, India</p>
               <p><strong className="text-slate-950">Grievance SLA:</strong> All complaints acknowledged within 24 hours and resolved within 7 business days.</p>
             </div>
           </section>

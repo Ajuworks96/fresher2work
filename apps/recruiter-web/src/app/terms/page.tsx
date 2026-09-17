@@ -179,7 +179,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-xl font-bold">7. Governing Law & Dispute Resolution</h2>
             </div>
             <p className="mt-4">
-              These Terms shall be interpreted, governed by, and construed in accordance with the laws of India. Any legal dispute, controversy, or claim arising out of or relating to these terms or use of the platform shall be subject to the exclusive jurisdiction of the competent courts in Kozhikode (Calicut), Kerala or Bengaluru, Karnataka, India.
+              These Terms shall be interpreted, governed by, and construed in accordance with the laws of India. Any legal dispute, controversy, or claim arising out of or relating to these terms or use of the platform shall be subject to the exclusive jurisdiction of the competent courts in Kozhikode (Calicut) or Kochi, Kerala, India.
             </p>
           </section>
 
@@ -198,7 +198,7 @@ export default function TermsOfServicePage() {
               <p><strong className="text-slate-950">Legal Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
               <p><strong className="text-slate-950">Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 hover:underline">infovelvetbyte@gmail.com</a></p>
               <p><strong className="text-slate-950">Helpline:</strong> <a href="tel:+918921658090" className="text-emerald-700 hover:underline">+91 8921658090</a></p>
-              <p><strong className="text-slate-950">Locations:</strong> Calicut (Kerala) & Bengaluru (Karnataka), India</p>
+              <p><strong className="text-slate-950">Locations:</strong> Calicut and Kochi, Kerala, India</p>
             </div>
           </section>
 

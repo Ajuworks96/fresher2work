@@ -278,7 +278,7 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
               ),
               const SizedBox(height: 6),
               const Text(
-                'Velvetbyte PVT Ltd / FresherToWork\nCalicut, Kerala & Bengaluru, Karnataka, India',
+                'Velvetbyte PVT Ltd / FresherToWork\nCalicut and Kochi, Kerala, India',
                 style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
               ),
               const Divider(color: Color(0xFF334155), height: 32),

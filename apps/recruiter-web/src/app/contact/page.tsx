@@ -119,10 +119,10 @@ export default function ContactPage() {
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Karnataka Office</span>
-                <p className="mt-1 text-sm font-bold text-slate-950">Bengaluru Technology Hub</p>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Kochi Office</span>
+                <p className="mt-1 text-sm font-bold text-slate-950">Kochi Technology Hub</p>
                 <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                  Indiranagar / HSR Layout Tech Corridor, Bengaluru, Karnataka – 560038, India
+                  Infopark Kochi / Kakkanad IT Corridor, Ernakulam, Kerala – 682042, India
                 </p>
               </div>
             </div>
