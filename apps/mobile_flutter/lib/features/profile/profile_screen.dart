@@ -10,6 +10,7 @@ import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
 import '../activation/activation_screen.dart';
 import '../auth/login_screen.dart';
+import '../legal/legal_policy_screen.dart';
 import '../projects/widgets/file_upload_zone.dart';
 import 'edit_profile_screen.dart';
 
@@ -690,6 +691,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               child: IconButton(
                                 icon: const Icon(
+                                  Icons.shield_outlined,
+                                  size: 19,
+                                  color: AppColors.bluePrimary,
+                                ),
+                                tooltip: 'Legal & Policies',
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const LegalPolicyScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 42,
+                              height: 42,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
                                   Icons.share_outlined,
                                   size: 19,
                                   color: AppColors.textDark,
@@ -1071,7 +1102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Embedded ₹99 Discovery Pass Card
                   _buildDiscoveryPassCard(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 18),
+
+                  // Legal, Trust & Policies Card
+                  _buildLegalPoliciesCard(),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
@@ -1817,6 +1852,135 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLegalPoliciesCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.borderSubtle),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.shield_outlined,
+                  size: 18,
+                  color: AppColors.bluePrimary,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Trust, Safety & Policies',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Divider(color: AppColors.borderSubtle, height: 1),
+          const SizedBox(height: 8),
+          _buildPolicyRowItem(
+            icon: Icons.lock_outline_rounded,
+            title: 'Privacy Policy',
+            subtitle: 'DPDP Act 2023 compliant data security',
+            tab: LegalTab.privacy,
+          ),
+          _buildPolicyRowItem(
+            icon: Icons.gavel_rounded,
+            title: 'Terms of Service',
+            subtitle: 'Rules for freshers and corporate recruiters',
+            tab: LegalTab.terms,
+          ),
+          _buildPolicyRowItem(
+            icon: Icons.currency_rupee_rounded,
+            title: 'Refund & Cancellation',
+            subtitle: '₹99 verification fee & refund criteria',
+            tab: LegalTab.refund,
+          ),
+          _buildPolicyRowItem(
+            icon: Icons.support_agent_rounded,
+            title: 'Contact & Grievance',
+            subtitle: 'Email & WhatsApp helpline assistance',
+            tab: LegalTab.contact,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPolicyRowItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required LegalTab tab,
+  }) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => LegalPolicyScreen(initialTab: tab),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: AppColors.textMuted),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: AppColors.textMuted,
+            ),
+          ],
+        ),
       ),
     );
   }

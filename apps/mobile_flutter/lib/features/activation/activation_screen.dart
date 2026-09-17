@@ -4,6 +4,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
+import '../legal/legal_policy_screen.dart';
 import '../navigation/main_navigation_screen.dart';
 
 class ActivationScreen extends StatefulWidget {
@@ -504,6 +505,69 @@ class _ActivationScreenState extends State<ActivationScreen> {
                                   'Pay ₹99 via UPI / Razorpay →',
                                   style: GoogleFonts.plusJakartaSans(fontSize: 14.5, fontWeight: FontWeight.w800),
                                 ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              'By proceeding, you agree to our ',
+                              style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textLight),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const LegalPolicyScreen(initialTab: LegalTab.terms),
+                              )),
+                              child: Text(
+                                'Terms',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.bluePrimary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' • ',
+                              style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textLight),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const LegalPolicyScreen(initialTab: LegalTab.privacy),
+                              )),
+                              child: Text(
+                                'Privacy',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.bluePrimary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' • ',
+                              style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textLight),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const LegalPolicyScreen(initialTab: LegalTab.refund),
+                              )),
+                              child: Text(
+                                'Refund Policy',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.bluePrimary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
