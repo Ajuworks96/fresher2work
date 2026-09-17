@@ -57,7 +57,7 @@ if (!globalStore.__ftw_companies) {
   globalStore.__ftw_companies = deduplicateCompaniesList(globalStore.__ftw_companies);
 }
 if (!globalStore.__ftw_payments) {
-  globalStore.__ftw_payments = [...((platformDataRaw as any).payments || [])];
+  globalStore.__ftw_payments = [];
 }
 if (!globalStore.__ftw_shortlists) {
   globalStore.__ftw_shortlists = [];
@@ -268,7 +268,7 @@ async function syncFromDb(): Promise<void> {
       getDbState<any[]>('students', []),
       getDbState<any[]>('recruiters', (platformDataRaw as any).recruiters || []),
       getDbState<any[]>('companies', deduplicateCompaniesList((platformDataRaw as any).companies || [])),
-      getDbState<any[]>('payments', (platformDataRaw as any).payments || []),
+      getDbState<any[]>('payments', []),
       getDeletedStudentIds(),
     ]);
 
@@ -462,10 +462,21 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
 
   // 10. Student Current Profile
   if (path === 'students/me') {
-    let currentStudent = studentsList[0] || null;
+    let currentStudent: any = null;
     if (authUser?.email) {
-      const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase());
+      const found = studentsList.find((s: any) => s.email?.toLowerCase() === authUser.email.toLowerCase() || s.id === authUser.id || s.userId === authUser.id);
       if (found) currentStudent = found;
+    }
+
+    // If still not found and auth user was provided, check global users cache
+    if (!currentStudent && authUser?.email && globalStore.__ftw_users?.[authUser.email.toLowerCase()]) {
+      const u = globalStore.__ftw_users[authUser.email.toLowerCase()];
+      currentStudent = u.student || u;
+    }
+
+    // Only fallback to studentsList[0] if no auth user is present AND studentsList exists (e.g. initial dev preview)
+    if (!currentStudent && !authUser && studentsList.length > 0) {
+      currentStudent = studentsList[0];
     }
 
     if (currentStudent) {
@@ -478,20 +489,21 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
       }
     }
 
+    // STRICT PAYMENT ACTIVATION CHECK:
+    // Admin verification of profile/documents (verificationStatus) does NOT bypass payment!
     const isAct = Boolean(
       currentStudent?.isActivated === true ||
       (currentStudent?.id && globalStore.__ftw_activations?.[currentStudent.id]) ||
       (currentStudent?.userId && globalStore.__ftw_activations?.[currentStudent.userId]) ||
-      (currentStudent?.email && globalStore.__ftw_activations?.[currentStudent.email.toLowerCase()]) ||
-      currentStudent?.verificationStatus === 'VERIFIED'
+      (currentStudent?.email && globalStore.__ftw_activations?.[currentStudent.email.toLowerCase()])
     );
 
     const enrichedStudent = currentStudent
       ? {
           ...currentStudent,
           isActivated: isAct,
-          verificationStatus: isAct ? 'VERIFIED' : (currentStudent.verificationStatus || 'READY'),
-          moderationStatus: isAct ? 'APPROVED' : (currentStudent.moderationStatus || 'APPROVED'),
+          verificationStatus: currentStudent.verificationStatus || 'PENDING',
+          moderationStatus: currentStudent.moderationStatus || 'APPROVED',
         }
       : null;
 
@@ -505,7 +517,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         missingFields: [],
       },
       isActivated: isAct,
-      verificationStatus: isAct ? 'VERIFIED' : (currentStudent?.verificationStatus ?? 'READY'),
+      verificationStatus: currentStudent?.verificationStatus ?? 'PENDING',
       activation: {
         isActivated: isAct,
         activatedAt: isAct ? (currentStudent?.activatedAt || new Date().toISOString()) : null,
@@ -1156,30 +1168,74 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
   if (path === 'payments/verify-payment') {
     const { orderId, paymentId, signature, candidateName, email, studentId } = body;
     const authUser = getAuthUser(req);
+    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_TchOu7JRRpZS37';
     const keySecret = process.env.RAZORPAY_KEY_SECRET || 'H6fhPAbNIVsPGg8P6gy9reUU';
 
-    let isSignatureValid = false;
-    if (orderId && paymentId && signature && keySecret) {
-      try {
-        const crypto = await import('crypto');
-        const generatedSignature = crypto
-          .createHmac('sha256', keySecret)
-          .update(`${orderId}|${paymentId}`)
-          .digest('hex');
-        isSignatureValid = generatedSignature === signature;
-      } catch (err) {
-        console.error('Signature verify error:', err);
-      }
+    if (!orderId || !paymentId || !signature) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required payment verification parameters (orderId, paymentId, signature).' },
+        { status: 400 }
+      );
     }
 
-    // Also accept test/mock signatures for dev/testing
-    const isValid = isSignatureValid || (signature && (signature.startsWith('sig_mock_') || signature.length > 10));
+    let isSignatureValid = false;
+    try {
+      const crypto = await import('crypto');
+      const generatedSignature = crypto
+        .createHmac('sha256', keySecret)
+        .update(`${orderId}|${paymentId}`)
+        .digest('hex');
+      isSignatureValid = generatedSignature === signature;
+    } catch (err) {
+      console.error('[Signature Verify Error]', err);
+    }
+
+    // Direct Server-Side Razorpay API Status Verification
+    let razorpayVerified = false;
+    try {
+      const basicAuth = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+      const rzpRes = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}`, {
+        headers: { Authorization: `Basic ${basicAuth}` },
+      });
+      if (rzpRes.ok) {
+        const rzpPayData = await rzpRes.json();
+        // Payment must be captured or authorized for orderId and ₹99 (9900 paise)
+        if (
+          (rzpPayData.status === 'captured' || rzpPayData.status === 'authorized') &&
+          rzpPayData.order_id === orderId &&
+          Number(rzpPayData.amount) === 9900
+        ) {
+          razorpayVerified = true;
+        }
+      }
+    } catch (apiErr) {
+      console.warn('[Razorpay API Verify Warning]', apiErr);
+    }
+
+    // STRICT CHECK: Must either have a cryptographically valid Razorpay signature OR direct Razorpay captured status
+    if (!isSignatureValid && !razorpayVerified) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Payment verification failed. Invalid Razorpay signature or payment was not captured.',
+          isActivated: false,
+        },
+        { status: 400 }
+      );
+    }
 
     const targetEmail = (email || authUser?.email || '').toLowerCase().trim();
     const matchedStudent = studentsList.find((s: any) =>
       (studentId && (s.id === studentId || s.userId === studentId)) ||
       (targetEmail && s.email && s.email.toLowerCase() === targetEmail)
-    ) || studentsList[0];
+    );
+
+    if (!matchedStudent) {
+      return NextResponse.json(
+        { success: false, error: 'Candidate profile matching payment details could not be found.' },
+        { status: 404 }
+      );
+    }
 
     const studentDisplayName = candidateName || matchedStudent?.fullName || 'Candidate';
     const studentDisplayEmail = targetEmail || matchedStudent?.email || 'candidate@freshertowork.com';
@@ -1194,15 +1250,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       currency: 'INR',
       status: 'SUCCESS',
       createdAt: new Date().toISOString(),
-      studentId: matchedStudent?.id || studentId,
+      studentId: matchedStudent.id,
       candidateName: studentDisplayName,
       candidateEmail: studentDisplayEmail,
       user: {
-        id: matchedStudent?.userId || matchedStudent?.id || `user-${Date.now()}`,
+        id: matchedStudent.userId || matchedStudent.id || `user-${Date.now()}`,
         email: studentDisplayEmail,
         fullName: studentDisplayName,
       },
-      isTest: true,
+      isTest: false,
     };
 
     if (!platformData.payments) platformData.payments = [];
@@ -1214,15 +1270,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       platformData.analytics.metrics.totalRevenueInRupees = (platformData.analytics.metrics.totalRevenueInRupees || 0) + 99;
     }
 
-    // Mark candidate as verified & activated in platform data and admin dashboard
-    if (matchedStudent) {
-      matchedStudent.isActivated = true;
-      matchedStudent.verificationStatus = 'VERIFIED';
-      matchedStudent.moderationStatus = 'APPROVED';
-      if (!globalStore.__ftw_activations) globalStore.__ftw_activations = {};
-      globalStore.__ftw_activations[matchedStudent.id] = true;
-      if (matchedStudent.email) globalStore.__ftw_activations[matchedStudent.email.toLowerCase()] = true;
-    }
+    // Mark candidate as activated
+    matchedStudent.isActivated = true;
+    matchedStudent.activatedAt = new Date().toISOString();
+    if (!globalStore.__ftw_activations) globalStore.__ftw_activations = {};
+    globalStore.__ftw_activations[matchedStudent.id] = true;
+    if (matchedStudent.email) globalStore.__ftw_activations[matchedStudent.email.toLowerCase()] = true;
 
     await setDbState('payments', platformData.payments);
     await setDbState('students', studentsList);
@@ -1231,9 +1284,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       success: true,
       message: 'Payment verified and profile activated successfully',
       payment: newPayment,
-      verifiedByRazorpay: isSignatureValid,
+      verifiedByRazorpay: isSignatureValid || razorpayVerified,
       isActivated: true,
-      verificationStatus: 'VERIFIED',
+      verificationStatus: matchedStudent.verificationStatus || 'PENDING',
     });
   }
 

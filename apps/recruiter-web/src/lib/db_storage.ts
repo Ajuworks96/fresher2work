@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 
 const connectionString =
   process.env.DATABASE_URL ||
-  'postgresql://postgres.sxsiarjhqgvzsqmwscap:FresherToWork%402026@aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres';
+  'postgresql://postgres.sxsiarjhqgvzsqmwscap:FresherToWork%402026@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres';
 
 let pool: Pool | null = null;
 
@@ -11,9 +11,9 @@ function getPool(): Pool {
     pool = new Pool({
       connectionString,
       ssl: { rejectUnauthorized: false },
-      max: 5,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
+      max: 2,
+      idleTimeoutMillis: 15000,
+      connectionTimeoutMillis: 8000,
     });
     pool.on('error', (err) => {
       console.error('[DB Pool Error]', err);

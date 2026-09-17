@@ -383,17 +383,12 @@ export default function SuperAdminSidebarPage() {
       setRecruiters(mergedRecruiters);
       setCompanies(mergedCompanies);
 
-      // Merge server response with browser-persisted payments cache
-      const localPayments: any[] = (() => {
-        try { return JSON.parse(localStorage.getItem('ftw_admin_payments_cache') || '[]'); } catch (_) { return []; }
-      })();
-      const mergedPayments = [...(resPayments.payments || [])];
-      for (const lp of localPayments) {
-        if (!mergedPayments.some((p: any) => p.id === lp.id || (p.razorpayPaymentId && p.razorpayPaymentId === lp.razorpayPaymentId))) {
-          mergedPayments.push(lp);
-        }
-      }
-      setPayments(mergedPayments);
+      // Server response is the single source of truth for payment ledger
+      const serverPayments: any[] = resPayments.payments || [];
+      setPayments(serverPayments);
+      try {
+        localStorage.setItem('ftw_admin_payments_cache', JSON.stringify(serverPayments));
+      } catch (_) {}
 
       if (inspectingCandidate) {
         const updated = studentList.find((s: any) => s.id === inspectingCandidate.id);
@@ -494,9 +489,11 @@ export default function SuperAdminSidebarPage() {
   const handleModerateStudent = async (studentId: string, status: string, isActivated?: boolean, moderationNotes?: string | null) => {
     setModeratingId(studentId);
     try {
-      const isApproved = status === 'VERIFIED' || status === 'APPROVED' || isActivated === true;
+      const existingStudent = students.find((s) => s.id === studentId);
+      const isApproved = status === 'VERIFIED' || status === 'APPROVED';
       const targetStatus = isApproved ? 'VERIFIED' : status;
-      const targetActivated = isApproved ? true : (isActivated ?? false);
+      // Do not automatically grant paid Discovery Pass when verifying candidate profile documents
+      const targetActivated = isActivated !== undefined ? isActivated : (existingStudent?.isActivated ?? false);
 
       // 1. Immediately persist to localStorage for zero-latency local durability
       const currentOverrides: Record<string, any> = (() => {

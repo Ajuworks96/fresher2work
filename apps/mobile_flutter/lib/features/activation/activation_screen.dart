@@ -53,16 +53,16 @@ class _ActivationScreenState extends State<ActivationScreen> {
           profile['isActivated'] == true ||
           st['isActivated'] == true;
 
-      // Also check local cache (set only after successful Razorpay verification)
-      final localPaid = await StorageService.isActivated();
-      final isAct = hasPaid || localPaid;
-
+      // Strictly sync local cache with verified backend response
       if (hasPaid) {
         await StorageService.setActivated(true);
+      } else {
+        await StorageService.setActivated(false);
       }
+
       if (mounted) {
-        setState(() => _isActivated = isAct);
-        if (isAct) {
+        setState(() => _isActivated = hasPaid);
+        if (hasPaid) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
             (route) => false,
@@ -249,6 +249,35 @@ class _ActivationScreenState extends State<ActivationScreen> {
         },
         'theme': {
           'color': '#2563EB',
+        },
+        'retry': {'enabled': true, 'max_count': 3},
+        'send_sms_hash': true,
+        'modal': {
+          'confirm_close': true,
+          'animation': true,
+        },
+        'config': {
+          'display': {
+            'blocks': {
+              'upi': {
+                'name': 'Pay with UPI (GPay, PhonePe, QR Code, UPI ID)',
+                'instruments': [
+                  {'method': 'upi'},
+                  {'method': 'qr'},
+                ],
+              },
+              'cards_netbanking': {
+                'name': 'Cards, Netbanking & Wallets',
+                'instruments': [
+                  {'method': 'card'},
+                  {'method': 'netbanking'},
+                  {'method': 'wallet'},
+                ],
+              },
+            },
+            'sequence': ['block.upi', 'block.cards_netbanking'],
+            'preferences': {'show_default_blocks': true},
+          },
         },
       };
 

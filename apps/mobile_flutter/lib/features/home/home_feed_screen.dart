@@ -25,7 +25,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   bool _isActivated = false;
   final TextEditingController _searchController = TextEditingController();
   List<ProofItem> _storedProofs = [];
-  bool _showFilterSheet = false;
   String _filterCategory = 'All';
 
   static const List<String> _filterOptions = ['All', 'Meta Ads', 'SEO', 'Website', 'Video', 'Design', 'Analytics', 'Content'];

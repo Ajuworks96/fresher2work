@@ -58,26 +58,5 @@
       "createdAt": "2026-09-15T10:00:00.000Z"
     }
   ],
-  "payments": [
-    {
-      "id": "pay_test_01",
-      "gatewayOrderId": "order_test_20260916_01",
-      "razorpayOrderId": "order_test_20260916_01",
-      "gatewayPaymentId": "pay_TchOu7JRRpZS37_demo",
-      "razorpayPaymentId": "pay_TchOu7JRRpZS37_demo",
-      "amountPaise": 9900,
-      "currency": "INR",
-      "status": "SUCCESS",
-      "createdAt": "2026-09-16T12:00:00.000Z",
-      "studentId": "student-arjun-quadcubes-01",
-      "candidateName": "Arjun P",
-      "candidateEmail": "arjunpquadcubes@gmail.com",
-      "user": {
-        "id": "user-arjun-quadcubes-01",
-        "fullName": "Arjun P",
-        "email": "arjunpquadcubes@gmail.com"
-      },
-      "isTest": true
-    }
-  ]
+  "payments": []
 }

@@ -182,169 +182,305 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                       ),
                 const SizedBox(height: 14),
 
-                // Select Subject Sub-Category
-                Text('Proof Category *', style: _labelStyle),
-                const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.scaffoldBg,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedSubcategory,
-                      isExpanded: true,
-                      items: currentDomain.subjectPills.where((p) => p != 'All').map((p) {
-                        return DropdownMenuItem(value: p, child: Text(p));
-                      }).toList(),
-                      onChanged: (val) {
-                        if (val != null) setModalState(() => selectedSubcategory = val);
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                // Project Title
-                Text('Project Title *', style: _labelStyle),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: titleCtrl,
-                  style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                  decoration: InputDecoration(
-                    hintText: 'e.g. Meta Ads E-commerce Scale or SEO 90-Day Traffic Growth',
-                    filled: true,
-                    fillColor: AppColors.scaffoldBg,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                // Subtitle / Result Summary
-                Text('Work Summary & Objective *', style: _labelStyle),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: subtitleCtrl,
-                  maxLines: 2,
-                  style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
-                  decoration: InputDecoration(
-                    hintText: 'Describe how you executed this project, tools used, and results generated.',
-                    filled: true,
-                    fillColor: AppColors.scaffoldBg,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                // Personal Portfolio URL & Client URLs
-                Text('Personal Portfolio Link (Must) *', style: _labelStyle),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: personalPortfolioCtrl,
-                  style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
-                  decoration: InputDecoration(
-                    hintText: 'https://yourname.portfolio or Behance / GitHub',
-                    prefixIcon: const Icon(Icons.language_rounded, color: AppColors.bluePrimary, size: 18),
-                    filled: true,
-                    fillColor: AppColors.scaffoldBg,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                Text('Client Project Link / Live URL (Optional)', style: _labelStyle),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: clientProjectCtrl,
-                  style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
-                  decoration: InputDecoration(
-                    hintText: 'https://business.facebook.com or client store URL',
-                    prefixIcon: const Icon(Icons.link_rounded, color: AppColors.success, size: 18),
-                    filled: true,
-                    fillColor: AppColors.scaffoldBg,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                // Metrics Achieved Row
-                Text('Key Metrics Achieved', style: _labelStyle),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: metric1ValCtrl,
-                        decoration: InputDecoration(
-                          hintText: 'Value (e.g. 4.8x)',
-                          filled: true,
-                          fillColor: AppColors.scaffoldBg,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                // Dynamic Niche Proof Config
+                () {
+                  final config = NicheProofHelper.getConfig(currentDomain.id, selectedSubcategory);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Niche Guidance Callout Card
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFFBFDBFE)),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.auto_awesome_rounded, color: Color(0xFF2563EB), size: 18),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    config.nicheBadge,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF1E3A8A),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    config.guideText,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 11.5,
+                                      color: const Color(0xFF1E40AF),
+                                      height: 1.35,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        controller: metric1LabelCtrl,
-                        decoration: InputDecoration(
-                          hintText: 'Metric (e.g. ROAS)',
-                          filled: true,
-                          fillColor: AppColors.scaffoldBg,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: metric2ValCtrl,
-                        decoration: InputDecoration(
-                          hintText: 'Value (e.g. ₹35)',
-                          filled: true,
-                          fillColor: AppColors.scaffoldBg,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        controller: metric2LabelCtrl,
-                        decoration: InputDecoration(
-                          hintText: 'Metric (e.g. Avg CPL)',
-                          filled: true,
-                          fillColor: AppColors.scaffoldBg,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
-                // File Upload Zone for Unlimited files
-                FileUploadZone(
-                  initialFiles: attachedFiles,
-                  onFilesChanged: (files) => setModalState(() => attachedFiles = files),
-                  title: 'Attach Work Screenshots, Reports, & PDFs',
-                  hint: 'Attach Meta Ads exports, SEO ranking charts, or case study documents',
-                ),
-                const SizedBox(height: 24),
+                      // Select Subject Sub-Category
+                      Text('Proof Category *', style: _labelStyle),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.scaffoldBg,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.borderSubtle),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: selectedSubcategory,
+                            isExpanded: true,
+                            items: currentDomain.subjectPills.where((p) => p != 'All').map((p) {
+                              return DropdownMenuItem(value: p, child: Text(p));
+                            }).toList(),
+                            onChanged: (val) {
+                              if (val != null) {
+                                setModalState(() {
+                                  selectedSubcategory = val;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Project Title
+                      Text('Project Title *', style: _labelStyle),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: titleCtrl,
+                        style: GoogleFonts.plusJakartaSans(fontSize: 14),
+                        decoration: InputDecoration(
+                          hintText: config.titleHint,
+                          hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textLight),
+                          filled: true,
+                          fillColor: AppColors.scaffoldBg,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Subtitle / Result Summary
+                      Text('Work Summary & Objective *', style: _labelStyle),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: subtitleCtrl,
+                        maxLines: 2,
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
+                        decoration: InputDecoration(
+                          hintText: config.summaryHint,
+                          hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textLight),
+                          filled: true,
+                          fillColor: AppColors.scaffoldBg,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Personal Portfolio URL & Client URLs
+                      Text('Personal Portfolio Link (Must) *', style: _labelStyle),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: personalPortfolioCtrl,
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
+                        decoration: InputDecoration(
+                          hintText: config.portfolioHint,
+                          hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textLight),
+                          prefixIcon: const Icon(Icons.language_rounded, color: AppColors.bluePrimary, size: 18),
+                          filled: true,
+                          fillColor: AppColors.scaffoldBg,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      Text('Client Project Link / Live URL (Optional)', style: _labelStyle),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: clientProjectCtrl,
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13.5),
+                        decoration: InputDecoration(
+                          hintText: config.clientLinkHint,
+                          hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textLight),
+                          prefixIcon: const Icon(Icons.link_rounded, color: AppColors.success, size: 18),
+                          filled: true,
+                          fillColor: AppColors.scaffoldBg,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Metrics Achieved Row with Suggestion Chips
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Key Metrics Achieved *', style: _labelStyle),
+                          Text(
+                            'Tap chip to autofill',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11,
+                              color: AppColors.bluePrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Horizontal Suggestion Chips for the active niche
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: config.suggestedMetrics.map((preset) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 6, bottom: 6),
+                              child: InkWell(
+                                onTap: () {
+                                  setModalState(() {
+                                    if (metric1LabelCtrl.text.isEmpty) {
+                                      metric1LabelCtrl.text = preset.label;
+                                      if (metric1ValCtrl.text.isEmpty) {
+                                        metric1ValCtrl.text = preset.placeholderVal;
+                                      }
+                                    } else if (metric2LabelCtrl.text.isEmpty) {
+                                      metric2LabelCtrl.text = preset.label;
+                                      if (metric2ValCtrl.text.isEmpty) {
+                                        metric2ValCtrl.text = preset.placeholderVal;
+                                      }
+                                    } else {
+                                      metric2LabelCtrl.text = preset.label;
+                                    }
+                                  });
+                                },
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF1F5F9),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.add_rounded, size: 13, color: Color(0xFF2563EB)),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        preset.label,
+                                        style: GoogleFonts.plusJakartaSans(
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF334155),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Metric 1 Inputs
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: metric1ValCtrl,
+                              decoration: InputDecoration(
+                                hintText: 'Value (e.g. ${config.defaultMetric1Val})',
+                                hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textLight),
+                                filled: true,
+                                fillColor: AppColors.scaffoldBg,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: metric1LabelCtrl,
+                              decoration: InputDecoration(
+                                hintText: 'Metric (e.g. ${config.defaultMetric1Label})',
+                                hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textLight),
+                                filled: true,
+                                fillColor: AppColors.scaffoldBg,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Metric 2 Inputs
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: metric2ValCtrl,
+                              decoration: InputDecoration(
+                                hintText: 'Value (e.g. ${config.defaultMetric2Val})',
+                                hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textLight),
+                                filled: true,
+                                fillColor: AppColors.scaffoldBg,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: metric2LabelCtrl,
+                              decoration: InputDecoration(
+                                hintText: 'Metric (e.g. ${config.defaultMetric2Label})',
+                                hintStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textLight),
+                                filled: true,
+                                fillColor: AppColors.scaffoldBg,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // File Upload Zone with Niche-tailored title and hint
+                      FileUploadZone(
+                        initialFiles: attachedFiles,
+                        onFilesChanged: (files) => setModalState(() => attachedFiles = files),
+                        title: config.fileUploadTitle,
+                        hint: config.fileUploadHint,
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  );
+                }(),
 
                 // Save & Publish Button
                 SizedBox(
@@ -399,7 +535,7 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                       if (mounted) {
                         setState(() {
                           if (isEditing) {
-                            _activeProofs[editIndex!] = newProof;
+                            _activeProofs[editIndex] = newProof;
                           } else {
                             _activeProofs.insert(0, newProof);
                           }
