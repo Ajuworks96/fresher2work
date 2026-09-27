@@ -34,6 +34,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _coverLocalPath;
   List<String> _skills = [];
 
+  List<String> _lookingFor = ['Full-time', 'Internship'];
+  List<String> _workModes = ['Remote', 'Hybrid'];
+  List<String> _preferredLocations = ['Kochi', 'Kozhikode', 'Bangalore'];
+
+  String _getUsername() {
+    final name = _candidateFullName.trim().isNotEmpty ? _candidateFullName : 'talent';
+    return name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '_');
+  }
+
+  String get _talentPassportUrl => 'https://freshertowork.com/u/${_getUsername()}';
+
+  int _calculateProfileStrength() {
+    int score = 0;
+    if (_candidateFullName.trim().isNotEmpty && _userRoleTitle.trim().isNotEmpty) score += 20;
+    if (_aboutText.trim().isNotEmpty) score += 10;
+    if (_phoneNumber.trim().isNotEmpty) score += 10;
+    if (_avatarUrl != null || _avatarLocalPath != null) score += 10;
+    if (_skills.length >= 3) score += 15;
+    if (_storedProofs.isNotEmpty) score += 15;
+    if (_resumeDocs.isNotEmpty) score += 10;
+    if (_lookingFor.isNotEmpty && _workModes.isNotEmpty) score += 10;
+    return score.clamp(15, 100);
+  }
+
+  Future<void> _shareTalentPassport() async {
+    final url = _talentPassportUrl;
+    final text = 'Check out my verified Talent Passport on FresherToWork: $url';
+    await Clipboard.setData(ClipboardData(text: url));
+    final waUri = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(text)}');
+    try {
+      if (await canLaunchUrl(waUri)) {
+        await launchUrl(waUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {}
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color(0xFF10B981),
+          content: Text(
+            '✓ Talent Passport URL copied to clipboard! Ready to share.',
+            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
+  }
+
+  Future<void> _copyPassportLink() async {
+    final url = _talentPassportUrl;
+    await Clipboard.setData(ClipboardData(text: url));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color(0xFF10B981),
+          content: Text(
+            '✓ Link copied: $url\nShare on WhatsApp, LinkedIn or Instagram bio!',
+            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 12),
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openPassportUrl() async {
+    final uri = Uri.parse(_talentPassportUrl);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {}
+  }
+
   int _activeTabIndex = 0; // 0: About, 1: Proof Works, 2: Portfolio Links, 3: Resume
   bool _isActivated = false;
   List<ProofItem> _storedProofs = [];
@@ -127,6 +204,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (user['skills'] is List) {
       loadedSkills = (user['skills'] as List).map((e) => e.toString()).toList();
     }
+    List<String> loadedLookingFor = _lookingFor;
+    if (user['lookingFor'] is List && (user['lookingFor'] as List).isNotEmpty) {
+      loadedLookingFor = (user['lookingFor'] as List).map((e) => e.toString()).toList();
+    }
+    List<String> loadedWorkModes = _workModes;
+    if (user['workModes'] is List && (user['workModes'] as List).isNotEmpty) {
+      loadedWorkModes = (user['workModes'] as List).map((e) => e.toString()).toList();
+    }
+    List<String> loadedLocations = _preferredLocations;
+    if (user['preferredLocations'] is List && (user['preferredLocations'] as List).isNotEmpty) {
+      loadedLocations = (user['preferredLocations'] as List).map((e) => e.toString()).toList();
+    }
 
     final cachedActivated = await StorageService.isActivated();
     bool activated = cachedActivated;
@@ -147,6 +236,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _skills = loadedSkills.isNotEmpty
             ? loadedSkills
             : DomainConstants.getDomainById(domain).skills;
+        _lookingFor = loadedLookingFor;
+        _workModes = loadedWorkModes;
+        _preferredLocations = loadedLocations;
         _isActivated = activated;
         _storedProofs = proofs;
       });
@@ -239,6 +331,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
 
+      if (st['lookingFor'] is List && (st['lookingFor'] as List).isNotEmpty) {
+        loadedLookingFor = (st['lookingFor'] as List).map((e) => e.toString()).toList();
+      }
+      if (st['workModes'] is List && (st['workModes'] as List).isNotEmpty) {
+        loadedWorkModes = (st['workModes'] as List).map((e) => e.toString()).toList();
+      }
+      if (st['preferredLocations'] is List && (st['preferredLocations'] as List).isNotEmpty) {
+        loadedLocations = (st['preferredLocations'] as List).map((e) => e.toString()).toList();
+      }
+
       // Merge into existing user cache so resumeDocs, skills, etc. are preserved
       final existingUser = await StorageService.getUser() ?? {};
       existingUser['fullName'] = name;
@@ -249,6 +351,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       existingUser['portfolioUrl'] = portfolio;
       if (avUrl != null) existingUser['avatarUrl'] = avUrl;
       if (cvUrl != null) existingUser['coverUrl'] = cvUrl;
+      existingUser['lookingFor'] = loadedLookingFor;
+      existingUser['workModes'] = loadedWorkModes;
+      existingUser['preferredLocations'] = loadedLocations;
       await StorageService.saveUser(existingUser);
 
       if (mounted) {
@@ -266,6 +371,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _skills = loadedSkills.isNotEmpty
               ? loadedSkills
               : DomainConstants.getDomainById(domain).skills;
+          _lookingFor = loadedLookingFor;
+          _workModes = loadedWorkModes;
+          _preferredLocations = loadedLocations;
           _isActivated = activated;
           _storedProofs = proofs;
         });
@@ -288,6 +396,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _skills = loadedSkills.isNotEmpty
               ? loadedSkills
               : DomainConstants.getDomainById(domain).skills;
+          _lookingFor = loadedLookingFor;
+          _workModes = loadedWorkModes;
+          _preferredLocations = loadedLocations;
           _isActivated = activated;
           _storedProofs = proofs;
         });
@@ -614,13 +725,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
-  }
-
-  bool get _isProfileIncomplete {
-    return _candidateFullName.isEmpty ||
-        _aboutText.isEmpty ||
-        _phoneNumber.isEmpty ||
-        _portfolioUrl.isEmpty;
   }
 
   @override
@@ -984,80 +1088,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 14),
 
-                  // Profile Incomplete Banner (if details missing)
-                  if (_isProfileIncomplete)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEFF6FF),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFBFDBFE)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.bluePrimary,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              Icons.star_rounded,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Complete Your Candidate Profile',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w800,
-                                    color: const Color(0xFF1E3A8A),
-                                  ),
-                                ),
-                                Text(
-                                  'Add your photo, phone & bio to boost recruiter inquiries.',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 11.5,
-                                    color: const Color(0xFF3B82F6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: _navigateToEditProfile,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.bluePrimary,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              minimumSize: Size.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              'Complete',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  // 1. Profile Strength Engine (Completion % + Actionable Gamification Nudges)
+                  _buildProfileStrengthCard(),
+                  const SizedBox(height: 14),
+
+                  // 2. Signature Talent Passport Showcase Card
+                  _buildTalentPassportCard(displayRoleTitle),
+                  const SizedBox(height: 16),
 
                   // Skill Pills with Checkmark Badges
                   Wrap(
@@ -1876,7 +1913,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Unlock ₹99 Discovery Pass',
+                  'Unlock ₹299 Discovery Pass',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -2049,4 +2086,791 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  Widget _buildProfileStrengthCard() {
+    final score = _calculateProfileStrength();
+    final Color scoreColor = score >= 80
+        ? const Color(0xFF10B981)
+        : score >= 50
+            ? const Color(0xFF2563EB)
+            : const Color(0xFFF59E0B);
+
+    // Dynamic actionable nudge
+    String nudgeText = '';
+    String nudgePoints = '';
+    VoidCallback? onNudgeTap;
+
+    if (_storedProofs.isEmpty) {
+      nudgeText = 'Add your first project to Proof of Work';
+      nudgePoints = '+15%';
+      onNudgeTap = () => setState(() => _activeTabIndex = 1);
+    } else if (_resumeDocs.isEmpty) {
+      nudgeText = 'Upload your CV / Resume document';
+      nudgePoints = '+10%';
+      onNudgeTap = () => setState(() => _activeTabIndex = 3);
+    } else if (_lookingFor.isEmpty || _workModes.isEmpty) {
+      nudgeText = 'Set your job opportunities preferences';
+      nudgePoints = '+10%';
+      onNudgeTap = _showOpenToOpportunitiesSheet;
+    } else if (_avatarUrl == null && _avatarLocalPath == null) {
+      nudgeText = 'Add a clear profile photo';
+      nudgePoints = '+10%';
+      onNudgeTap = _navigateToEditProfile;
+    } else if (_skills.length < 5) {
+      nudgeText = 'Add 5+ verified industry skills';
+      nudgePoints = '+10%';
+      onNudgeTap = _navigateToEditProfile;
+    } else {
+      nudgeText = 'Profile 100% complete! Recruiter ready.';
+      nudgePoints = '★';
+      onNudgeTap = _openPassportUrl;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: scoreColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.bolt_rounded, color: scoreColor, size: 20),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Profile Strength',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: scoreColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '$score%',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                    color: scoreColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Progress Bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Container(
+              height: 7,
+              width: double.infinity,
+              color: const Color(0xFFF1F5F9),
+              child: FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: (score / 100.0).clamp(0.05, 1.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: scoreColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Dynamic Smart Nudge Pill
+          InkWell(
+            onTap: onNudgeTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.add_circle_outline_rounded, size: 16, color: scoreColor),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      nudgeText,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF334155),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: scoreColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      nudgePoints,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: scoreColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.chevron_right_rounded, size: 16, color: Color(0xFF94A3B8)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTalentPassportCard(String displayRoleTitle) {
+    final candidateName = _candidateFullName.trim().isNotEmpty ? _candidateFullName : 'Candidate Name';
+    final proofsCount = _storedProofs.length.toString().padLeft(2, '0');
+    final skillsCount = _skills.length.toString().padLeft(2, '0');
+    final resumeCount = _resumeDocs.length.toString().padLeft(2, '0');
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFF334155)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.25),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Passport Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFBBF24).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.stars_rounded, color: Color(0xFFFBBF24), size: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'FRESHERTOWORK TALENT PASSPORT',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.1,
+                        color: const Color(0xFF94A3B8),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.5)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 11),
+                      const SizedBox(width: 4),
+                      Text(
+                        'OFFICIAL',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF34D399),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1, color: Color(0xFF334155)),
+
+          // Identity Section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  candidateName,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  displayRoleTitle,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF38BDF8),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Skill Badges
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: _skills.take(4).map((sk) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E293B),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFF475569)),
+                      ),
+                      child: Text(
+                        sk,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFE2E8F0),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 14),
+
+                // 3 Metrics Counter Boxes
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F172A).withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFF334155)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildPassportMetric('PROJECTS', proofsCount),
+                      Container(width: 1, height: 26, color: const Color(0xFF334155)),
+                      _buildPassportMetric('SKILLS', skillsCount),
+                      Container(width: 1, height: 26, color: const Color(0xFF334155)),
+                      _buildPassportMetric('DOCS/CV', resumeCount),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Open to info row
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B).withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFF334155)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.explore_outlined, color: Color(0xFF38BDF8), size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Open to: ${_lookingFor.join(" • ")}',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Modes: ${_workModes.join(", ")} | ${_preferredLocations.join(", ")}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 10,
+                                color: const Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _showOpenToOpportunitiesSheet,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'Edit',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF38BDF8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Public URL Copy / Preview Bar
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF020617),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFF1E293B)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.link_rounded, color: Color(0xFF64748B), size: 14),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          _talentPassportUrl,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11,
+                            color: const Color(0xFF38BDF8),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _copyPassportLink,
+                        icon: const Icon(Icons.copy_rounded, color: Color(0xFF94A3B8), size: 15),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        tooltip: 'Copy Passport Link',
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        onPressed: _openPassportUrl,
+                        icon: const Icon(Icons.open_in_new_rounded, color: Color(0xFF94A3B8), size: 15),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        tooltip: 'Open in Browser',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 1-Click WhatsApp Share Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _shareTalentPassport,
+                    icon: const Icon(Icons.share_rounded, size: 16),
+                    label: Text(
+                      'Share Talent Passport on WhatsApp',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPassportMetric(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 1),
+        Text(
+          label,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 9.5,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF94A3B8),
+            letterSpacing: 0.8,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showOpenToOpportunitiesSheet() {
+    List<String> tempLookingFor = List.from(_lookingFor);
+    List<String> tempWorkModes = List.from(_workModes);
+    List<String> tempLocations = List.from(_preferredLocations);
+
+    const allLookingFor = ['Full-time', 'Internship', 'Freelance', 'Part-time'];
+    const allWorkModes = ['Remote', 'Hybrid', 'On-site'];
+    const allLocations = [
+      'Kochi',
+      'Kozhikode',
+      'Bangalore',
+      'Trivandrum',
+      'Chennai',
+      'Hyderabad',
+      'Remote / Anywhere'
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 44,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFCBD5E1),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.work_outline_rounded,
+                                  color: AppColors.bluePrimary, size: 20),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Open to Opportunities',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close_rounded,
+                              size: 20, color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Tell recruiters your job preferences. These are highlighted on your Talent Passport.',
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12, color: AppColors.textMuted),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Section 1: Looking For
+                    Text(
+                      'LOOKING FOR',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: allLookingFor.map((item) {
+                        final isSelected = tempLookingFor.contains(item);
+                        return FilterChip(
+                          label: Text(item),
+                          selected: isSelected,
+                          onSelected: (val) {
+                            setModalState(() {
+                              if (val) {
+                                tempLookingFor.add(item);
+                              } else {
+                                tempLookingFor.remove(item);
+                              }
+                            });
+                          },
+                          selectedColor: const Color(0xFFDBEAFE),
+                          checkmarkColor: AppColors.bluePrimary,
+                          labelStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected ? AppColors.bluePrimary : AppColors.textDark,
+                          ),
+                          backgroundColor: const Color(0xFFF1F5F9),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                              color: isSelected ? AppColors.bluePrimary : Colors.transparent,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Section 2: Work Mode
+                    Text(
+                      'WORK MODE',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: allWorkModes.map((item) {
+                        final isSelected = tempWorkModes.contains(item);
+                        return FilterChip(
+                          label: Text(item),
+                          selected: isSelected,
+                          onSelected: (val) {
+                            setModalState(() {
+                              if (val) {
+                                tempWorkModes.add(item);
+                              } else {
+                                tempWorkModes.remove(item);
+                              }
+                            });
+                          },
+                          selectedColor: const Color(0xFFDCFCE7),
+                          checkmarkColor: const Color(0xFF10B981),
+                          labelStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected ? const Color(0xFF065F46) : AppColors.textDark,
+                          ),
+                          backgroundColor: const Color(0xFFF1F5F9),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                              color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Section 3: Preferred Locations
+                    Text(
+                      'PREFERRED LOCATIONS',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: allLocations.map((item) {
+                        final isSelected = tempLocations.contains(item);
+                        return FilterChip(
+                          label: Text(item),
+                          selected: isSelected,
+                          onSelected: (val) {
+                            setModalState(() {
+                              if (val) {
+                                tempLocations.add(item);
+                              } else {
+                                tempLocations.remove(item);
+                              }
+                            });
+                          },
+                          selectedColor: const Color(0xFFFEF3C7),
+                          checkmarkColor: const Color(0xFFD97706),
+                          labelStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected ? const Color(0xFF92400E) : AppColors.textDark,
+                          ),
+                          backgroundColor: const Color(0xFFF1F5F9),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                              color: isSelected ? const Color(0xFFD97706) : Colors.transparent,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Save Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (tempLookingFor.isEmpty) tempLookingFor = ['Full-time'];
+                          if (tempWorkModes.isEmpty) tempWorkModes = ['Remote'];
+
+                          setState(() {
+                            _lookingFor = tempLookingFor;
+                            _workModes = tempWorkModes;
+                            _preferredLocations = tempLocations;
+                          });
+                          final messenger = ScaffoldMessenger.of(context);
+                          Navigator.pop(context);
+
+                          // Save to local cache
+                          final user = await StorageService.getUser() ?? {};
+                          user['lookingFor'] = tempLookingFor;
+                          user['workModes'] = tempWorkModes;
+                          user['preferredLocations'] = tempLocations;
+                          await StorageService.saveUser(user);
+
+                          // Sync to backend
+                          ApiService.updateStudentProfile({
+                            'lookingFor': tempLookingFor,
+                            'workModes': tempWorkModes,
+                            'preferredLocations': tempLocations,
+                          }).catchError((_) => <String, dynamic>{});
+
+                          if (mounted) {
+                            messenger.showSnackBar(
+                              SnackBar(
+                                backgroundColor: const Color(0xFF10B981),
+                                content: Text('✓ Opportunities updated successfully!',
+                                    style: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.w700)),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.bluePrimary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Save Preferences',
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
+

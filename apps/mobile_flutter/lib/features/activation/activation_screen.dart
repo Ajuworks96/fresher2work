@@ -114,7 +114,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Please wait while we confirm your ₹99 payment with Razorpay and activate your Discovery Pass.',
+                'Please wait while we confirm your ₹299 payment with Razorpay and activate your Discovery Pass.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
@@ -180,7 +180,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Color(0xFF10B981),
-              content: Text('✓ ₹99 Discovery Pass Activated! Verified by Razorpay & Admin.'),
+              content: Text('✓ ₹299 Discovery Pass Activated! Verified by Razorpay & Admin.'),
             ),
           );
 
@@ -232,14 +232,14 @@ class _ActivationScreenState extends State<ActivationScreen> {
       final orderId = order['orderId'] as String;
       _currentOrderId = orderId;
       final keyId = (order['keyId'] as String?) ?? 'rzp_test_TchOu7JRRpZS37';
-      final amount = order['amount'] ?? 9900;
+      final amount = order['amount'] ?? 29900;
       final profile = order['profile'] as Map<String, dynamic>?;
 
       var options = {
         'key': keyId,
         'amount': amount,
         'name': 'FresherToWork',
-        'description': 'Direct HR Matching - ₹99 Discovery Pass',
+        'description': 'Direct HR Matching - ₹299 Discovery Pass',
         'order_id': orderId,
         'timeout': 300,
         'prefill': {
@@ -340,7 +340,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
               Text(
                 _isActivated
                     ? 'Admin Verified • Direct HR Discovery Active'
-                    : '1-Time ₹99 Activation • Lifetime Direct HR Discovery',
+                    : '1-Time ₹299 Activation • Lifetime Talent Passport & HR Discovery',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   color: _isActivated ? const Color(0xFF047857) : AppColors.textMuted,
@@ -409,6 +409,8 @@ class _ActivationScreenState extends State<ActivationScreen> {
 
                       _buildBenefitRow('Verified Proof-of-Work Badge Activated'),
                       const SizedBox(height: 12),
+                      _buildBenefitRow('Verified Talent Passport & Public URL Activated'),
+                      const SizedBox(height: 12),
                       _buildBenefitRow('Direct HR Inquiries via WhatsApp & Email Active'),
                       const SizedBox(height: 12),
                       _buildBenefitRow('Unlimited Live Project & Campaign Proofs'),
@@ -464,12 +466,12 @@ class _ActivationScreenState extends State<ActivationScreen> {
                           Row(
                             children: [
                               Text(
-                                '₹99',
+                                '₹299',
                                 style: GoogleFonts.plusJakartaSans(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.bluePrimary),
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '₹499',
+                                '₹999',
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 14,
                                   color: AppColors.textLight,
@@ -484,6 +486,8 @@ class _ActivationScreenState extends State<ActivationScreen> {
                       const Divider(height: 1, color: AppColors.borderSubtle),
                       const SizedBox(height: 18),
 
+                      _buildBenefitRow('Verified Talent Passport & Public URL (freshertowork.com/u/you)'),
+                      const SizedBox(height: 12),
                       _buildBenefitRow('Direct recruiter WhatsApp & Email inquiries'),
                       const SizedBox(height: 12),
                       _buildBenefitRow('Verified Proof-of-Work badge on candidate search'),
@@ -508,7 +512,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                           child: _processing
                               ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                               : Text(
-                                  'Pay ₹99 via UPI / Razorpay →',
+                                  'Pay ₹299 via UPI / Razorpay →',
                                   style: GoogleFonts.plusJakartaSans(fontSize: 14.5, fontWeight: FontWeight.w800),
                                 ),
                         ),

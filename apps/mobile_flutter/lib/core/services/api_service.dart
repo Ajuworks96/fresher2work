@@ -272,7 +272,7 @@ class ApiService {
       Uri.parse('$baseUrl/payments/create-order'),
       headers: await _headers(),
       body: jsonEncode({
-        'amount': 9900,
+        'amount': 29900,
         'currency': 'INR',
       }),
     );

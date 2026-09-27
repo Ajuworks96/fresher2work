@@ -181,9 +181,9 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
         ),
         const SizedBox(height: 16),
         _buildSectionCard(
-          title: '3. Profile Activation Fee (₹99)',
+          title: '3. Profile Activation Fee (₹299)',
           content:
-              'Candidates may choose to activate their profile for direct recruiter discovery for a nominal one-time verification fee of ₹99. This covers manual human moderation, portfolio proofing, and cloud hosting.',
+              'Candidates may choose to activate their profile for direct recruiter discovery for a nominal one-time verification fee of ₹299. This covers manual human moderation, portfolio proofing, and cloud hosting.',
         ),
         const SizedBox(height: 16),
         _buildSectionCard(
@@ -213,13 +213,13 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
           icon: Icons.currency_rupee_rounded,
           color: const Color(0xFFF59E0B),
           title: 'Refund & Cancellation',
-          subtitle: 'Clear terms on candidate profile verification fee (₹99)',
+          subtitle: 'Clear terms on candidate profile verification fee (₹299)',
         ),
         const SizedBox(height: 20),
         _buildSectionCard(
           title: '1. Profile Activation Fee Overview',
           content:
-              'Candidate profile activation requires a one-time digital processing fee of ₹99 (inclusive of taxes) processed securely via Razorpay.',
+              'Candidate profile activation requires a one-time digital processing fee of ₹299 (inclusive of taxes) processed securely via Razorpay.',
         ),
         const SizedBox(height: 16),
         _buildSectionCard(

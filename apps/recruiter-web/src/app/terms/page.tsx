@@ -114,7 +114,7 @@ export default function TermsOfServicePage() {
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
                 <div>
-                  <strong className="text-slate-950">One-Time Discovery Pass (₹99):</strong> Candidate profile verification, priority discovery ranking, and direct recruiter contact reveals require an upfront, non-recurring verification fee of <strong>₹99 (inclusive of GST)</strong>.
+                  <strong className="text-slate-950">One-Time Discovery Pass (₹299):</strong> Candidate profile verification, priority discovery ranking, and direct recruiter contact reveals require an upfront, non-recurring verification fee of <strong>₹299 (inclusive of GST)</strong>.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
