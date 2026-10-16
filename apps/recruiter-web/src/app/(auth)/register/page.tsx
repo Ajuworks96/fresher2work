@@ -44,15 +44,25 @@ export default function RecruiterRegisterPage() {
 
 
   return (
-    <div className="flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-50">
+    <div className="flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-50 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
-          FresherToWork Recruiter
-        </span>
-        <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900">
+        <Link href="/" className="inline-block mb-3 group">
+          <img
+            src="/brand/logo.png"
+            alt="Fresher2Work"
+            className="h-10 w-auto mx-auto object-contain transition-transform group-hover:scale-105"
+          />
+        </Link>
+        <div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1f357c]/10 px-3.5 py-1 text-xs font-semibold text-[#1f357c] border border-[#3e7aa7]/30">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#4ad1c7]" />
+            Fresher2Work Recruiter Onboarding
+          </span>
+        </div>
+        <h2 className="mt-4 text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
           Create Recruiter Account
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-xs sm:text-sm text-slate-500">
           Discover verified fresher talent with real proof-of-work.
         </p>
       </div>
@@ -156,7 +166,7 @@ export default function RecruiterRegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 flex w-full justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-60 transition-all cursor-pointer"
+              className="mt-2 flex w-full justify-center rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] px-4 py-3 text-xs font-bold text-white shadow-md shadow-[#1f357c]/20 focus:outline-none focus:ring-2 focus:ring-[#3e7aa7] disabled:opacity-60 transition-all cursor-pointer"
             >
               {loading ? 'Creating Account...' : 'Register as Recruiter'}
             </button>
@@ -165,7 +175,7 @@ export default function RecruiterRegisterPage() {
           <div className="mt-4 border-t border-slate-100 pt-4 flex flex-col gap-2 text-center">
             <p className="text-xs text-slate-500">
               Already have an account?{' '}
-              <Link href="/recruiter" className="font-semibold text-emerald-600 hover:underline">
+              <Link href="/recruiter" className="font-semibold text-[#1f357c] hover:text-[#3e7aa7] hover:underline">
                 Go to Recruiter Portal
               </Link>
             </p>

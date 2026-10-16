@@ -395,7 +395,7 @@ export default function ShortlistsPage() {
                             setSelectedCandidate(student);
                             setContactRevealed(null);
                           }}
-                          className="rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-colors cursor-pointer shadow-xs"
+                          className="rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] px-3.5 py-2 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
                         >
                           View Profile
                         </button>
@@ -730,15 +730,15 @@ export default function ShortlistsPage() {
 
             <div className="pt-4 border-t border-slate-200 space-y-3">
               {contactRevealed ? (
-                <div className="bg-slate-900 text-white p-4 rounded-xl space-y-2 border border-slate-800">
-                  <p className="text-xs font-bold text-emerald-400 uppercase">Contact Details</p>
+                <div className="bg-[#1f357c] text-white p-4 rounded-xl space-y-2 border border-[#3e7aa7]/40 shadow-xs">
+                  <p className="text-xs font-bold text-[#4ad1c7] uppercase">Contact Details</p>
                   <p className="text-sm font-mono flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-emerald-400" />
+                    <Mail className="w-4 h-4 text-[#4ad1c7]" />
                     {contactRevealed.email}
                   </p>
                   {contactRevealed.phone && (
                     <p className="text-sm font-mono flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-emerald-400" />
+                      <Phone className="w-4 h-4 text-[#4ad1c7]" />
                       {contactRevealed.phone}
                     </p>
                   )}
@@ -750,9 +750,9 @@ export default function ShortlistsPage() {
                   <button
                     onClick={() => handleRevealContact(selectedCandidate.id)}
                     disabled={contacting}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-xs font-bold text-white hover:bg-slate-800 cursor-pointer shadow-xs"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] py-3 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
                   >
-                    <Mail className="w-4 h-4" />
+                    <Mail className="w-4 h-4 text-[#4ad1c7]" />
                     {contacting ? 'Revealing...' : 'Reveal Contact Details'}
                   </button>
                 )}

@@ -56,15 +56,15 @@ export default function DashboardLayout({
   // NEVER render dashboard children until recruiter authentication is verified!
   if (!isAuthVerified) {
     return (
-      <div className="min-h-screen bg-[#0B0F17] flex flex-col items-center justify-center p-6 text-white font-sans">
+      <div className="min-h-screen bg-[#070D1F] flex flex-col items-center justify-center p-6 text-white font-sans">
         <div className="w-full max-w-sm text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs font-semibold text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>FresherToWork • Verifying Recruiter Session</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0C1633] border border-[#3e7aa7]/40 text-xs font-semibold text-[#4ad1c7]">
+            <span className="w-2 h-2 rounded-full bg-[#4ad1c7] animate-pulse" />
+            <span>Fresher2Work • Verifying Recruiter Session</span>
           </div>
-          <div className="h-10 w-10 border-2 border-[#FF5A36]/20 border-t-[#FF5A36] rounded-full animate-spin mx-auto" />
+          <div className="h-10 w-10 border-2 border-[#3e7aa7]/30 border-t-[#4ad1c7] rounded-full animate-spin mx-auto" />
           <p className="text-sm font-bold text-slate-200">Verifying Recruiter Access...</p>
-          <p className="text-xs text-slate-500">Checking enterprise session authorization</p>
+          <p className="text-xs text-slate-400">Checking enterprise session authorization</p>
         </div>
       </div>
     );
@@ -77,15 +77,20 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#F4F7FB]">
       {/* Sidebar */}
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 shadow-xs">
         <div>
-          <div className="h-16 flex items-center px-6 border-b border-slate-100">
-            <span className="text-lg font-black tracking-tight text-slate-900">
-              Fresher<span className="text-[#FF5A36]">ToWork</span>
-            </span>
-            <span className="ml-2 rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-[#FF5A36] border border-orange-200/80 uppercase tracking-wide">
+          {/* Logo Brand Header */}
+          <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100">
+            <Link href="/discover" className="flex items-center gap-2">
+              <img
+                src="/brand/logo.png"
+                alt="Fresher2Work"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
+            <span className="rounded-md bg-[#1f357c]/10 px-2 py-0.5 text-[9px] font-extrabold text-[#1f357c] border border-[#3e7aa7]/30 uppercase tracking-wide">
               RECRUITER
             </span>
           </div>
@@ -104,11 +109,11 @@ export default function DashboardLayout({
                     href={item.href}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                       isActive
-                        ? 'bg-orange-50 text-orange-950 shadow-xs border border-orange-200/70 font-bold'
+                        ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] shadow-xs border-l-4 border-[#4ad1c7] font-bold'
                         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 stroke-[2] ${isActive ? 'text-[#FF5A36]' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 stroke-[2] ${isActive ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     {item.label}
                   </Link>
                 );
@@ -118,10 +123,10 @@ export default function DashboardLayout({
         </div>
 
         {/* Footer / User Profile */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+        <div className="p-4 border-t border-slate-100 bg-slate-50/70">
           <div className="flex items-center justify-between">
             <div className="truncate mr-2">
-              <p className="text-xs font-bold text-slate-900 truncate">{userName}</p>
+              <p className="text-xs font-bold text-[#1f357c] truncate">{userName}</p>
               <p className="text-[11px] text-slate-500 truncate">{companyName}</p>
             </div>
             <button
@@ -139,14 +144,14 @@ export default function DashboardLayout({
       <main className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-8 shrink-0">
           <div>
-            <h1 className="text-base font-extrabold text-slate-900">
+            <h1 className="text-base font-extrabold text-[#1f357c]">
               {pathname === '/discover'
                 ? 'Talent Discovery Hub'
                 : pathname === '/shortlists'
                 ? 'Saved Candidates'
                 : 'Company & Employer Profile'}
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               {pathname === '/discover'
                 ? 'Discover verified fresher portfolios with live proof-of-work'
                 : pathname === '/shortlists'
@@ -155,8 +160,8 @@ export default function DashboardLayout({
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#4ad1c7]/15 px-3 py-1 text-xs font-semibold text-[#1f357c] border border-[#4ad1c7]/40 shadow-xs">
+              <span className="h-2 w-2 rounded-full bg-[#4ad1c7] animate-pulse"></span>
               Live Talent Discovery
             </span>
           </div>

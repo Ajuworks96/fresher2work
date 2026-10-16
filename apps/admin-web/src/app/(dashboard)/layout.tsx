@@ -120,15 +120,17 @@ export default function AdminDashboardLayout({
       <aside className="w-64 border-r border-slate-800/80 bg-[#0B0F17] text-white flex flex-col justify-between shrink-0 select-none">
         <div>
           {/* Brand */}
-          <div className="h-16 flex items-center px-6 border-b border-slate-800/80">
-            <div className="flex items-center gap-2.5">
-              <span className="text-lg font-black tracking-tight text-white">
-                Fresher<span className="text-emerald-400">ToWork</span>
-              </span>
-              <span className="rounded bg-emerald-950/90 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-400 border border-emerald-800/80 uppercase tracking-wider">
-                ADMIN
-              </span>
-            </div>
+          <div className="h-16 flex items-center justify-between px-5 border-b border-slate-800/80">
+            <Link href="/analytics" className="flex items-center gap-2">
+              <img
+                src="/brand/logo.png"
+                alt="Fresher2Work"
+                className="h-9 w-auto object-contain brightness-105"
+              />
+            </Link>
+            <span className="rounded bg-[#1f357c]/40 px-1.5 py-0.5 text-[9px] font-extrabold text-[#4ad1c7] border border-[#3e7aa7]/40 uppercase tracking-wider">
+              ADMIN
+            </span>
           </div>
 
           <div className="px-5 pt-5 pb-2">
@@ -148,7 +150,7 @@ export default function AdminDashboardLayout({
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                     isActive
-                      ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
+                      ? 'bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] text-white border-l-4 border-[#4ad1c7] font-bold shadow-md shadow-[#1f357c]/40'
                       : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
                   }`}
                 >

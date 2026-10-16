@@ -359,7 +359,7 @@ export default function TalentDiscoveryPage() {
               onClick={() => setSelectedRole(tab.key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer border ${
                 isActive
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                  ? 'bg-[#1f357c] text-white border-[#1f357c] shadow-xs'
                   : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
               }`}
             >
@@ -379,14 +379,14 @@ export default function TalentDiscoveryPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by skill (Figma, Meta Ads, Premiere, React), role (UI/UX, Marketing), name..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 placeholder-slate-400"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7] placeholder-slate-400"
             />
           </div>
 
           <div className="flex gap-2 items-center">
             <button
               type="submit"
-              className="flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-xs hover:bg-emerald-700 transition-all cursor-pointer"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-[#1f357c]/20 transition-all cursor-pointer"
             >
               <Search className="w-4 h-4 stroke-[2]" />
               Search Talents
@@ -1509,7 +1509,7 @@ export default function TalentDiscoveryPage() {
                   <button
                     onClick={() => handleRevealContact(selectedCandidate.id, 'EMAIL')}
                     disabled={contacting}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition-all cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#1f357c] py-3 text-xs font-bold text-white shadow-md shadow-[#1f357c]/20 hover:bg-[#16275a] transition-all cursor-pointer"
                   >
                     <Mail className="w-4 h-4 stroke-[2]" />
                     {contacting ? 'Revealing Contact...' : 'Reveal Direct Contact'}
@@ -1517,14 +1517,14 @@ export default function TalentDiscoveryPage() {
                 )}
 
                 {selectedCandidate.placement || selectedCandidate.isHired ? (
-                  <div className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-emerald-100 border border-emerald-300 py-3 text-xs font-black text-emerald-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <div className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#4ad1c7]/15 border border-[#4ad1c7]/40 py-3 text-xs font-black text-[#1f357c]">
+                    <CheckCircle2 className="w-4 h-4 text-[#3e7aa7]" />
                     Candidate Placed
                   </div>
                 ) : (
                   <button
                     onClick={() => handleOpenHireModal(selectedCandidate)}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-all cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] py-3 text-xs font-bold text-white shadow-md shadow-[#1f357c]/20 transition-all cursor-pointer"
                   >
                     <Briefcase className="w-4 h-4 stroke-[2]" />
                     Hire Candidate

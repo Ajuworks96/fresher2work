@@ -51,7 +51,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-slate-900 font-sans selection:bg-orange-100 selection:text-orange-900">
+    <div className="min-h-screen bg-[#FAFAF8] text-slate-900 font-sans selection:bg-[#4ad1c7]/20 selection:text-[#1f357c]">
       
       {/* =========================================================================
           1. TOP NAVIGATION BAR (Clean, Minimalist SaaS)
@@ -61,22 +61,21 @@ export default function LandingPage() {
           
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF5A36] to-[#E64C29] font-black text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
-              F
-            </span>
-            <span className="text-xl font-black tracking-tight text-slate-900">
-              Fresher<span className="text-[#FF5A36]">ToWork</span>
-            </span>
+            <img
+              src="/brand/logo.png"
+              alt="Fresher2Work"
+              className="h-10 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
+            />
           </Link>
 
           {/* Center Links (Desktop) */}
           <div className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600">
-            <a href="#benefits" className="hover:text-slate-900 transition-colors">Key Benefits</a>
-            <a href="#tools" className="hover:text-slate-900 transition-colors">Talent Tools</a>
-            <a href="#features" className="hover:text-slate-900 transition-colors">Proof-of-Work</a>
-            <a href="#pricing" className="hover:text-slate-900 transition-colors">Recruiter Plans</a>
-            <Link href="/Fresher2Work.apk" className="hover:text-emerald-700 font-bold transition-colors flex items-center gap-1.5 text-emerald-600">
-              <Download className="w-3.5 h-3.5" /> Mobile App
+            <a href="#benefits" className="hover:text-[#1f357c] transition-colors">Key Benefits</a>
+            <a href="#tools" className="hover:text-[#1f357c] transition-colors">Talent Tools</a>
+            <a href="#features" className="hover:text-[#1f357c] transition-colors">Proof-of-Work</a>
+            <a href="#pricing" className="hover:text-[#1f357c] transition-colors">Recruiter Plans</a>
+            <Link href="/Fresher2Work.apk" className="hover:text-[#1f357c] font-bold transition-colors flex items-center gap-1.5 text-[#3e7aa7]">
+              <Download className="w-3.5 h-3.5 text-[#4ad1c7]" /> Mobile App
             </Link>
           </div>
 
@@ -84,18 +83,18 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/superadmin"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200/90 shadow-xs transition-all"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#1f357c] bg-white hover:bg-slate-100 border border-slate-200/90 shadow-xs transition-all"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3e7aa7]" />
               <span>Super Admin</span>
             </Link>
             
             <Link
               href="/recruiter"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-[#FF5A36] hover:bg-[#e64c29] shadow-md shadow-orange-500/20 transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] shadow-md shadow-[#1f357c]/25 transition-all active:scale-[0.98]"
             >
               <span>Recruiter Portal</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#4ad1c7]" />
             </Link>
           </div>
         </div>
@@ -105,19 +104,19 @@ export default function LandingPage() {
           2. HERO SECTION (With Hyper-Realistic Phone Mockup & Floating Cards)
       ========================================================================= */}
       <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-32 overflow-hidden">
-        {/* Soft Ambient Background Gradient Glows matching reference image */}
+        {/* Soft Ambient Background Gradient Glows matching brand palette */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[700px] pointer-events-none -z-10 opacity-70">
-          <div className="absolute top-10 left-10 w-96 h-96 bg-[#FFEBE4] rounded-full blur-3xl" />
-          <div className="absolute top-20 right-10 w-[450px] h-[450px] bg-[#E0F7F6] rounded-full blur-3xl" />
-          <div className="absolute top-44 left-1/3 w-80 h-80 bg-[#FFF3EE] rounded-full blur-3xl" />
+          <div className="absolute top-10 left-10 w-96 h-96 bg-[#4ad1c7]/15 rounded-full blur-3xl" />
+          <div className="absolute top-20 right-10 w-[450px] h-[450px] bg-[#3e7aa7]/15 rounded-full blur-3xl" />
+          <div className="absolute top-44 left-1/3 w-80 h-80 bg-[#1f357c]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center">
           
           {/* Pill Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-xs mb-6 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-[#FF5A36] animate-pulse" />
-            <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#3e7aa7]/30 shadow-xs mb-6 backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-[#4ad1c7] animate-pulse" />
+            <span className="text-xs font-bold text-[#1f357c] tracking-wide uppercase">
               Proof-of-Work Hiring Platform for Growing Teams
             </span>
           </div>
@@ -136,23 +135,23 @@ export default function LandingPage() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
             <Link
               href="/recruiter"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold text-white bg-[#FF5A36] hover:bg-[#e64c29] shadow-lg shadow-orange-500/25 transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] shadow-lg shadow-[#1f357c]/25 transition-all active:scale-[0.98]"
             >
               <span>Explore Verified Talents</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 text-[#4ad1c7]" />
             </Link>
 
             <Link
               href="/Fresher2Work.apk"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 hover:border-[#4ad1c7] shadow-xs transition-all active:scale-[0.98]"
             >
-              <Smartphone className="w-4 h-4 text-emerald-600" />
+              <Smartphone className="w-4 h-4 text-[#3e7aa7]" />
               <span>Download Candidate App</span>
             </Link>
 
             <Link
               href="/superadmin"
-              className="inline-flex items-center gap-1.5 px-5 py-3.5 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-1.5 px-5 py-3.5 rounded-full text-sm font-semibold text-slate-600 hover:text-[#1f357c] transition-colors"
             >
               <span>Super Admin Portal ↗</span>
             </Link>
@@ -185,13 +184,13 @@ export default function LandingPage() {
                 </div>
                 <div className="h-0.5 w-12 bg-emerald-400" />
                 <div className="flex flex-col items-center">
-                  <span className="h-4 w-4 rounded-full bg-orange-500 text-white flex items-center justify-center text-[9px] font-bold">★</span>
-                  <span className="text-[9px] text-orange-600 font-bold mt-1">Direct Hire</span>
+                  <span className="h-4 w-4 rounded-full bg-[#1f357c] text-[#4ad1c7] flex items-center justify-center text-[9px] font-bold">★</span>
+                  <span className="text-[9px] text-[#1f357c] font-bold mt-1">Direct Hire</span>
                 </div>
               </div>
 
               <div className="pt-1.5 flex items-center gap-2.5 bg-slate-50 rounded-xl p-2 border border-slate-100">
-                <div className="w-8 h-8 rounded-lg bg-orange-500 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-lg bg-[#1f357c] text-white flex items-center justify-center font-bold text-xs">
                   AS
                 </div>
                 <div className="truncate">
@@ -204,8 +203,8 @@ export default function LandingPage() {
             {/* FLOATING CARD 2: Right Stats Widget matching reference image */}
             <div className="hidden lg:flex absolute -right-4 top-1/3 -translate-y-1/2 z-20 flex-col gap-3 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl shadow-slate-900/5 text-left w-64 transition-transform hover:-translate-y-1 duration-300">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-[#FFF1EC] text-[#FF5A36] flex items-center justify-center font-black border border-orange-200/80">
-                  <Sparkles className="w-5 h-5" />
+                <div className="w-11 h-11 rounded-xl bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center font-black border border-[#1f357c]/20">
+                  <Sparkles className="w-5 h-5 text-[#3e7aa7]" />
                 </div>
                 <div>
                   <div className="text-xl font-black text-slate-900">3.5k+</div>
@@ -216,8 +215,8 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-center gap-3 pt-2.5 border-t border-slate-100">
-                <div className="w-11 h-11 rounded-xl bg-[#E6F9F6] text-emerald-700 flex items-center justify-center font-black border border-emerald-200/80">
-                  <Zap className="w-5 h-5 text-emerald-600" />
+                <div className="w-11 h-11 rounded-xl bg-[#4ad1c7]/15 text-[#1f357c] flex items-center justify-center font-black border border-[#4ad1c7]/30">
+                  <Zap className="w-5 h-5 text-[#3e7aa7]" />
                 </div>
                 <div>
                   <div className="text-xl font-black text-slate-900">24/7</div>
@@ -268,23 +267,25 @@ export default function LandingPage() {
                   {/* App Header */}
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-md bg-[#FF5A36] text-white flex items-center justify-center text-xs font-black">
-                        F
-                      </span>
+                      <img
+                        src="/brand/favicon.png"
+                        alt="Fresher2Work"
+                        className="w-6 h-6 rounded-md object-contain"
+                      />
                       <div>
-                        <div className="text-[11px] font-black text-slate-900">FresherToWork</div>
+                        <div className="text-[11px] font-black text-slate-900">Fresher2Work</div>
                         <div className="text-[9px] text-slate-400">Talent Passport #98421</div>
                       </div>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
-                      <Check className="w-2.5 h-2.5 text-emerald-600" /> Active
+                    <span className="px-2 py-0.5 rounded-full bg-[#4ad1c7]/15 text-[#1f357c] text-[10px] font-bold border border-[#4ad1c7]/40 flex items-center gap-1">
+                      <Check className="w-2.5 h-2.5 text-[#3e7aa7]" /> Active
                     </span>
                   </div>
 
                   {/* Candidate Identity Card */}
-                  <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-orange-50/50 border border-slate-200/80">
+                  <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-[#4ad1c7]/10 border border-[#3e7aa7]/30">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[9px] font-bold text-orange-600 uppercase tracking-wider bg-orange-100/70 px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-bold text-[#1f357c] uppercase tracking-wider bg-[#4ad1c7]/20 px-2 py-0.5 rounded border border-[#4ad1c7]/40">
                         Full-Stack Dev
                       </span>
                       <span className="text-[9px] font-semibold text-slate-400">Calicut, Kerala</span>
@@ -315,7 +316,7 @@ export default function LandingPage() {
                       </span>
                       <Link
                         href="/recruiter"
-                        className="px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-bold flex items-center gap-1"
+                        className="px-2.5 py-1 rounded-md bg-[#1f357c] hover:bg-[#16275a] text-white text-[9px] font-bold flex items-center gap-1"
                       >
                         Inspect Work <ArrowRight className="w-2.5 h-2.5" />
                       </Link>
@@ -388,7 +389,7 @@ export default function LandingPage() {
       ========================================================================= */}
       <section id="benefits" className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#FF5A36] bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1f357c] bg-[#4ad1c7]/15 px-3 py-1 rounded-full border border-[#4ad1c7]/40">
             Key Benefits
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
@@ -403,8 +404,8 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Faster Delivery Times */}
-          <div className="p-8 rounded-3xl bg-[#FFF3EC] border border-orange-200/70 shadow-xs hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-2xl bg-[#FF5A36] text-white flex items-center justify-center font-black mb-6 shadow-md shadow-orange-500/20">
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-[#1f357c]/5 to-[#3e7aa7]/10 border border-[#3e7aa7]/25 shadow-xs hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-2xl bg-[#1f357c] text-[#4ad1c7] flex items-center justify-center font-black mb-6 shadow-md shadow-[#1f357c]/20">
               <Zap className="w-6 h-6 stroke-[2.2]" />
             </div>
             <h3 className="text-xl font-black text-slate-900">Faster Delivery Times</h3>
@@ -414,8 +415,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 2: Enhanced Delivery Security */}
-          <div className="p-8 rounded-3xl bg-[#ECFDF5] border border-emerald-200/70 shadow-xs hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black mb-6 shadow-md shadow-emerald-600/20">
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-[#4ad1c7]/10 to-[#3e7aa7]/10 border border-[#4ad1c7]/30 shadow-xs hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-2xl bg-[#3e7aa7] text-white flex items-center justify-center font-black mb-6 shadow-md shadow-[#3e7aa7]/20">
               <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
             </div>
             <h3 className="text-xl font-black text-slate-900">Enhanced Delivery Security</h3>
@@ -425,8 +426,8 @@ export default function LandingPage() {
           </div>
 
           {/* Card 3: Complete Shipment Visibility */}
-          <div className="p-8 rounded-3xl bg-[#EFF6FF] border border-blue-200/70 shadow-xs hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black mb-6 shadow-md shadow-blue-600/20">
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-[#1f357c]/5 to-[#4ad1c7]/5 border border-slate-200/90 shadow-xs hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-2xl bg-[#1f357c] text-white flex items-center justify-center font-black mb-6 shadow-md shadow-[#1f357c]/20">
               <Eye className="w-6 h-6 stroke-[2.2]" />
             </div>
             <h3 className="text-xl font-black text-slate-900">Complete Visibility</h3>
@@ -445,7 +446,7 @@ export default function LandingPage() {
       <section id="tools" className="py-20 sm:py-28 bg-white border-y border-slate-200/60 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center">
           
-          <span className="text-xs font-bold uppercase tracking-wider text-[#FF5A36] bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1f357c] bg-[#4ad1c7]/15 px-3 py-1 rounded-full border border-[#4ad1c7]/40">
             Core Platform
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
@@ -464,8 +465,8 @@ export default function LandingPage() {
               {/* Node 1 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#FF5A36]" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#FF5A36] transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#1f357c]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#1f357c] transition-colors">
                     Live Code Tracking
                   </h4>
                 </div>
@@ -477,8 +478,8 @@ export default function LandingPage() {
               {/* Node 2 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-emerald-600 transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#3e7aa7]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#3e7aa7] transition-colors">
                     Smart Match Planning
                   </h4>
                 </div>
@@ -490,8 +491,8 @@ export default function LandingPage() {
               {/* Node 3 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-blue-500" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-blue-600 transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#4ad1c7]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#1f357c] transition-colors">
                     Pipeline Management
                   </h4>
                 </div>
@@ -509,8 +510,8 @@ export default function LandingPage() {
 
               <div className="w-full bg-[#FFFFFF] rounded-[40px] overflow-hidden pt-8 pb-5 px-3.5 text-left border border-slate-100 shadow-inner">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                  <span className="text-[9px] font-black uppercase text-[#FF5A36]">Challenge Radar</span>
-                  <span className="text-[8px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  <span className="text-[9px] font-black uppercase text-[#1f357c]">Challenge Radar</span>
+                  <span className="text-[8px] font-bold text-[#1f357c] bg-[#4ad1c7]/20 px-2 py-0.5 rounded-full border border-[#4ad1c7]/40">
                     Live Feed
                   </span>
                 </div>
@@ -518,10 +519,10 @@ export default function LandingPage() {
                 <div className="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
                   <div className="flex items-center justify-between text-[9px]">
                     <span className="font-bold text-slate-800">Dev Challenge #42</span>
-                    <span className="text-emerald-600 font-bold">100% Passed</span>
+                    <span className="text-[#3e7aa7] font-bold">100% Passed</span>
                   </div>
                   <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full w-full" />
+                    <div className="h-full bg-gradient-to-r from-[#1f357c] to-[#4ad1c7] rounded-full w-full" />
                   </div>
                   <div className="flex justify-between text-[8px] text-slate-500">
                     <span>16/16 Unit Tests</span>
@@ -530,13 +531,13 @@ export default function LandingPage() {
                 </div>
 
                 <div className="mt-3 space-y-1.5 text-[9px]">
-                  <div className="p-2 rounded-lg bg-orange-50/60 border border-orange-100 flex items-center justify-between">
+                  <div className="p-2 rounded-lg bg-[#4ad1c7]/10 border border-[#4ad1c7]/30 flex items-center justify-between">
                     <span className="font-bold text-slate-800">UI/UX Systems</span>
-                    <span className="text-orange-600 font-bold">42 Tokens</span>
+                    <span className="text-[#1f357c] font-bold">42 Tokens</span>
                   </div>
-                  <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-100 flex items-center justify-between">
+                  <div className="p-2 rounded-lg bg-[#3e7aa7]/10 border border-[#3e7aa7]/30 flex items-center justify-between">
                     <span className="font-bold text-slate-800">Backend API</span>
-                    <span className="text-emerald-700 font-bold">PostgreSQL</span>
+                    <span className="text-[#1f357c] font-bold">PostgreSQL</span>
                   </div>
                 </div>
               </div>
@@ -548,8 +549,8 @@ export default function LandingPage() {
               {/* Node 4 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-purple-500" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-purple-600 transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#1f357c]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#1f357c] transition-colors">
                     Repo & Figma Scanning
                   </h4>
                 </div>
@@ -561,8 +562,8 @@ export default function LandingPage() {
               {/* Node 5 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-orange-500" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-orange-600 transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#3e7aa7]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#3e7aa7] transition-colors">
                     Instant Notifications
                   </h4>
                 </div>
@@ -574,8 +575,8 @@ export default function LandingPage() {
               {/* Node 6 */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-md transition-all group">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-2 h-2 rounded-full bg-teal-500" />
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-teal-600 transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#4ad1c7]" />
+                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#1f357c] transition-colors">
                     Performance Analytics
                   </h4>
                 </div>
@@ -595,7 +596,7 @@ export default function LandingPage() {
       ========================================================================= */}
       <section id="features" className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#FF5A36] bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1f357c] bg-[#4ad1c7]/15 px-3 py-1 rounded-full border border-[#4ad1c7]/40">
             Features
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
@@ -649,7 +650,7 @@ Tests:       16 passed, 16 total`}
                 <span className="text-xs text-slate-500 block">Verification accuracy</span>
               </div>
               <div>
-                <span className="text-2xl font-black text-[#FF5A36]">15 min</span>
+                <span className="text-2xl font-black text-[#1f357c]">15 min</span>
                 <span className="text-xs text-slate-500 block">Review turnaround</span>
               </div>
             </div>
@@ -660,7 +661,7 @@ Tests:       16 passed, 16 total`}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Candidate Passports</span>
-                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                <span className="text-xs font-bold text-[#1f357c] bg-[#4ad1c7]/15 px-2.5 py-0.5 rounded-full border border-[#4ad1c7]/30">
                   24/7 Verified
                 </span>
               </div>
@@ -670,10 +671,10 @@ Tests:       16 passed, 16 total`}
               </p>
 
               {/* Realistic Candidate Card */}
-              <div className="mt-6 p-5 rounded-2xl bg-[#FFF6F2] border border-orange-200/80">
+              <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-[#4ad1c7]/10 border border-[#3e7aa7]/30">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#FF5A36] text-white flex items-center justify-center font-bold text-sm">
+                    <div className="w-10 h-10 rounded-xl bg-[#1f357c] text-[#4ad1c7] flex items-center justify-center font-bold text-sm shadow-xs">
                       AM
                     </div>
                     <div>
@@ -681,7 +682,7 @@ Tests:       16 passed, 16 total`}
                       <div className="text-[11px] text-slate-500">UI/UX Systems Architect</div>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-[#4ad1c7]/20 text-[#1f357c] text-[10px] font-bold border border-[#4ad1c7]/40">
                     ✓ Hired by RazorScale
                   </span>
                 </div>
@@ -697,7 +698,7 @@ Tests:       16 passed, 16 total`}
                 <span className="text-xs text-slate-500 block">Placement success rate</span>
               </div>
               <div>
-                <span className="text-2xl font-black text-emerald-600">24/7</span>
+                <span className="text-2xl font-black text-[#3e7aa7]">24/7</span>
                 <span className="text-xs text-slate-500 block">Recruiter portal uptime</span>
               </div>
             </div>
@@ -708,7 +709,7 @@ Tests:       16 passed, 16 total`}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Direct Hiring</span>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-xs font-bold text-[#1f357c] bg-[#4ad1c7]/15 px-2.5 py-0.5 rounded-full border border-[#4ad1c7]/30">
                   100% In-App
                 </span>
               </div>
@@ -736,7 +737,7 @@ Tests:       16 passed, 16 total`}
                 <span className="text-xs text-slate-500 block">Direct in-app hiring</span>
               </div>
               <div>
-                <span className="text-2xl font-black text-[#FF5A36]">&lt; 5 Sec</span>
+                <span className="text-2xl font-black text-[#1f357c]">&lt; 5 Sec</span>
                 <span className="text-xs text-slate-500 block">Direct contact reveal</span>
               </div>
             </div>
@@ -793,7 +794,7 @@ Tests:       16 passed, 16 total`}
       <section id="pricing" className="py-20 sm:py-28 bg-[#FAFAF8] border-t border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center">
           
-          <span className="text-xs font-bold uppercase tracking-wider text-[#FF5A36] bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1f357c] bg-[#4ad1c7]/15 px-3 py-1 rounded-full border border-[#4ad1c7]/40">
             Recruiter Pricing
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
@@ -819,19 +820,19 @@ Tests:       16 passed, 16 total`}
 
                 <div className="mt-8 space-y-3.5 text-xs text-slate-600">
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <Check className="w-4 h-4 text-[#3e7aa7] shrink-0" />
                     <span>Browse 3,500+ verified fresher profiles</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <Check className="w-4 h-4 text-[#3e7aa7] shrink-0" />
                     <span>Inspect public GitHub & Figma portfolios</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <Check className="w-4 h-4 text-[#3e7aa7] shrink-0" />
                     <span>5 Direct contact reveals per month</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <Check className="w-4 h-4 text-[#3e7aa7] shrink-0" />
                     <span>Standard email support</span>
                   </div>
                 </div>
@@ -840,50 +841,50 @@ Tests:       16 passed, 16 total`}
               <div className="mt-10">
                 <Link
                   href="/recruiter"
-                  className="w-full py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all text-center block shadow-sm"
+                  className="w-full py-3.5 rounded-full bg-[#1f357c] hover:bg-[#16275a] text-white text-xs font-bold transition-all text-center block shadow-sm"
                 >
                   Get Started
                 </Link>
               </div>
             </div>
 
-            {/* Plan 2: Professional Card (Signature Vibrant Orange matching reference) */}
-            <div className="p-8 sm:p-10 rounded-3xl bg-[#FF5A36] text-white shadow-xl shadow-orange-500/25 flex flex-col justify-between relative overflow-hidden">
+            {/* Plan 2: Professional Card (Signature Vibrant Navy/Teal Flagship) */}
+            <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#1f357c] via-[#243e8f] to-[#3e7aa7] text-white shadow-xl shadow-[#1f357c]/30 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-xs">
+                <span className="px-3 py-1 rounded-full bg-[#4ad1c7] text-[#1f357c] text-[10px] font-black uppercase tracking-wider shadow-sm">
                   Popular
                 </span>
               </div>
 
               <div>
-                <span className="text-xs font-bold text-orange-200 uppercase tracking-wider">Professional</span>
+                <span className="text-xs font-bold text-[#4ad1c7] uppercase tracking-wider">Professional</span>
                 <div className="mt-4 flex items-baseline gap-2">
                   <span className="text-4xl sm:text-5xl font-black text-white">$79</span>
-                  <span className="text-sm font-medium text-orange-200">/ month</span>
+                  <span className="text-sm font-medium text-slate-200">/ month</span>
                 </div>
-                <p className="mt-3 text-xs text-orange-100 leading-relaxed">
+                <p className="mt-3 text-xs text-slate-200 leading-relaxed">
                   For growing high-scale teams needing unlimited reveals and custom coding challenges.
                 </p>
 
                 <div className="mt-8 space-y-3.5 text-xs text-white">
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-white shrink-0" />
+                    <Check className="w-4 h-4 text-[#4ad1c7] shrink-0" />
                     <span className="font-semibold">Unlimited candidate contact reveals</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-white shrink-0" />
+                    <Check className="w-4 h-4 text-[#4ad1c7] shrink-0" />
                     <span>Run sandboxed live unit test suites</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-white shrink-0" />
+                    <Check className="w-4 h-4 text-[#4ad1c7] shrink-0" />
                     <span>Deep anti-plagiarism Git forensics</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-white shrink-0" />
+                    <Check className="w-4 h-4 text-[#4ad1c7] shrink-0" />
                     <span>Priority Super Admin verification pipeline</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-white shrink-0" />
+                    <Check className="w-4 h-4 text-[#4ad1c7] shrink-0" />
                     <span>Dedicated talent advisor & SLA</span>
                   </div>
                 </div>
@@ -892,7 +893,7 @@ Tests:       16 passed, 16 total`}
               <div className="mt-10">
                 <Link
                   href="/recruiter"
-                  className="w-full py-3.5 rounded-full bg-white hover:bg-slate-100 text-[#FF5A36] text-xs font-extrabold transition-all text-center block shadow-md"
+                  className="w-full py-3.5 rounded-full bg-[#4ad1c7] hover:bg-[#3ec4ba] text-[#1f357c] text-xs font-black transition-all text-center block shadow-lg shadow-[#4ad1c7]/30 active:scale-[0.98]"
                 >
                   Enter Recruiter Portal
                 </Link>
@@ -916,7 +917,7 @@ Tests:       16 passed, 16 total`}
           &ldquo;Managing fresher hiring is now 10x faster and completely transparent. Real-time test tracking and inspectable Git code changed our engineering hiring pipeline forever.&rdquo;
         </blockquote>
         <div className="mt-6 flex flex-col items-center">
-          <div className="w-12 h-12 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-sm shadow-sm mb-2">
+          <div className="w-12 h-12 rounded-full bg-[#1f357c] text-white font-bold flex items-center justify-center text-sm shadow-sm mb-2">
             DM
           </div>
           <div className="text-sm font-black text-slate-900">David Miller</div>
@@ -928,7 +929,7 @@ Tests:       16 passed, 16 total`}
           9. PRE-FOOTER BANNER: "STAY UPDATED. STAY AHEAD." (Matching reference image)
       ========================================================================= */}
       <section className="py-16 max-w-6xl mx-auto px-4 sm:px-8">
-        <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-r from-[#FFEBE4] via-[#FFF3EE] to-[#E0F7F6] border border-orange-200/50 text-center relative overflow-hidden shadow-lg shadow-orange-500/5">
+        <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-r from-[#1f357c]/10 via-[#3e7aa7]/10 to-[#4ad1c7]/15 border border-[#3e7aa7]/30 text-center relative overflow-hidden shadow-lg shadow-[#1f357c]/5">
           
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
             Stay Updated. Stay Ahead.
@@ -948,7 +949,7 @@ Tests:       16 passed, 16 total`}
             />
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-full bg-[#FF5A36] hover:bg-[#e64c29] text-white text-xs font-bold transition-all shrink-0 cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition-all shrink-0 cursor-pointer shadow-md shadow-[#1f357c]/20"
             >
               Subscribe Free
             </button>
@@ -956,7 +957,7 @@ Tests:       16 passed, 16 total`}
 
           {subSuccess && (
             <p className="mt-3 text-xs font-bold text-emerald-700 animate-fadeIn">
-              ✓ Thanks! You are subscribed to FresherToWork updates.
+              ✓ Thanks! You are subscribed to Fresher2Work updates.
             </p>
           )}
 
@@ -964,8 +965,8 @@ Tests:       16 passed, 16 total`}
           <div className="mt-12 -mb-24 max-w-[280px] mx-auto rounded-t-[40px] p-3 bg-slate-900 border-t-4 border-x-4 border-slate-800 shadow-2xl">
             <div className="w-full bg-white rounded-t-[32px] pt-4 px-4 pb-8 text-left">
               <div className="flex items-center justify-between text-[9px] font-bold text-slate-600 border-b border-slate-100 pb-2">
-                <span>FresherToWork Radar</span>
-                <span className="text-emerald-600">● Live Updates</span>
+                <span>Fresher2Work Radar</span>
+                <span className="text-[#4ad1c7]">● Live Updates</span>
               </div>
               <div className="mt-2 text-[10px] font-bold text-slate-900">
                 Top Full-Stack & UI/UX Freshers Live
@@ -975,89 +976,6 @@ Tests:       16 passed, 16 total`}
 
         </div>
       </section>
-
-      {/* =========================================================================
-          10. FOOTER (Multi-Column Modern SaaS with Download Badges)
-      ========================================================================= */}
-      <footer className="pt-20 pb-12 bg-white border-t border-slate-200/60 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-slate-100">
-            
-            {/* Col 1: Brand & App Download */}
-            <div className="col-span-2 space-y-4">
-              <Link href="/" className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FF5A36] font-black text-white text-xs">
-                  F
-                </span>
-                <span className="text-base font-black text-slate-900">
-                  Fresher<span className="text-[#FF5A36]">ToWork</span>
-                </span>
-              </Link>
-              <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
-                Empowering college graduates and career changers into high-paying engineering, product design, and growth marketing roles through transparent proof-of-work.
-              </p>
-              
-              {/* Download APK Pill */}
-              <div className="pt-2 flex flex-wrap gap-2.5">
-                <Link
-                  href="/Fresher2Work.apk"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 text-white text-[11px] font-bold hover:bg-slate-800 transition-colors"
-                >
-                  <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Download Android APK</span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Col 2: Platform */}
-            <div className="space-y-2.5">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Platform</h4>
-              <ul className="space-y-2">
-                <li><a href="#benefits" className="hover:text-slate-900 transition-colors">Key Benefits</a></li>
-                <li><a href="#tools" className="hover:text-slate-900 transition-colors">Tools</a></li>
-                <li><a href="#features" className="hover:text-slate-900 transition-colors">Proof-of-Work</a></li>
-                <li><a href="#pricing" className="hover:text-slate-900 transition-colors">Recruiter Pricing</a></li>
-              </ul>
-            </div>
-
-            {/* Col 3: Portals */}
-            <div className="space-y-2.5">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Portals</h4>
-              <ul className="space-y-2">
-                <li><Link href="/recruiter" className="hover:text-[#FF5A36] font-semibold transition-colors">Recruiter Portal</Link></li>
-                <li><Link href="/superadmin" className="hover:text-emerald-700 font-semibold transition-colors">Super Admin Console</Link></li>
-                <li><Link href="/Fresher2Work.apk" className="hover:text-slate-900 transition-colors">Candidate Mobile App</Link></li>
-                <li><Link href="/contact" className="hover:text-slate-900 transition-colors">Contact Support</Link></li>
-              </ul>
-            </div>
-
-            {/* Col 4: Legal & Compliance */}
-            <div className="space-y-2.5">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Legal & Security</h4>
-              <ul className="space-y-2">
-                <li><Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link></li>
-                <li><Link href="/refund-policy" className="hover:text-slate-900 transition-colors">Refund Policy</Link></li>
-                <li><span className="text-emerald-600 font-semibold">Verified Enterprise Access Control</span></li>
-              </ul>
-            </div>
-
-          </div>
-
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400">
-            <div>
-              © 2026 FresherToWork Inc. All rights reserved.
-            </div>
-            <div className="flex items-center gap-4">
-              <span>Enterprise Grade Security</span>
-              <span>•</span>
-              <span>TLS 1.3 256-bit Encryption</span>
-            </div>
-          </div>
-
-        </div>
-      </footer>
 
     </div>
   );

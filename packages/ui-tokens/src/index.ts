@@ -4,22 +4,24 @@
  * Visual Personality: Premium, Warm, Young, Confident, Professional, Minimal, Modern
  * ==============================================================================
  */
-
 export const PALETTE = {
-  // Brand Emerald (Fresh, Energetic, Trustworthy, Career-focused)
+  // Official Brand Palette: #1f357c (Navy), #3e7aa7 (Ocean), #4ad1c7 (Teal)
   brand: {
-    50: '#f0fdf4',
-    100: '#dcfce7',
-    200: '#bbf7d0',
-    300: '#86efac',
-    400: '#4ade80',
-    500: '#10b981', // Brand Primary
-    600: '#059669', // Brand Primary Hover / Action
-    700: '#047857', // Brand Dark
-    800: '#065f46',
-    900: '#064e3b',
-    950: '#022c22',
+    50: '#edfbf9',
+    100: '#d5f7f4',
+    200: '#aef0e9',
+    300: '#65ded5',
+    400: '#4ad1c7', // Vibrant Teal Accent
+    500: '#3e7aa7', // Ocean Blue Midtone
+    600: '#1f357c', // Deep Royal Navy Primary
+    700: '#192c67',
+    800: '#142251',
+    900: '#0c1633',
+    950: '#070d1f',
   },
+  navy: '#1f357c',
+  ocean: '#3e7aa7',
+  teal: '#4ad1c7',
 
   // Recruiter Indigo (Analytical, Authoritative, Executive)
   accent: {

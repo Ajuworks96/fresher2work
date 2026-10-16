@@ -97,7 +97,7 @@ export default function CompanyProfilePage() {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-all cursor-pointer"
+            className="rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] px-4 py-2 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
           >
             ✏️ Edit Profile
           </button>
@@ -213,7 +213,7 @@ export default function CompanyProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-all cursor-pointer"
+              className="rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] px-5 py-2 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>

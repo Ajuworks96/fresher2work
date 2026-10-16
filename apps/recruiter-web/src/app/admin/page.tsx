@@ -871,11 +871,15 @@ export default function SuperAdminSidebarPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-slate-900 font-sans">
         <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl p-8 space-y-6">
           <div className="text-center space-y-2">
-            <div className="h-12 w-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm">
-              <Shield className="w-6 h-6 stroke-[2.2]" />
-            </div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900">Super Admin Console</h2>
-            <p className="text-xs text-slate-500 font-medium">FresherToWork Global Management Portal</p>
+            <Link href="/" className="inline-block mb-1">
+              <img
+                src="/brand/logo.png"
+                alt="Fresher2Work"
+                className="h-10 w-auto mx-auto object-contain"
+              />
+            </Link>
+            <h2 className="text-2xl font-black tracking-tight text-[#1f357c]">Super Admin Console</h2>
+            <p className="text-xs text-slate-500 font-medium">Fresher2Work Global Management Portal</p>
           </div>
 
           {error && (
@@ -894,7 +898,7 @@ export default function SuperAdminSidebarPage() {
                   type="email"
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium focus:bg-white focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium focus:bg-white focus:border-[#3e7aa7] focus:outline-none focus:ring-2 focus:ring-[#3e7aa7]/15"
                   placeholder="admin@freshertowork.com"
                   required
                 />
@@ -909,7 +913,7 @@ export default function SuperAdminSidebarPage() {
                   type="password"
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium focus:bg-white focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium focus:bg-white focus:border-[#3e7aa7] focus:outline-none focus:ring-2 focus:ring-[#3e7aa7]/15"
                   placeholder="••••••••••••"
                   required
                 />
@@ -919,7 +923,7 @@ export default function SuperAdminSidebarPage() {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition-all shadow-md shadow-[#1f357c]/20 flex items-center justify-center gap-2 cursor-pointer"
             >
               {loginLoading ? (
                 <>
@@ -982,20 +986,17 @@ export default function SuperAdminSidebarPage() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 shadow-xs z-10">
         <div>
           {/* Brand Header */}
-          <div className="h-16 flex items-center px-6 border-b border-slate-100 gap-3">
-            <div className="h-8 w-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-xs">
-              <Shield className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-black tracking-tight text-slate-900">
-                  Fresher<span className="text-emerald-600">ToWork</span>
-                </span>
-              </div>
-              <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">
-                SUPER ADMIN PANEL
-              </p>
-            </div>
+          <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100">
+            <Link href="/" className="flex items-center gap-2">
+              <img
+                src="/brand/logo.png"
+                alt="Fresher2Work"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
+            <span className="rounded-md bg-[#1f357c]/10 px-2 py-0.5 text-[9px] font-extrabold text-[#1f357c] border border-[#3e7aa7]/30 uppercase tracking-wide">
+              ADMIN
+            </span>
           </div>
 
           {/* Navigation Items */}
@@ -1010,12 +1011,12 @@ export default function SuperAdminSidebarPage() {
                   onClick={() => switchNavTab('candidates')}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === 'candidates' && !selectedCompanyHub && !inspectingCandidate
-                      ? 'bg-emerald-50 text-emerald-900 border border-emerald-200/80 shadow-xs'
+                      ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] border-l-4 border-[#4ad1c7] font-bold shadow-xs'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Users className={`w-4 h-4 ${activeTab === 'candidates' && !selectedCompanyHub && !inspectingCandidate ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <Users className={`w-4 h-4 ${activeTab === 'candidates' && !selectedCompanyHub && !inspectingCandidate ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     <span>Candidate Verification</span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-extrabold text-slate-700">
@@ -1028,15 +1029,15 @@ export default function SuperAdminSidebarPage() {
                   onClick={() => switchNavTab('placements')}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === 'placements' && !selectedCompanyHub && !inspectingCandidate
-                      ? 'bg-emerald-50 text-emerald-900 border border-emerald-200/80 shadow-xs'
+                      ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] border-l-4 border-[#4ad1c7] font-bold shadow-xs'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Award className={`w-4 h-4 ${activeTab === 'placements' && !selectedCompanyHub && !inspectingCandidate ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <Award className={`w-4 h-4 ${activeTab === 'placements' && !selectedCompanyHub && !inspectingCandidate ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     <span>Verified Placements</span>
                   </div>
-                  <span className="px-1.5 py-0.5 rounded-md bg-emerald-600 text-[10px] font-extrabold text-white">
+                  <span className="px-1.5 py-0.5 rounded-md bg-[#1f357c] text-[10px] font-extrabold text-[#4ad1c7]">
                     {totalHiresCount} Hires
                   </span>
                 </button>
@@ -1046,12 +1047,12 @@ export default function SuperAdminSidebarPage() {
                   onClick={() => switchNavTab('dashboard')}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === 'dashboard' && !selectedCompanyHub && !inspectingCandidate
-                      ? 'bg-emerald-50 text-emerald-900 border border-emerald-200/80 shadow-xs'
+                      ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] border-l-4 border-[#4ad1c7] font-bold shadow-xs'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <LayoutDashboard className={`w-4 h-4 ${activeTab === 'dashboard' && !selectedCompanyHub && !inspectingCandidate ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <LayoutDashboard className={`w-4 h-4 ${activeTab === 'dashboard' && !selectedCompanyHub && !inspectingCandidate ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     <span>Platform Overview</span>
                   </div>
                 </button>
@@ -1061,12 +1062,12 @@ export default function SuperAdminSidebarPage() {
                   onClick={() => switchNavTab('recruiters')}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === 'recruiters' && !selectedCompanyHub && !inspectingCandidate
-                      ? 'bg-emerald-50 text-emerald-900 border border-emerald-200/80 shadow-xs'
+                      ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] border-l-4 border-[#4ad1c7] font-bold shadow-xs'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Building2 className={`w-4 h-4 ${activeTab === 'recruiters' && !selectedCompanyHub && !inspectingCandidate ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <Building2 className={`w-4 h-4 ${activeTab === 'recruiters' && !selectedCompanyHub && !inspectingCandidate ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     <span>Recruiter Hub</span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-extrabold text-slate-700">
@@ -1079,15 +1080,15 @@ export default function SuperAdminSidebarPage() {
                   onClick={() => switchNavTab('ledger')}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeTab === 'ledger' && !selectedCompanyHub && !inspectingCandidate
-                      ? 'bg-emerald-50 text-emerald-900 border border-emerald-200/80 shadow-xs'
+                      ? 'bg-gradient-to-r from-[#1f357c]/10 to-[#3e7aa7]/10 text-[#1f357c] border-l-4 border-[#4ad1c7] font-bold shadow-xs'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <CreditCard className={`w-4 h-4 ${activeTab === 'ledger' && !selectedCompanyHub && !inspectingCandidate ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <CreditCard className={`w-4 h-4 ${activeTab === 'ledger' && !selectedCompanyHub && !inspectingCandidate ? 'text-[#1f357c]' : 'text-slate-400'}`} />
                     <span>Revenue & Ledger</span>
                   </div>
-                  <span className="px-1.5 py-0.5 rounded-md bg-emerald-100/60 text-[10px] font-extrabold text-emerald-800">
+                  <span className="px-1.5 py-0.5 rounded-md bg-[#4ad1c7]/20 text-[10px] font-extrabold text-[#1f357c]">
                     ₹99
                   </span>
                 </button>
