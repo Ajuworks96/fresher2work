@@ -299,7 +299,7 @@ export default function TalentDiscoveryPage() {
       {/* Metrics Banner */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-          <div className="h-11 w-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/60 shadow-xs">
+          <div className="h-11 w-11 rounded-xl bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center border border-[#3e7aa7]/30 shadow-xs">
             <GraduationCap className="w-5 h-5 stroke-[1.75]" />
           </div>
           <div>
@@ -395,7 +395,7 @@ export default function TalentDiscoveryPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as TalentSortOption)}
-              className="rounded-xl border border-slate-300 px-3.5 py-2.5 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="rounded-xl border border-slate-300 px-3.5 py-2.5 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:border-[#3e7aa7] cursor-pointer"
             >
               <option value="RELEVANCE">Relevance (Proof-of-Work)</option>
               <option value="COMPLETENESS">Highest Completeness</option>
@@ -519,7 +519,7 @@ export default function TalentDiscoveryPage() {
               onClick={() => toggleWorkMode(WorkMode.REMOTE)}
               className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                 selectedWorkModes.includes(WorkMode.REMOTE)
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-[#1f357c] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -530,7 +530,7 @@ export default function TalentDiscoveryPage() {
               onClick={() => toggleWorkMode(WorkMode.HYBRID)}
               className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                 selectedWorkModes.includes(WorkMode.HYBRID)
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-[#1f357c] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -541,7 +541,7 @@ export default function TalentDiscoveryPage() {
               onClick={() => toggleWorkMode(WorkMode.ON_SITE)}
               className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                 selectedWorkModes.includes(WorkMode.ON_SITE)
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-[#1f357c] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -556,7 +556,7 @@ export default function TalentDiscoveryPage() {
                 type="checkbox"
                 checked={hasCvOnly}
                 onChange={(e) => setHasCvOnly(e.target.checked)}
-                className="rounded text-emerald-600 focus:ring-emerald-500"
+                className="rounded text-[#1f357c] focus:ring-[#3e7aa7]"
               />
               Has CV
             </label>
@@ -566,7 +566,7 @@ export default function TalentDiscoveryPage() {
                 type="checkbox"
                 checked={hasProjectsOnly}
                 onChange={(e) => setHasProjectsOnly(e.target.checked)}
-                className="rounded text-emerald-600 focus:ring-emerald-500"
+                className="rounded text-[#1f357c] focus:ring-[#3e7aa7]"
               />
               Has Projects
             </label>
@@ -655,8 +655,8 @@ export default function TalentDiscoveryPage() {
                         <h3 className="text-sm font-extrabold text-slate-900 truncate">{student.fullName}</h3>
                         {student.placement || student.isHired ? (
                           isHiredByMe(student) ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs shrink-0">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs shrink-0">
+                              <CheckCircle2 className="w-3 h-3 text-[#4ad1c7] stroke-[2.5]" />
                               HIRED BY YOU
                             </span>
                           ) : (
@@ -666,7 +666,7 @@ export default function TalentDiscoveryPage() {
                             </span>
                           )
                         ) : (
-                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-black text-emerald-700 border border-emerald-200 shrink-0">
+                          <span className="rounded-full bg-[#1f357c]/10 px-2 py-0.5 text-[10px] font-black text-[#1f357c] border border-[#3e7aa7]/30 shrink-0">
                             {student.completenessScore}% Complete
                           </span>
                         )}
@@ -685,16 +685,16 @@ export default function TalentDiscoveryPage() {
                   {/* Placement Banner if Hired */}
                   {(student.placement || student.isHired) && (
                     isHiredByMe(student) ? (
-                      <div className="mt-2.5 rounded-xl bg-emerald-50 border border-emerald-200 p-2.5 text-xs text-emerald-950 font-semibold flex items-center justify-between shadow-2xs">
+                      <div className="mt-2.5 rounded-xl bg-[#1f357c]/5 border border-[#3e7aa7]/25 p-2.5 text-xs text-[#1f357c] font-semibold flex items-center justify-between shadow-2xs">
                         <div className="truncate flex items-center gap-1.5 min-w-0">
-                          <Briefcase className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                          <Briefcase className="w-3.5 h-3.5 text-[#3e7aa7] shrink-0" />
                           <span className="truncate">
-                            <strong className="text-emerald-900">Placed at your company:</strong> {student.placement?.companyName || currentRecruiter?.company?.name || 'Your Company'}
+                            <strong className="text-[#1f357c]">Placed at your company:</strong> {student.placement?.companyName || currentRecruiter?.company?.name || 'Your Company'}
                             {student.placement?.roleTitle && ` • ${student.placement.roleTitle}`}
                           </span>
                         </div>
                         {student.placement?.packageLpa && (
-                          <span className="shrink-0 font-black text-emerald-800 bg-emerald-200/70 px-2 py-0.5 rounded-md text-[10px] ml-1.5">
+                          <span className="shrink-0 font-black text-[#1f357c] bg-[#1f357c]/15 px-2 py-0.5 rounded-md text-[10px] ml-1.5">
                             {student.placement.packageLpa}
                           </span>
                         )}
@@ -723,7 +723,7 @@ export default function TalentDiscoveryPage() {
                   <div className="mt-3.5 space-y-2.5">
                     <div className="flex items-center justify-between text-[11px] px-0.5">
                       <span className="font-extrabold text-slate-800 flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
-                        <Briefcase className="w-3.5 h-3.5 text-emerald-600 stroke-[2]" />
+                        <Briefcase className="w-3.5 h-3.5 text-[#3e7aa7] stroke-[2]" />
                         Proof of Work ({totalProofItems} assets)
                       </span>
                       {student.cvFileUrl && (
@@ -731,7 +731,7 @@ export default function TalentDiscoveryPage() {
                           href={student.cvFileUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md flex items-center gap-1 text-[10px] hover:bg-emerald-100 transition-colors"
+                          className="font-bold text-[#1f357c] bg-[#1f357c]/10 border border-[#3e7aa7]/30 px-2 py-0.5 rounded-md flex items-center gap-1 text-[10px] hover:bg-[#1f357c]/20 transition-colors"
                         >
                           <FileText className="w-3 h-3 stroke-[2]" />
                           CV PDF ↗
@@ -747,7 +747,7 @@ export default function TalentDiscoveryPage() {
                             <div className="flex items-start justify-between gap-1">
                               <div>
                                 <p className="font-bold text-slate-900 line-clamp-1">{proj.title}</p>
-                                {proj.role && <p className="text-[10px] font-semibold text-emerald-700">Role: {proj.role}</p>}
+                                {proj.role && <p className="text-[10px] font-semibold text-[#3e7aa7]">Role: {proj.role}</p>}
                               </div>
                               <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold">
                                 {proj.liveDemoUrl && (
@@ -755,7 +755,7 @@ export default function TalentDiscoveryPage() {
                                     href={proj.liveDemoUrl}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="text-emerald-700 hover:text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded flex items-center gap-0.5"
+                                    className="text-[#1f357c] hover:text-[#3e7aa7] bg-[#1f357c]/10 px-1.5 py-0.5 rounded flex items-center gap-0.5"
                                   >
                                     <Globe className="w-2.5 h-2.5" /> Demo
                                   </a>
@@ -817,13 +817,13 @@ export default function TalentDiscoveryPage() {
                           <div key={sample.id} className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 text-xs space-y-1">
                             <div className="flex items-center justify-between">
                               <div className="truncate min-w-0 pr-2">
-                                <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1 py-0.2 rounded mr-1">
+                                <span className="text-[9px] font-black uppercase tracking-wider bg-[#1f357c]/10 text-[#1f357c] px-1 py-0.2 rounded mr-1">
                                   {sample.category.replace('_', ' ')}
                                 </span>
                                 <span className="font-bold text-slate-900">{sample.title}</span>
                               </div>
                               {sample.workLink && (
-                                <a href={sample.workLink} target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline font-bold text-[10px] shrink-0">
+                                <a href={sample.workLink} target="_blank" rel="noreferrer" className="text-[#1f357c] hover:underline font-bold text-[10px] shrink-0">
                                   View ↗
                                 </a>
                               )}
@@ -880,7 +880,7 @@ export default function TalentDiscoveryPage() {
                         className="rounded-lg bg-slate-100 border border-slate-200/60 px-2 py-0.5 text-[10px] font-bold text-slate-700 flex items-center gap-1"
                       >
                         {sk.skillName}
-                        {sk.isVerified && <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />}
+                        {sk.isVerified && <CheckCircle2 className="w-2.5 h-2.5 text-[#4ad1c7]" />}
                       </span>
                     ))}
                     {student.skills.length > 5 && (
@@ -906,10 +906,10 @@ export default function TalentDiscoveryPage() {
                         <MapPin className="w-3 h-3 text-slate-400 stroke-[1.75]" />
                         {(student as any).preferredLocations?.join(', ') || student.preferences?.preferredLocations?.[0] || 'Flexible'}
                       </span>
-                      <span className="flex items-center gap-1 font-semibold text-emerald-600 shrink-0">
+                      <span className="flex items-center gap-1 font-semibold text-[#1f357c] shrink-0">
                         {student.preferences?.availability === AvailabilityOption.IMMEDIATE ? (
                           <>
-                            <Zap className="w-3 h-3 fill-emerald-600 stroke-none" />
+                            <Zap className="w-3 h-3 fill-[#4ad1c7] text-[#4ad1c7] stroke-none" />
                             Immediate
                           </>
                         ) : (
@@ -931,12 +931,12 @@ export default function TalentDiscoveryPage() {
                             setContactRevealed(null);
                             setShortlistSuccess('');
                           }}
-                          className="flex-1 rounded-xl bg-emerald-700 py-2.5 text-xs font-bold text-white hover:bg-emerald-800 text-center transition-all cursor-pointer shadow-xs"
+                          className="flex-1 rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] py-2.5 text-xs font-bold text-white hover:opacity-90 text-center transition-all cursor-pointer shadow-xs"
                         >
                           View Placed Profile
                         </button>
-                        <span className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-[11px] border border-emerald-300 shrink-0">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-[#1f357c]/10 text-[#1f357c] font-extrabold text-[11px] border border-[#3e7aa7]/30 shrink-0">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" />
                           Your Hire
                         </span>
                       </>
@@ -978,10 +978,10 @@ export default function TalentDiscoveryPage() {
                       </a>
                       <button
                         onClick={() => handleOpenHireModal(student)}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white px-3.5 py-2.5 text-xs font-bold transition-all shadow-xs cursor-pointer"
                         title="Hire this candidate"
                       >
-                        <Briefcase className="w-3.5 h-3.5 stroke-[2]" />
+                        <Briefcase className="w-3.5 h-3.5 text-[#4ad1c7] stroke-[2]" />
                         Hire
                       </button>
                       <button
@@ -1042,7 +1042,7 @@ export default function TalentDiscoveryPage() {
                     <h2 className="text-xl font-black text-slate-900">{selectedCandidate.fullName}</h2>
                     <p className="text-xs text-slate-500 font-medium mt-0.5">{selectedCandidate.headline}</p>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-700 border border-emerald-200">
+                      <span className="rounded-full bg-[#1f357c]/10 px-2.5 py-0.5 text-[10px] font-extrabold text-[#1f357c] border border-[#3e7aa7]/30">
                         {selectedCandidate.completenessScore}% Completeness
                       </span>
                       {selectedCandidate.preferences?.availability && (
@@ -1074,7 +1074,7 @@ export default function TalentDiscoveryPage() {
               </div>
 
               {shortlistSuccess && (
-                <div className="bg-emerald-50 text-emerald-800 p-3 rounded-xl border border-emerald-200 text-xs font-bold">
+                <div className="bg-[#1f357c]/10 text-[#1f357c] p-3 rounded-xl border border-[#3e7aa7]/30 text-xs font-bold">
                   {shortlistSuccess}
                 </div>
               )}
@@ -1121,34 +1121,34 @@ export default function TalentDiscoveryPage() {
 
               {/* Placement Details Banner if Candidate is Hired */}
               {(selectedCandidate.placement || selectedCandidate.isHired) && (
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 shadow-xs space-y-3">
+                <div className="bg-[#1f357c]/5 border-2 border-[#3e7aa7]/30 rounded-2xl p-5 shadow-xs space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 text-white px-3 py-1 text-xs font-black uppercase tracking-wider shadow-xs">
-                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] text-white px-3 py-1 text-xs font-black uppercase tracking-wider shadow-xs">
+                      <CheckCircle2 className="w-4 h-4 text-[#4ad1c7]" />
                       Candidate Placed & Hired
                     </span>
                     {selectedCandidate.placement?.packageLpa && (
-                      <span className="text-sm font-black text-emerald-900 bg-emerald-100/80 px-3 py-1 rounded-xl border border-emerald-300">
+                      <span className="text-sm font-black text-[#1f357c] bg-[#1f357c]/10 px-3 py-1 rounded-xl border border-[#3e7aa7]/30">
                         CTC: {selectedCandidate.placement.packageLpa}
                       </span>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
                     <div>
-                      <p className="text-emerald-700 font-bold uppercase tracking-wider text-[10px]">Hiring Company</p>
-                      <p className="text-sm font-extrabold text-emerald-950 mt-0.5">
+                      <p className="text-[#3e7aa7] font-bold uppercase tracking-wider text-[10px]">Hiring Company</p>
+                      <p className="text-sm font-extrabold text-[#1f357c] mt-0.5">
                         {selectedCandidate.placement?.companyName || selectedCandidate.placement?.company?.name || 'Partner Company'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-emerald-700 font-bold uppercase tracking-wider text-[10px]">Job Role</p>
-                      <p className="text-sm font-extrabold text-emerald-950 mt-0.5">
+                      <p className="text-[#3e7aa7] font-bold uppercase tracking-wider text-[10px]">Job Role</p>
+                      <p className="text-sm font-extrabold text-[#1f357c] mt-0.5">
                         {selectedCandidate.placement?.roleTitle || 'Graduate Trainee'}
                       </p>
                     </div>
                   </div>
                   {selectedCandidate.placement?.notes && (
-                    <p className="text-xs text-emerald-800 bg-emerald-100/50 p-2.5 rounded-xl italic">
+                    <p className="text-xs text-[#1f357c] bg-[#1f357c]/10 p-2.5 rounded-xl italic">
                       "{selectedCandidate.placement.notes}"
                     </p>
                   )}
@@ -1175,7 +1175,7 @@ export default function TalentDiscoveryPage() {
                         <div className="flex items-start justify-between">
                           <div>
                             <h5 className="text-sm font-bold text-slate-900">{p.title}</h5>
-                            {p.role && <p className="text-[11px] font-semibold text-emerald-700">Role: {p.role}</p>}
+                            {p.role && <p className="text-[11px] font-semibold text-[#3e7aa7]">Role: {p.role}</p>}
                           </div>
                           <div className="flex gap-2 text-xs font-bold">
                             {(p.liveDemoUrl || p.projectLink) && (
@@ -1183,7 +1183,7 @@ export default function TalentDiscoveryPage() {
                                 href={p.liveDemoUrl || p.projectLink}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center gap-1 rounded bg-emerald-100 text-emerald-800 px-2 py-1 hover:bg-emerald-200 transition-colors"
+                                className="flex items-center gap-1 rounded bg-[#1f357c]/10 text-[#1f357c] px-2 py-1 hover:bg-[#1f357c]/20 transition-colors"
                               >
                                 <Globe className="w-3 h-3" />
                                 Live Demo
@@ -1233,7 +1233,7 @@ export default function TalentDiscoveryPage() {
                         {p.skillsDemonstrated && p.skillsDemonstrated.length > 0 && (
                           <div className="flex flex-wrap gap-1">
                             {p.skillsDemonstrated.map((s, idx) => (
-                              <span key={idx} className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                              <span key={idx} className="bg-[#1f357c]/5 border border-[#3e7aa7]/25 text-[#1f357c] text-[10px] font-semibold px-2 py-0.5 rounded-md">
                                 ✓ {s}
                               </span>
                             ))}
@@ -1244,7 +1244,7 @@ export default function TalentDiscoveryPage() {
                         {p.mediaUrls && p.mediaUrls.length > 0 && (
                           <div className="space-y-1.5 pt-1 border-t border-slate-200/70">
                             <p className="text-[10px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1">
-                              <ImageIcon className="w-3.5 h-3.5 text-emerald-600" />
+                              <ImageIcon className="w-3.5 h-3.5 text-[#3e7aa7]" />
                               Visual Proof & High-Res Deliverables ({p.mediaUrls.length})
                             </p>
                             <div className="grid grid-cols-2 gap-2">
@@ -1254,7 +1254,7 @@ export default function TalentDiscoveryPage() {
                                   href={url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-all shadow-2xs block"
+                                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-[#3e7aa7] transition-all shadow-2xs block"
                                 >
                                   <img src={url} alt={`Deliverable ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
@@ -1283,7 +1283,7 @@ export default function TalentDiscoveryPage() {
                       <div key={sample.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
                         <div className="flex items-start justify-between">
                           <div>
-                            <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                            <span className="text-[9px] font-black uppercase tracking-wider bg-[#1f357c]/10 text-[#1f357c] px-1.5 py-0.5 rounded">
                               {sample.category.replace('_', ' ')}
                             </span>
                             <h5 className="text-sm font-bold text-slate-900 mt-1">{sample.title}</h5>
@@ -1296,7 +1296,7 @@ export default function TalentDiscoveryPage() {
                               href={sample.workLink}
                               target="_blank"
                               rel="noreferrer"
-                              className="flex items-center gap-1 text-xs font-bold text-emerald-600 hover:underline"
+                              className="flex items-center gap-1 text-xs font-bold text-[#1f357c] hover:underline"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               View Asset
@@ -1323,7 +1323,7 @@ export default function TalentDiscoveryPage() {
                         {sample.mediaUrls && sample.mediaUrls.length > 0 && (
                           <div className="space-y-1 pt-1 border-t border-slate-200/70">
                             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
-                              <ImageIcon className="w-3 h-3 text-emerald-600" />
+                              <ImageIcon className="w-3 h-3 text-[#3e7aa7]" />
                               Asset Previews ({sample.mediaUrls.length})
                             </p>
                             <div className="grid grid-cols-2 gap-2">
@@ -1333,7 +1333,7 @@ export default function TalentDiscoveryPage() {
                                   href={url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-all shadow-2xs block"
+                                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-[#3e7aa7] transition-all shadow-2xs block"
                                 >
                                   <img src={url} alt={`Asset ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
@@ -1355,21 +1355,21 @@ export default function TalentDiscoveryPage() {
               {selectedCandidate.cvFileUrl && (
                 <div>
                   <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Candidate CV (PDF)</h4>
-                  <div className="mt-2 flex items-center justify-between bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                  <div className="mt-2 flex items-center justify-between bg-[#1f357c]/5 border border-[#3e7aa7]/30 p-4 rounded-xl">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-lg bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center">
                         <FileText className="w-5 h-5 stroke-[1.75]" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-emerald-900">Verified Original PDF CV</p>
-                        <p className="text-[11px] text-emerald-700">Uploaded and reviewed by candidate</p>
+                        <p className="text-xs font-bold text-[#1f357c]">Verified Original PDF CV</p>
+                        <p className="text-[11px] text-[#3e7aa7]">Uploaded and reviewed by candidate</p>
                       </div>
                     </div>
                     <a
                       href={selectedCandidate.cvFileUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-xs"
+                      className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] px-3.5 py-2 text-xs font-bold text-white transition-all shadow-xs"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       Open PDF
@@ -1390,7 +1390,7 @@ export default function TalentDiscoveryPage() {
                       className="rounded-lg bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-bold text-slate-800 flex items-center gap-1.5"
                     >
                       {sk.skillName}
-                      {sk.isVerified && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                      {sk.isVerified && <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" />}
                     </span>
                   ))}
                 </div>
@@ -1421,7 +1421,7 @@ export default function TalentDiscoveryPage() {
                     {selectedCandidate.certificates.map((cert) => (
                       <div key={cert.id} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Award className="w-4 h-4 text-emerald-600 stroke-[1.75]" />
+                          <Award className="w-4 h-4 text-[#3e7aa7] stroke-[1.75]" />
                           <div>
                             <p className="text-xs font-bold text-slate-900">{cert.name}</p>
                             <p className="text-[11px] text-slate-500">{cert.issuingOrganization} • {cert.issueDate}</p>
@@ -1432,7 +1432,7 @@ export default function TalentDiscoveryPage() {
                             href={cert.credentialUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex items-center gap-1 text-xs font-bold text-emerald-600 hover:underline"
+                            className="flex items-center gap-1 text-xs font-bold text-[#1f357c] hover:underline"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             Verify
@@ -1482,21 +1482,21 @@ export default function TalentDiscoveryPage() {
             <div className="mt-6 pt-4 border-t border-slate-200 space-y-3">
               {contactRevealed ? (
                 <div className="bg-slate-900 text-white p-4 rounded-xl space-y-2 border border-slate-800">
-                  <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Direct Candidate Contact</p>
+                  <p className="text-xs font-bold text-[#4ad1c7] uppercase tracking-wider">Direct Candidate Contact</p>
                   <p className="text-sm font-mono flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-emerald-400" />
+                    <Mail className="w-4 h-4 text-[#4ad1c7]" />
                     {contactRevealed.email}
                   </p>
                   {contactRevealed.phone && (
                     <p className="text-sm font-mono flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-emerald-400" />
+                      <Phone className="w-4 h-4 text-[#4ad1c7]" />
                       {contactRevealed.phone}
                     </p>
                   )}
                   {contactRevealed.linkedinUrl && (
                     <p className="text-sm font-mono flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-emerald-400" />
-                      <a href={contactRevealed.linkedinUrl} target="_blank" rel="noreferrer" className="text-emerald-400 underline">
+                      <Globe className="w-4 h-4 text-[#4ad1c7]" />
+                      <a href={contactRevealed.linkedinUrl} target="_blank" rel="noreferrer" className="text-[#4ad1c7] underline">
                         LinkedIn Profile ↗
                       </a>
                     </p>
@@ -1551,7 +1551,7 @@ export default function TalentDiscoveryPage() {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black">
+                <div className="h-12 w-12 rounded-2xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 flex items-center justify-center font-black">
                   <Briefcase className="w-6 h-6 stroke-[2]" />
                 </div>
                 <div>
@@ -1567,7 +1567,7 @@ export default function TalentDiscoveryPage() {
               </button>
             </div>
 
-            <div className="bg-emerald-50 rounded-2xl p-3.5 border border-emerald-200 text-xs text-emerald-900 leading-relaxed font-medium">
+            <div className="bg-[#1f357c]/5 rounded-2xl p-3.5 border border-[#3e7aa7]/30 text-xs text-[#1f357c] leading-relaxed font-medium">
               💡 <strong>Instant Global Placement:</strong> Recording this placement marks the candidate as <strong>HIRED</strong> across FresherToWork for all recruiters and admins.
             </div>
 
@@ -1578,7 +1578,7 @@ export default function TalentDiscoveryPage() {
             )}
 
             {hireSuccessMsg && (
-              <div className="bg-emerald-100 text-emerald-900 p-3 rounded-xl border border-emerald-300 text-xs font-bold">
+              <div className="bg-[#1f357c]/10 text-[#1f357c] p-3 rounded-xl border border-[#3e7aa7]/30 text-xs font-bold">
                 {hireSuccessMsg}
               </div>
             )}
@@ -1593,7 +1593,7 @@ export default function TalentDiscoveryPage() {
                   placeholder="e.g. Junior Frontend Developer, QA Engineer"
                   value={hireRoleTitle}
                   onChange={(e) => setHireRoleTitle(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50"
                 />
               </div>
 
@@ -1606,7 +1606,7 @@ export default function TalentDiscoveryPage() {
                   placeholder="e.g. ₹ 4.5 LPA, 45,000 AED/yr"
                   value={hirePackageLpa}
                   onChange={(e) => setHirePackageLpa(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50"
                 />
               </div>
 
@@ -1619,7 +1619,7 @@ export default function TalentDiscoveryPage() {
                   placeholder="e.g. Joining on 1st October in Bangalore office"
                   value={hireNotes}
                   onChange={(e) => setHireNotes(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50 resize-none"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50 resize-none"
                 />
               </div>
             </div>
@@ -1637,7 +1637,7 @@ export default function TalentDiscoveryPage() {
                 type="button"
                 onClick={handleConfirmHire}
                 disabled={hiringLoading}
-                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-extrabold shadow-md shadow-[#1f357c]/20 transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
               >
                 {hiringLoading ? 'Recording Hire...' : 'Confirm Hire'}
               </button>
@@ -1671,7 +1671,7 @@ export default function TalentDiscoveryPage() {
             <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-900 text-sm">{lockedModalCandidate.fullName}</span>
-                <span className="rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.2 text-[9px] font-black uppercase">
+                <span className="rounded-full bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-2 py-0.2 text-[9px] font-black uppercase">
                   HIRED
                 </span>
               </div>

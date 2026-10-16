@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@freshertowork.com"
-                  className="w-full rounded-xl border border-slate-700 bg-[#080B10] pl-10 pr-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-xl border border-slate-700 bg-[#080B10] pl-10 pr-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full rounded-xl border border-slate-700 bg-[#080B10] pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-xl border border-slate-700 bg-[#080B10] pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
                 <button
                   type="button"

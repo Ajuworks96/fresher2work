@@ -18,7 +18,7 @@ export const Card: React.FC<CardProps> = ({
     <div
       className={`bg-white rounded-xl border transition-all ${
         highlighted
-          ? 'border-emerald-300 ring-2 ring-emerald-50 shadow-sm'
+          ? 'border-[#3e7aa7]/40 ring-2 ring-[#3e7aa7]/10 shadow-sm'
           : 'border-slate-200/90'
       } ${
         elevated ? 'shadow-md' : 'shadow-xs'

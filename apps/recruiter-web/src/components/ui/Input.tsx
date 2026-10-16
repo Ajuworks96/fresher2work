@@ -38,7 +38,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             } ${rightIcon ? 'pr-10' : ''} ${
               error
                 ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                : 'border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-100'
+                : 'border-slate-200 hover:border-slate-300 focus:border-[#3e7aa7] focus:ring-[#3e7aa7]/20'
             } ${className}`}
             {...props}
           />

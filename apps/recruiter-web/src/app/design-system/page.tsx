@@ -67,7 +67,7 @@ export default function DesignSystemGalleryPage() {
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-slate-900">1. Button Styles & Variants</h2>
         <div className="flex flex-wrap gap-4 items-center bg-white p-6 rounded-xl border border-slate-200">
-          <Button variant="primary">Primary Emerald</Button>
+          <Button variant="primary">Primary Brand</Button>
           <Button variant="secondary">Secondary Slate</Button>
           <Button variant="accent">Accent Indigo</Button>
           <Button variant="outline">Outline</Button>

@@ -170,8 +170,8 @@ export default function RecruiterPortalPage() {
                     {activeUser.company?.name || activeUser.companyName || 'Corporate Partner'} • {activeUser.businessEmail || activeUser.email}
                   </p>
                 </div>
-                <span className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200">
-                  <CheckCircle2 className="w-4 h-4" />
+                <span className="p-1.5 rounded-lg bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30">
+                  <CheckCircle2 className="w-4 h-4 text-[#4ad1c7]" />
                 </span>
               </div>
 
@@ -329,7 +329,7 @@ export default function RecruiterPortalPage() {
                 >
                   <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
                     <span>Arjun (CEO)</span>
-                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-mono font-bold border border-emerald-200">Active</span>
+                    <span className="text-[9px] text-[#1f357c] bg-[#1f357c]/10 px-1.5 py-0.2 rounded font-mono font-bold border border-[#3e7aa7]/30">Active</span>
                   </div>
                   <div className="text-[10px] text-slate-500 truncate mt-0.5">arjunworks96@gmail.com</div>
                   <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>
@@ -342,7 +342,7 @@ export default function RecruiterPortalPage() {
                 >
                   <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
                     <span>Lead Partner</span>
-                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-mono font-bold border border-emerald-200">Active</span>
+                    <span className="text-[9px] text-[#1f357c] bg-[#1f357c]/10 px-1.5 py-0.2 rounded font-mono font-bold border border-[#3e7aa7]/30">Active</span>
                   </div>
                   <div className="text-[10px] text-slate-500 truncate mt-0.5">recruiter@freshertowork.com</div>
                   <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>

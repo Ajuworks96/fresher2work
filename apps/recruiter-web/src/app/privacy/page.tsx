@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-800 selection:bg-[#1f357c] selection:text-white">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
@@ -39,9 +39,9 @@ export default function PrivacyPolicyPage() {
 
       {/* Hero Header */}
       <div className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 via-slate-50/60 to-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-100/50 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1f357c]/10 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#3e7aa7]/30 bg-[#1f357c]/10 px-3.5 py-1.5 text-xs font-bold text-[#1f357c] shadow-sm">
             <Shield className="h-4 w-4" /> Data Protection & Privacy Standard
           </div>
           <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
@@ -60,13 +60,13 @@ export default function PrivacyPolicyPage() {
           {/* Section 1: Introduction */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <FileText className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">1. Introduction & Operating Entity</h2>
             </div>
             <p className="mt-4">
-              Welcome to <strong>FresherToWork</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;FresherToWork&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-emerald-600">freshertowork.com</span> and <span className="font-semibold text-emerald-600">recruiter-web-lac.vercel.app</span>).
+              Welcome to <strong>FresherToWork</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;FresherToWork&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-[#1f357c]">freshertowork.com</span> and <span className="font-semibold text-[#1f357c]">recruiter-web-lac.vercel.app</span>).
             </p>
             <p className="mt-3">
               This Privacy Policy explains what personal information we collect, why we collect it, how it is processed and secured, and your explicit rights under the law. By registering or using FresherToWork, you consent to the transparent practices described herein.
@@ -86,25 +86,25 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="mt-4 space-y-3">
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Candidate Profile Information:</strong> Full name, email address, phone number, encrypted password hash, role headline, bio, city, and state.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Proof-of-Work & Credentials:</strong> Verified project repositories, portfolio URLs (GitHub, Behance, Figma, Google Drive), skill tags with proficiency ratings, resume documents (PDF), and educational background.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Recruiter Organization Information:</strong> Registered company name, corporate domain website, official work email, contact numbers, recruiter designation, and office locations.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Transactional & Payment Data:</strong> Order IDs, transaction reference IDs, and verification receipts processed securely via Razorpay. <em>We never store card numbers, CVVs, or UPI PINs on our servers.</em>
                 </div>
@@ -154,7 +154,7 @@ export default function PrivacyPolicyPage() {
           {/* Section 4: Security & Data Retention */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Lock className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">4. Data Security, Cloud Storage & Encryption</h2>
@@ -183,9 +183,9 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* Section 6: Contact Information */}
-          <section className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6 sm:p-8 shadow-sm">
+          <section className="rounded-2xl border border-[#3e7aa7]/30 bg-[#1f357c]/5 p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-300 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Mail className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">6. Grievance Redressal & Data Privacy Officer</h2>
@@ -193,10 +193,10 @@ export default function PrivacyPolicyPage() {
             <p className="mt-3 text-slate-700">
               For any privacy inquiries, data deletion requests, or DPDP compliance concerns, you can directly reach our officer:
             </p>
-            <div className="mt-4 rounded-xl border border-emerald-200/80 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
+            <div className="mt-4 rounded-xl border border-[#3e7aa7]/20 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
               <p><strong className="text-slate-950">Corporate Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
-              <p><strong className="text-slate-950">Official Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 hover:underline">infovelvetbyte@gmail.com</a></p>
-              <p><strong className="text-slate-950">Helpline Phone:</strong> <a href="tel:+918921658090" className="text-emerald-700 hover:underline">+91 8921658090</a></p>
+              <p><strong className="text-slate-950">Official Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] hover:underline font-semibold">infovelvetbyte@gmail.com</a></p>
+              <p><strong className="text-slate-950">Helpline Phone:</strong> <a href="tel:+918921658090" className="text-[#1f357c] hover:underline font-semibold">+91 8921658090</a></p>
               <p><strong className="text-slate-950">Operating Locations:</strong> Calicut and Kochi, Kerala, India</p>
               <p><strong className="text-slate-950">Grievance SLA:</strong> All complaints acknowledged within 24 hours and resolved within 7 business days.</p>
             </div>

@@ -72,7 +72,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 href={liveDemoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1.5"
+                className="text-[#3e7aa7] hover:text-[#1f357c] hover:underline flex items-center gap-1.5"
               >
                 <Globe className="w-3.5 h-3.5 stroke-[1.75]" />
                 Live Demo

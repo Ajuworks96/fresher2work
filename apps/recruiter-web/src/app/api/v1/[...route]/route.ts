@@ -78,13 +78,13 @@ async function sendVerificationEmail(toEmail: string, otp: string, recipientName
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
       <div style="text-align: center; margin-bottom: 24px;">
-        <h2 style="color: #0f172a; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #059669;">ToWork</span></h2>
+        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">ToWork</span></h2>
         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Candidate Account Verification</p>
       </div>
       <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'Candidate'}</strong>,</p>
       <p style="color: #334155; font-size: 14px; line-height: 1.5;">Welcome to FresherToWork. Please enter the 4-digit verification code below to verify your email address and activate your portfolio:</p>
       <div style="text-align: center; margin: 28px 0;">
-        <span style="display: inline-block; background: #f0fdf4; border: 2px dashed #059669; color: #047857; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
+        <span style="display: inline-block; background: #f0f7fb; border: 2px dashed #1f357c; color: #1f357c; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
       </div>
       <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
@@ -141,7 +141,7 @@ async function sendPasswordResetEmail(toEmail: string, otp: string, recipientNam
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
       <div style="text-align: center; margin-bottom: 24px;">
-        <h2 style="color: #0f172a; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #059669;">ToWork</span></h2>
+        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">ToWork</span></h2>
         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Password Reset Request</p>
       </div>
       <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'User'}</strong>,</p>

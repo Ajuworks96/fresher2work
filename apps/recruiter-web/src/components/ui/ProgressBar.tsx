@@ -24,8 +24,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const colorMap = {
-    brand: 'bg-emerald-500',
-    accent: 'bg-indigo-500',
+    brand: 'bg-gradient-to-r from-[#1f357c] via-[#3e7aa7] to-[#4ad1c7]',
+    accent: 'bg-[#3e7aa7]',
     warning: 'bg-amber-500',
     error: 'bg-red-500',
   };
@@ -73,7 +73,7 @@ export const CompletenessMeter: React.FC<CompletenessMeterProps> = ({
           </h4>
         </div>
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-black text-emerald-600">{score}</span>
+          <span className="text-2xl font-black text-[#1f357c]">{score}</span>
           <span className="text-xs font-bold text-slate-400">/ 100%</span>
         </div>
       </div>
@@ -91,16 +91,16 @@ export const CompletenessMeter: React.FC<CompletenessMeterProps> = ({
                 className="flex items-center justify-between p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer text-xs transition-colors"
               >
                 <span className="text-slate-700 font-medium flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#4ad1c7]" />
                   {step}
                 </span>
-                <span className="text-emerald-700 font-bold hover:underline">Add +</span>
+                <span className="text-[#3e7aa7] font-bold hover:underline">Add +</span>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <p className="text-xs text-emerald-700 font-bold bg-emerald-50 p-2 rounded-lg text-center">
+        <p className="text-xs text-[#1f357c] font-bold bg-[#1f357c]/10 border border-[#3e7aa7]/30 p-2 rounded-lg text-center">
           ✓ All profile sections complete! You have maximum visibility.
         </p>
       )}

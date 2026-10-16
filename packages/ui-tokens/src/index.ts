@@ -56,13 +56,13 @@ export const PALETTE = {
 
   // Semantic Status Colors
   success: {
-    50: '#ecfdf5',
-    100: '#d1fae5',
-    500: '#10b981',
-    700: '#047857',
-    text: '#065f46',
-    bg: '#ecfdf5',
-    border: '#a7f3d0',
+    50: '#f0f7fb',
+    100: '#dcedf6',
+    500: '#3e7aa7',
+    700: '#1f357c',
+    text: '#1f357c',
+    bg: '#f0f7fb',
+    border: '#b5caf3',
   },
   warning: {
     50: '#fffbeb',
@@ -157,7 +157,7 @@ export const SHADOWS = {
   xl: '0 20px 25px -5px rgb(15 23 42 / 0.08), 0 8px 10px -6px rgb(15 23 42 / 0.04)',
   card: '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
   cardHover: '0 10px 20px -5px rgb(15 23 42 / 0.08), 0 4px 8px -4px rgb(15 23 42 / 0.04)',
-  focusRing: '0 0 0 3px rgba(16, 185, 129, 0.25)',
+  focusRing: '0 0 0 3px rgba(62, 122, 167, 0.25)',
   dropdown: '0 12px 28px -4px rgb(15 23 42 / 0.12), 0 4px 10px -2px rgb(15 23 42 / 0.06)',
 };
 

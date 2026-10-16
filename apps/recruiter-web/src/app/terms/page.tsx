@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-800 selection:bg-[#1f357c] selection:text-white">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
@@ -76,7 +76,7 @@ export default function TermsOfServicePage() {
           {/* Section 2: Platform Purpose */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Briefcase className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">2. Nature of Service & Proof-of-Work Model</h2>
@@ -105,19 +105,19 @@ export default function TermsOfServicePage() {
             </p>
             <ul className="mt-4 space-y-3">
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Truthful Submissions:</strong> All submitted project links, GitHub repositories, Figma portfolios, and resume details must be your original work or accurately disclose your role in team collaborations.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">One-Time Discovery Pass (₹299):</strong> Candidate profile verification, priority discovery ranking, and direct recruiter contact reveals require an upfront, non-recurring verification fee of <strong>₹299 (inclusive of GST)</strong>.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">No Plagiarism / Fraud:</strong> Any profile found displaying stolen source code, fabricated credentials, or fraudulent project claims will have their badge revoked and account permanently banned without refund.
                 </div>
@@ -159,13 +159,13 @@ export default function TermsOfServicePage() {
           {/* Section 6: Payments & Refunds Link */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Scale className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">6. Payments, Billing & Refunds</h2>
             </div>
             <p className="mt-4">
-              All financial transactions are conducted via PCI-DSS compliant payment gateways (Razorpay). Details regarding cancellations, accidental billing, and eligibility for refunds are governed by our standalone <Link href="/refund-policy" className="font-semibold text-emerald-600 underline hover:text-emerald-700">Refund & Cancellation Policy</Link>, which is incorporated into these Terms by reference.
+              All financial transactions are conducted via PCI-DSS compliant payment gateways (Razorpay). Details regarding cancellations, accidental billing, and eligibility for refunds are governed by our standalone <Link href="/refund-policy" className="font-semibold text-[#1f357c] underline hover:text-[#3e7aa7]">Refund & Cancellation Policy</Link>, which is incorporated into these Terms by reference.
             </p>
           </section>
 
@@ -183,9 +183,9 @@ export default function TermsOfServicePage() {
           </section>
 
           {/* Section 8: Support Card */}
-          <section className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6 sm:p-8 shadow-sm">
+          <section className="rounded-2xl border border-[#3e7aa7]/30 bg-[#1f357c]/5 p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-300 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Mail className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">8. Questions Regarding Terms</h2>
@@ -193,10 +193,10 @@ export default function TermsOfServicePage() {
             <p className="mt-3 text-slate-700">
               If you have any questions or require legal clarification regarding these Terms of Service, please contact our administrative team:
             </p>
-            <div className="mt-4 rounded-xl border border-emerald-200/80 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
+            <div className="mt-4 rounded-xl border border-[#3e7aa7]/20 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
               <p><strong className="text-slate-950">Legal Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
-              <p><strong className="text-slate-950">Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 hover:underline">infovelvetbyte@gmail.com</a></p>
-              <p><strong className="text-slate-950">Helpline:</strong> <a href="tel:+918921658090" className="text-emerald-700 hover:underline">+91 8921658090</a></p>
+              <p><strong className="text-slate-950">Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] hover:underline font-semibold">infovelvetbyte@gmail.com</a></p>
+              <p><strong className="text-slate-950">Helpline:</strong> <a href="tel:+918921658090" className="text-[#1f357c] hover:underline font-semibold">+91 8921658090</a></p>
               <p><strong className="text-slate-950">Locations:</strong> Calicut and Kochi, Kerala, India</p>
             </div>
           </section>

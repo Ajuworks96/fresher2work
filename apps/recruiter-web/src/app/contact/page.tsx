@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-800 selection:bg-[#1f357c] selection:text-white">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
@@ -39,9 +39,9 @@ export default function ContactPage() {
 
       {/* Hero Header */}
       <div className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 via-slate-50/60 to-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-100/50 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1f357c]/10 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#3e7aa7]/30 bg-[#1f357c]/10 px-3.5 py-1.5 text-xs font-bold text-[#1f357c] shadow-sm">
             <MessageSquare className="h-4 w-4" /> Direct Support & Grievance Redressal
           </div>
           <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
@@ -59,7 +59,7 @@ export default function ContactPage() {
           
           {/* Email Support Card */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
               <Mail className="h-6 w-6" />
             </div>
             <h2 className="mt-5 text-lg font-bold text-slate-950">Official Email Support</h2>
@@ -68,7 +68,7 @@ export default function ContactPage() {
             </p>
             <a
               href="mailto:infovelvetbyte@gmail.com"
-              className="mt-4 inline-flex items-center gap-2 text-base font-bold text-emerald-700 hover:text-emerald-800 hover:underline"
+              className="mt-4 inline-flex items-center gap-2 text-base font-bold text-[#1f357c] hover:text-[#3e7aa7] hover:underline"
             >
               infovelvetbyte@gmail.com <ArrowUpRight className="h-4 w-4" />
             </a>
@@ -128,9 +128,9 @@ export default function ContactPage() {
           </div>
 
           {/* Grievance Officer & SLA Card */}
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6 sm:p-8 shadow-sm sm:col-span-2">
+          <div className="rounded-2xl border border-[#3e7aa7]/30 bg-[#1f357c]/5 p-6 sm:p-8 shadow-sm sm:col-span-2">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 border border-emerald-300 shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <ShieldCheck className="h-6 w-6" />
               </div>
               <div>
@@ -143,9 +143,9 @@ export default function ContactPage() {
               <p>
                 If you have complaints regarding data protection, unwanted recruiter messages, or payment resolution:
               </p>
-              <div className="rounded-xl border border-emerald-200/80 bg-white p-4 shadow-sm space-y-1.5 text-xs sm:text-sm">
+              <div className="rounded-xl border border-[#3e7aa7]/20 bg-white p-4 shadow-sm space-y-1.5 text-xs sm:text-sm">
                 <p><strong className="text-slate-950">Designated Officer:</strong> Legal & Grievance Team, Velvetbyte PVT Ltd</p>
-                <p><strong className="text-slate-950">Direct Grievance Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 font-semibold hover:underline">infovelvetbyte@gmail.com</a></p>
+                <p><strong className="text-slate-950">Direct Grievance Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] font-semibold hover:underline">infovelvetbyte@gmail.com</a></p>
                 <p><strong className="text-slate-950">Phone Helpline:</strong> +91 8921658090</p>
                 <p><strong className="text-slate-950">Response Commitment:</strong> All grievances are formally acknowledged within 24 hours and thoroughly redressed within 7 working days.</p>
               </div>

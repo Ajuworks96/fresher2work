@@ -11,6 +11,32 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        emerald: {
+          50: '#f0f7fb',
+          100: '#dcedf6',
+          200: '#b5caf3',
+          300: '#8dc1e3',
+          400: '#4ad1c7', // Vibrant Teal Accent (#4ad1c7)
+          500: '#3e7aa7', // Ocean Blue Midtone (#3e7aa7)
+          600: '#1f357c', // Deep Royal Navy Primary (#1f357c)
+          700: '#192c67',
+          800: '#142251',
+          900: '#0c1633',
+          950: '#070d1f',
+        },
+        green: {
+          50: '#f0f7fb',
+          100: '#dcedf6',
+          200: '#b5caf3',
+          300: '#8dc1e3',
+          400: '#4ad1c7', // Vibrant Teal Accent (#4ad1c7)
+          500: '#3e7aa7', // Ocean Blue Midtone (#3e7aa7)
+          600: '#1f357c', // Deep Royal Navy Primary (#1f357c)
+          700: '#192c67',
+          800: '#142251',
+          900: '#0c1633',
+          950: '#070d1f',
+        },
         brand: {
           50: '#edfbf9',
           100: '#d5f7f4',

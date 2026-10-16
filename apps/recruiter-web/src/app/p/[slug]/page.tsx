@@ -48,7 +48,7 @@ export default function PublicProfilePage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-10 h-10 border-4 border-[#1f357c] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-600 font-medium">Loading candidate profile...</p>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function PublicProfilePage() {
           <p className="text-sm text-slate-500">{error || 'This candidate profile is not active.'}</p>
           <Link
             href="/discover"
-            className="inline-block px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition"
+            className="inline-block px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white font-semibold text-sm transition"
           >
             Explore Other Candidates
           </Link>
@@ -94,7 +94,7 @@ export default function PublicProfilePage() {
         <div>
           <Link
             href="/recruiter"
-            className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
+            className="text-xs font-semibold text-[#3e7aa7] hover:text-[#1f357c] hover:underline"
           >
             Recruiter Portal ↗
           </Link>
@@ -131,14 +131,14 @@ export default function PublicProfilePage() {
         {/* Profile Card */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-2xl font-black shadow-inner shrink-0">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#1f357c] to-[#3e7aa7] text-white flex items-center justify-center text-2xl font-black shadow-inner shrink-0">
               {profile.fullName?.charAt(0) || 'S'}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h1 className="text-2xl font-extrabold text-slate-900">{profile.fullName}</h1>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-xs font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Active & Verified
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-2.5 py-0.5 text-xs font-bold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" /> Active & Verified
                 </span>
               </div>
               <p className="text-base text-slate-600 font-medium mt-1">{profile.headline || 'Aspiring Professional'}</p>
@@ -166,7 +166,7 @@ export default function PublicProfilePage() {
             <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
               <Link
                 href="/discover"
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition text-center shadow-xs"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white font-semibold text-sm transition text-center shadow-xs"
               >
                 Contact Candidate via Recruiter App
               </Link>
@@ -192,7 +192,7 @@ export default function PublicProfilePage() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200"
                 >
                   {skill.skillName || skill.name}
-                  {skill.rating && <span className="text-emerald-600 font-bold">★ {skill.rating}/5</span>}
+                  {skill.rating && <span className="text-[#3e7aa7] font-bold">★ {skill.rating}/5</span>}
                 </span>
               ))}
             </div>
@@ -208,7 +208,7 @@ export default function PublicProfilePage() {
                 <div key={idx} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white transition flex flex-col justify-between">
                   <div>
                     <h4 className="font-bold text-slate-900 text-sm">{p.title}</h4>
-                    {p.role && <p className="text-xs text-emerald-600 font-semibold mt-0.5">{p.role}</p>}
+                    {p.role && <p className="text-xs text-[#3e7aa7] font-semibold mt-0.5">{p.role}</p>}
                     <p className="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">{p.description}</p>
                     {p.techStack && p.techStack.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-3">
@@ -226,7 +226,7 @@ export default function PublicProfilePage() {
                         href={p.liveDemoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1.5"
+                        className="text-xs font-semibold text-[#3e7aa7] hover:text-[#1f357c] flex items-center gap-1.5"
                       >
                         <Globe className="w-3.5 h-3.5" />
                         Live Demo
@@ -250,7 +250,7 @@ export default function PublicProfilePage() {
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="font-bold text-slate-900 text-sm">{ws.title}</h4>
-                      <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold bg-[#1f357c]/10 text-[#1f357c] px-2 py-0.5 rounded-full border border-[#3e7aa7]/30">
                         {ws.category}
                       </span>
                     </div>
@@ -262,7 +262,7 @@ export default function PublicProfilePage() {
                         href={ws.assetUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs font-semibold text-purple-600 hover:text-purple-700"
+                        className="text-xs font-semibold text-[#3e7aa7] hover:text-[#1f357c]"
                       >
                         View Project Asset ↗
                       </a>
@@ -281,7 +281,7 @@ export default function PublicProfilePage() {
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Education</h3>
               <div className="space-y-3">
                 {profile.education.map((edu: any, idx: number) => (
-                  <div key={idx} className="border-l-2 border-emerald-500 pl-3">
+                  <div key={idx} className="border-l-2 border-[#3e7aa7] pl-3">
                     <h4 className="text-xs font-bold text-slate-900">{edu.degree} in {edu.fieldOfStudy}</h4>
                     <p className="text-xs text-slate-500">{edu.institutionName}</p>
                     <p className="text-[11px] text-slate-400">Class of {edu.gradYear || edu.endYear || '2025'}</p>
@@ -296,7 +296,7 @@ export default function PublicProfilePage() {
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Certificates</h3>
               <div className="space-y-3">
                 {profile.certificates.map((cert: any, idx: number) => (
-                  <div key={idx} className="border-l-2 border-teal-500 pl-3">
+                  <div key={idx} className="border-l-2 border-[#4ad1c7] pl-3">
                     <h4 className="text-xs font-bold text-slate-900">{cert.name}</h4>
                     <p className="text-xs text-slate-500">{cert.issuingOrganization}</p>
                     <p className="text-[11px] text-slate-400">Issued {cert.issueDate || '2024'}</p>

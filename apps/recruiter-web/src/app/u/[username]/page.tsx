@@ -137,14 +137,14 @@ export default function TalentPassportPage() {
             onClick={handleCopyLink}
             className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 transition"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-[#4ad1c7]" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? 'Copied!' : 'Copy Passport URL'}
           </button>
           <a
             href={`https://wa.me/?text=${shareText}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition shadow-md shadow-[#1f357c]/20"
           >
             <Share2 className="w-3.5 h-3.5" />
             Share WhatsApp
@@ -157,19 +157,19 @@ export default function TalentPassportPage() {
         {/* ============================================================ */}
         {/* THE SIGNATURE TALENT PASSPORT CARD */}
         {/* ============================================================ */}
-        <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 p-6 sm:p-10 shadow-2xl shadow-blue-500/10">
+        <div className="relative overflow-hidden rounded-3xl border border-[#3e7aa7]/40 bg-gradient-to-b from-[#0c1633] via-[#0c1633]/95 to-[#070d1f] p-6 sm:p-10 shadow-2xl shadow-[#1f357c]/20">
           {/* Subtle Ambient Glow */}
-          <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-blue-600/15 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none" />
+          <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-[#3e7aa7]/15 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-[#1f357c]/20 blur-3xl pointer-events-none" />
 
           {/* Passport Top Header Banner */}
           <div className="flex items-center justify-between pb-6 border-b border-slate-800/80 gap-4 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+              <div className="w-10 h-10 rounded-2xl bg-[#3e7aa7]/15 border border-[#3e7aa7]/30 flex items-center justify-center text-[#4ad1c7]">
                 <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div>
-                <p className="text-[10px] font-black tracking-widest uppercase text-blue-400">
+                <p className="text-[10px] font-black tracking-widest uppercase text-[#4ad1c7]">
                   FresherToWork • Official Talent Passport
                 </p>
                 <p className="text-xs text-slate-400 font-mono font-medium">
@@ -179,7 +179,7 @@ export default function TalentPassportPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1 text-xs font-bold tracking-wide">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#4ad1c7]/10 border border-[#4ad1c7]/30 text-[#4ad1c7] px-3 py-1 text-xs font-bold tracking-wide">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Verified Candidate
               </span>
@@ -189,7 +189,7 @@ export default function TalentPassportPage() {
           {/* Candidate Primary Identity */}
           <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div className="relative shrink-0">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-500 p-1 shadow-xl">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-[#1f357c] to-[#3e7aa7] p-1 shadow-xl">
                 <div className="w-full h-full rounded-[22px] bg-slate-900 flex items-center justify-center text-3xl font-black text-white overflow-hidden">
                   {profile.avatarUrl ? (
                     <img
@@ -202,7 +202,7 @@ export default function TalentPassportPage() {
                   )}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-emerald-500 border-2 border-slate-900 flex items-center justify-center text-white shadow-md">
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-[#4ad1c7] border-2 border-slate-900 flex items-center justify-center text-[#0c1633] shadow-md font-bold">
                 <Check className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -257,7 +257,7 @@ export default function TalentPassportPage() {
               <p className="text-2xl sm:text-3xl font-black text-white">
                 {String(projects.length || 4).padStart(2, '0')}
               </p>
-              <p className="text-[10px] text-emerald-400 font-semibold">Proof Verified</p>
+              <p className="text-[10px] text-[#4ad1c7] font-semibold">Proof Verified</p>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-800 text-center space-y-1">
@@ -267,7 +267,7 @@ export default function TalentPassportPage() {
               <p className="text-2xl sm:text-3xl font-black text-white">
                 {String(skillsList.length || 8).padStart(2, '0')}
               </p>
-              <p className="text-[10px] text-blue-400 font-semibold">Audited Stack</p>
+              <p className="text-[10px] text-[#3e7aa7] font-semibold">Audited Stack</p>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-800 text-center space-y-1">
@@ -282,8 +282,8 @@ export default function TalentPassportPage() {
           </div>
 
           {/* Open to Opportunities Section */}
-          <div className="mt-6 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider">
+          <div className="mt-6 p-4 rounded-2xl bg-[#1f357c]/10 border border-[#3e7aa7]/30 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#4ad1c7] uppercase tracking-wider">
               <Briefcase className="w-4 h-4" />
               Open to Opportunities
             </div>
@@ -308,7 +308,7 @@ export default function TalentPassportPage() {
           {/* Passport Footer URL & Direct Sharing Action */}
           <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
+              <Globe className="w-3.5 h-3.5 text-[#4ad1c7]" />
               <span>freshertowork.com/u/<strong className="text-white">{username}</strong></span>
             </div>
 
@@ -317,7 +317,7 @@ export default function TalentPassportPage() {
                 onClick={handleCopyLink}
                 className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-white transition cursor-pointer"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#4ad1c7]" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? 'Link Copied!' : 'Copy Link'}
               </button>
 
@@ -325,7 +325,7 @@ export default function TalentPassportPage() {
                 href={`https://wa.me/?text=${shareText}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-600/20"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition shadow-lg shadow-[#1f357c]/20"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share Passport
@@ -340,7 +340,7 @@ export default function TalentPassportPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-blue-400" />
+              <Sparkles className="w-5 h-5 text-[#4ad1c7]" />
               Proof of Work Showcase ({projects.length})
             </h2>
             <span className="text-xs text-slate-400">Audited Live Repositories & Demos</span>
@@ -351,7 +351,7 @@ export default function TalentPassportPage() {
               {projects.map((proj: any, idx: number) => (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 space-y-4 hover:border-slate-700 transition flex flex-col justify-between"
+                  className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 space-y-4 hover:border-[#3e7aa7]/40 transition flex flex-col justify-between"
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
@@ -359,14 +359,14 @@ export default function TalentPassportPage() {
                         {proj.title}
                       </h3>
                       {proj.status === 'VERIFIED' && (
-                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 shrink-0">
+                        <span className="text-[10px] font-bold text-[#4ad1c7] bg-[#4ad1c7]/10 px-2 py-0.5 rounded-md border border-[#4ad1c7]/20 shrink-0">
                           ✓ Verified
                         </span>
                       )}
                     </div>
 
                     {proj.role && (
-                      <p className="text-xs font-bold text-blue-400">Role: {proj.role}</p>
+                      <p className="text-xs font-bold text-[#3e7aa7]">Role: {proj.role}</p>
                     )}
 
                     <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
@@ -376,7 +376,7 @@ export default function TalentPassportPage() {
                     {/* Key Metrics if available */}
                     {proj.keyMetrics && (
                       <div className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50 text-[11px] text-slate-300">
-                        <strong className="text-blue-400">Key Metrics:</strong> {proj.keyMetrics}
+                        <strong className="text-[#4ad1c7]">Key Metrics:</strong> {proj.keyMetrics}
                       </div>
                     )}
 
@@ -402,7 +402,7 @@ export default function TalentPassportPage() {
                         href={proj.liveDemoUrl || proj.githubUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 font-bold text-blue-400 hover:text-blue-300 transition"
+                        className="inline-flex items-center gap-1 font-bold text-[#3e7aa7] hover:text-[#4ad1c7] transition"
                       >
                         <Globe className="w-3.5 h-3.5" />
                         View Live Proof ↗
@@ -432,7 +432,7 @@ export default function TalentPassportPage() {
         {(profile.cvFileUrl || profile.resumeDocs?.length > 0) && (
           <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#4ad1c7]/10 border border-[#4ad1c7]/30 text-[#4ad1c7] flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
@@ -447,9 +447,9 @@ export default function TalentPassportPage() {
               href={profile.cvFileUrl || (profile.resumeDocs?.[0]?.name ? `https://assets.fresher2work.com/resumes/${encodeURIComponent(profile.resumeDocs[0].name)}` : '#')}
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition shadow-md shadow-[#1f357c]/20"
             >
-              <FileText className="w-3.5 h-3.5" />
+              <FileText className="w-3.5 h-3.5 text-[#4ad1c7]" />
               Download Verified CV ↗
             </a>
           </div>

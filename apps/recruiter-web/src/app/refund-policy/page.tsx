@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RefundPolicyPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-800 selection:bg-[#1f357c] selection:text-white">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
@@ -76,7 +76,7 @@ export default function RefundPolicyPage() {
           {/* Section 2: Eligible for Refund */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm hover:border-slate-300 transition">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">2. Circumstances Eligible for a Full Refund</h2>
@@ -86,19 +86,19 @@ export default function RefundPolicyPage() {
             </p>
             <ul className="mt-4 space-y-3">
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Duplicate or Accidental Multiple Debits:</strong> If your bank account or UPI application was debited more than once for the same candidate profile due to network latency or gateway timeout, all duplicate debits are refunded immediately.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Payment Debited but Activation Failed:</strong> If money was deducted from your bank account but our automated Razorpay webhook failed to mark your profile as activated, and our technical support team is unable to resolve the issue within 24 hours.
                 </div>
               </li>
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#4ad1c7]" />
                 <div>
                   <strong className="text-slate-950">Cancellation Request Prior to Profile Review:</strong> If you request cancellation of your application within 2 hours of payment before our engineering moderation team reviews your projects.
                 </div>
@@ -155,9 +155,9 @@ export default function RefundPolicyPage() {
           </section>
 
           {/* Section 5: How to Claim Refund */}
-          <section className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6 sm:p-8 shadow-sm">
+          <section className="rounded-2xl border border-[#3e7aa7]/30 bg-[#1f357c]/5 p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-950">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-300 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 shadow-sm">
                 <Mail className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold">5. How to Initiate a Refund Request</h2>
@@ -165,11 +165,11 @@ export default function RefundPolicyPage() {
             <p className="mt-3 text-slate-700">
               If you experienced a failed transaction, duplicate debit, or require assistance, simply email our payment support desk with your details:
             </p>
-            <div className="mt-4 rounded-xl border border-emerald-200/80 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
-              <p><strong className="text-slate-950">Send Email to:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-emerald-700 font-semibold hover:underline">infovelvetbyte@gmail.com</a></p>
+            <div className="mt-4 rounded-xl border border-[#3e7aa7]/20 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
+              <p><strong className="text-slate-950">Send Email to:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] font-semibold hover:underline">infovelvetbyte@gmail.com</a></p>
               <p><strong className="text-slate-950">Subject Line:</strong> <code>Refund Request - [Your Registered Mobile Number]</code></p>
               <p><strong className="text-slate-950">Required Details:</strong> Candidate Full Name, Registered Email, Razorpay Payment/Order ID, and screenshot of bank debit message.</p>
-              <p><strong className="text-slate-950">Support Phone / WhatsApp:</strong> <a href="tel:+918921658090" className="text-emerald-700 font-semibold hover:underline">+91 8921658090</a></p>
+              <p><strong className="text-slate-950">Support Phone / WhatsApp:</strong> <a href="tel:+918921658090" className="text-[#1f357c] font-semibold hover:underline">+91 8921658090</a></p>
             </div>
           </section>
 

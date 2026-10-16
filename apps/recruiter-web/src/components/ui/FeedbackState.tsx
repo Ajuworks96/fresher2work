@@ -16,7 +16,7 @@ export const AlertBanner: React.FC<AlertBannerProps> = ({
   className = '',
 }) => {
   const styles = {
-    success: 'bg-emerald-50 border-emerald-200 text-emerald-900',
+    success: 'bg-[#1f357c]/10 border-[#3e7aa7]/30 text-[#1f357c]',
     warning: 'bg-amber-50 border-amber-200 text-amber-900',
     error: 'bg-red-50 border-red-200 text-red-900',
     info: 'bg-blue-50 border-blue-200 text-blue-900',

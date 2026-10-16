@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CompanyProfile, RecruiterProfile, CompanyVerificationStatus } from '@fresher2work/types';
 import { recruiterApi } from '@/lib/api';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function CompanyProfilePage() {
   const [company, setCompany] = useState<CompanyProfile | null>(null);
@@ -105,7 +106,7 @@ export default function CompanyProfilePage() {
       </div>
 
       {successMsg && (
-        <div className="bg-emerald-50 text-emerald-800 p-3.5 rounded-xl border border-emerald-200 text-xs font-bold">
+        <div className="bg-[#1f357c]/10 text-[#1f357c] p-3.5 rounded-xl border border-[#3e7aa7]/30 text-xs font-bold">
           {successMsg}
         </div>
       )}
@@ -126,7 +127,7 @@ export default function CompanyProfilePage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
 
@@ -139,7 +140,7 @@ export default function CompanyProfilePage() {
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 placeholder="https://company.com"
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
 
@@ -152,7 +153,7 @@ export default function CompanyProfilePage() {
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
                 placeholder="FinTech / SaaS"
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
 
@@ -165,7 +166,7 @@ export default function CompanyProfilePage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Bengaluru, Karnataka"
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
           </div>
@@ -184,7 +185,7 @@ export default function CompanyProfilePage() {
                 required
                 value={recruiterName}
                 onChange={(e) => setRecruiterName(e.target.value)}
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
 
@@ -197,7 +198,7 @@ export default function CompanyProfilePage() {
                 required
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
-                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                className="mt-1 block w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none"
               />
             </div>
           </div>
@@ -213,7 +214,7 @@ export default function CompanyProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-gradient-to-r from-[#1f357c] to-[#3e7aa7] px-5 py-2 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
+              className="rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] px-5 py-2 text-xs font-bold text-white hover:opacity-95 transition-all cursor-pointer shadow-xs"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
@@ -224,14 +225,14 @@ export default function CompanyProfilePage() {
           {/* Company Card */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-2xl bg-emerald-100 flex items-center justify-center font-black text-emerald-800 text-xl border border-emerald-200">
+              <div className="h-16 w-16 rounded-2xl bg-[#1f357c]/10 flex items-center justify-center font-black text-[#1f357c] text-xl border border-[#3e7aa7]/30">
                 {company?.name.substring(0, 2).toUpperCase() || 'CO'}
               </div>
               <div>
                 <h3 className="text-lg font-extrabold text-slate-900">{company?.name}</h3>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200">
-                    ✓ Verified Employer
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#1f357c]/10 px-2.5 py-0.5 text-xs font-bold text-[#1f357c] border border-[#3e7aa7]/30">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" /> Verified Employer
                   </span>
                   <span className="text-xs text-slate-400">• Active Discovery Partner</span>
                 </div>
@@ -243,7 +244,7 @@ export default function CompanyProfilePage() {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Website</p>
                 <p className="text-slate-900 font-semibold mt-0.5">
                   {company?.website ? (
-                    <a href={company.website} target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline">
+                    <a href={company.website} target="_blank" rel="noreferrer" className="text-[#3e7aa7] hover:text-[#1f357c] hover:underline">
                       {company.website} ↗
                     </a>
                   ) : (
@@ -264,7 +265,7 @@ export default function CompanyProfilePage() {
 
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Verification Status</p>
-                <p className="text-emerald-600 font-bold mt-0.5">
+                <p className="text-[#1f357c] font-bold mt-0.5">
                   {company?.verificationStatus || 'VERIFIED'}
                 </p>
               </div>
@@ -294,7 +295,7 @@ export default function CompanyProfilePage() {
 
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Account Role</p>
-                <p className="text-emerald-600 font-bold mt-0.5">Verified Recruiter</p>
+                <p className="text-[#1f357c] font-bold mt-0.5">Verified Recruiter</p>
               </div>
             </div>
           </div>

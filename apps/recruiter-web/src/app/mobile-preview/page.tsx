@@ -84,7 +84,7 @@ export default function MobilePreviewPage() {
             <button
               onClick={() => setIsActivated(!isActivated)}
               style={{
-                background: isActivated ? '#10b981' : '#f59e0b',
+                background: isActivated ? '#4ad1c7' : '#f59e0b',
                 color: '#fff',
                 border: 'none',
                 padding: '3px 10px',
@@ -370,13 +370,13 @@ export default function MobilePreviewPage() {
                           <Eye size={14} color="#6366f1" />
                         </div>
                         <div style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginTop: '6px' }}>24</div>
-                        <div style={{ fontSize: '10.5px', color: '#10b981', fontWeight: 600, marginTop: '2px' }}>+12% from last week</div>
+                        <div style={{ fontSize: '10.5px', color: '#4ad1c7', fontWeight: 600, marginTop: '2px' }}>+12% from last week</div>
                       </div>
 
                       <div style={{ background: '#ffffff', padding: '14px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>Search Appearances</span>
-                          <TrendingUp size={14} color="#10b981" />
+                          <TrendingUp size={14} color="#4ad1c7" />
                         </div>
                         <div style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginTop: '6px' }}>58</div>
                         <div style={{ fontSize: '10.5px', color: '#6366f1', fontWeight: 600, marginTop: '2px' }}>Top 10% in Kerala</div>
@@ -396,10 +396,10 @@ export default function MobilePreviewPage() {
                       </div>
                       <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#334155' }}>
-                          <CheckCircle2 size={14} color="#10b981" /> GitHub connected (3 live repositories)
+                          <CheckCircle2 size={14} color="#4ad1c7" /> GitHub connected (3 live repositories)
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#334155' }}>
-                          <CheckCircle2 size={14} color="#10b981" /> Academic scorecard verified
+                          <CheckCircle2 size={14} color="#4ad1c7" /> Academic scorecard verified
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#64748b' }}>
                           <div style={{ width: '14px', height: '14px', borderRadius: '50%', border: '2px solid #cbd5e1' }} /> Add live deployment demo URL
@@ -430,7 +430,7 @@ export default function MobilePreviewPage() {
                         <Github size={18} color="#0f172a" />
                         <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a' }}>fresher-jobs-aggregator</span>
                       </div>
-                      <span style={{ fontSize: '11px', background: '#ecfdf5', color: '#059669', padding: '2px 8px', borderRadius: '9999px', fontWeight: 700, border: '1px solid #a7f3d0' }}>
+                      <span style={{ fontSize: '11px', background: '#1f357c15', color: '#1f357c', padding: '2px 8px', borderRadius: '9999px', fontWeight: 700, border: '1px solid #3e7aa740' }}>
                         Verified
                       </span>
                     </div>
@@ -459,7 +459,7 @@ export default function MobilePreviewPage() {
                         <Github size={18} color="#0f172a" />
                         <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a' }}>realtime-chat-engine</span>
                       </div>
-                      <span style={{ fontSize: '11px', background: '#ecfdf5', color: '#059669', padding: '2px 8px', borderRadius: '9999px', fontWeight: 700, border: '1px solid #a7f3d0' }}>
+                      <span style={{ fontSize: '11px', background: '#1f357c15', color: '#1f357c', padding: '2px 8px', borderRadius: '9999px', fontWeight: 700, border: '1px solid #3e7aa740' }}>
                         Verified
                       </span>
                     </div>
@@ -499,16 +499,16 @@ export default function MobilePreviewPage() {
 
                     <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', color: '#1e293b' }}>
-                        <CheckCircle2 size={16} color="#10b981" /> Direct recruiter WhatsApp & Email inquiries
+                        <CheckCircle2 size={16} color="#4ad1c7" /> Direct recruiter WhatsApp & Email inquiries
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', color: '#1e293b' }}>
-                        <CheckCircle2 size={16} color="#10b981" /> Verified Proof-of-Work badge on search
+                        <CheckCircle2 size={16} color="#4ad1c7" /> Verified Proof-of-Work badge on search
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', color: '#1e293b' }}>
-                        <CheckCircle2 size={16} color="#10b981" /> Featured in Top 5% Freshers feed
+                        <CheckCircle2 size={16} color="#4ad1c7" /> Featured in Top 5% Freshers feed
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', color: '#1e293b' }}>
-                        <CheckCircle2 size={16} color="#10b981" /> Instant notification when recruiter shortlists you
+                        <CheckCircle2 size={16} color="#4ad1c7" /> Instant notification when recruiter shortlists you
                       </div>
                     </div>
 
@@ -517,7 +517,7 @@ export default function MobilePreviewPage() {
                       style={{
                         marginTop: '18px',
                         width: '100%',
-                        background: isActivated ? '#10b981' : 'linear-gradient(135deg, #4f46e5, #4338ca)',
+                        background: isActivated ? '#4ad1c7' : 'linear-gradient(135deg, #4f46e5, #4338ca)',
                         color: '#fff',
                         border: 'none',
                         padding: '12px',
@@ -591,7 +591,7 @@ export default function MobilePreviewPage() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', background: '#f8fafc', borderRadius: '8px', fontSize: '12px' }}>
                           <span style={{ color: '#334155', fontWeight: 600 }}>B.Tech Computer Science (8.8 CGPA)</span>
-                          <span style={{ color: '#10b981', fontWeight: 700 }}>✓ Verified</span>
+                          <span style={{ color: '#4ad1c7', fontWeight: 700 }}>✓ Verified</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', background: '#f8fafc', borderRadius: '8px', fontSize: '12px' }}>
                           <span style={{ color: '#334155', fontWeight: 600 }}>Resume / CV.pdf (Uploaded)</span>

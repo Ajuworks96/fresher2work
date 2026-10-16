@@ -53,7 +53,7 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
         onDrop={handleDrop}
         className={`relative rounded-xl border-2 border-dashed p-6 text-center transition-all ${
           dragOver
-            ? 'border-emerald-500 bg-emerald-50/50'
+            ? 'border-[#3e7aa7] bg-[#1f357c]/5'
             : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
         }`}
       >
@@ -66,7 +66,7 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
         />
 
         <div className="flex flex-col items-center space-y-2">
-          <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/60 shadow-xs">
+          <div className="h-12 w-12 rounded-xl bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center border border-[#3e7aa7]/30 shadow-xs">
             <FileText className="w-6 h-6 stroke-[1.75]" />
           </div>
           <div>
@@ -86,15 +86,15 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
       </div>
 
       {currentFileUrl && (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200">
-          <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-[#1f357c]/10 border border-[#3e7aa7]/30">
+          <span className="text-xs font-bold text-[#1f357c] flex items-center gap-1.5">
             ✓ Active CV uploaded and ready for recruiters
           </span>
           <a
             href={currentFileUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-xs font-bold text-emerald-700 hover:underline"
+            className="text-xs font-bold text-[#3e7aa7] hover:underline"
           >
             View Uploaded PDF ↗
           </a>

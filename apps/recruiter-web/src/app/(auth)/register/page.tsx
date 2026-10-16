@@ -87,7 +87,7 @@ export default function RecruiterRegisterPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Anjali Menon"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
 
@@ -101,7 +101,7 @@ export default function RecruiterRegisterPage() {
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
                   placeholder="Talent Lead / Founder"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function RecruiterRegisterPage() {
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder="RazorScale Technologies"
-                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function RecruiterRegisterPage() {
                   value={workEmail}
                   onChange={(e) => setWorkEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
 
@@ -144,7 +144,7 @@ export default function RecruiterRegisterPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@ export default function RecruiterRegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
               />
             </div>
 

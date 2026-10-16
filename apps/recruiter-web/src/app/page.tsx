@@ -166,23 +166,23 @@ export default function LandingPage() {
                 <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   ID: FTW-98421
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-[10px] font-bold text-emerald-700 border border-emerald-200">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Verified
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1f357c]/10 text-[10px] font-bold text-[#1f357c] border border-[#3e7aa7]/30">
+                  <CheckCircle2 className="w-3 h-3 text-[#4ad1c7]" /> Verified
                 </span>
               </div>
 
               {/* Progress Node Line */}
               <div className="flex items-center justify-between py-1 px-1">
                 <div className="flex flex-col items-center">
-                  <span className="h-4 w-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
+                  <span className="h-4 w-4 rounded-full bg-[#4ad1c7] text-[#0c1633] flex items-center justify-center text-[9px] font-bold">✓</span>
                   <span className="text-[9px] text-slate-500 font-medium mt-1">Code Solved</span>
                 </div>
-                <div className="h-0.5 w-12 bg-emerald-400" />
+                <div className="h-0.5 w-12 bg-[#3e7aa7]" />
                 <div className="flex flex-col items-center">
-                  <span className="h-4 w-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
+                  <span className="h-4 w-4 rounded-full bg-[#4ad1c7] text-[#0c1633] flex items-center justify-center text-[9px] font-bold">✓</span>
                   <span className="text-[9px] text-slate-500 font-medium mt-1">16 Tests</span>
                 </div>
-                <div className="h-0.5 w-12 bg-emerald-400" />
+                <div className="h-0.5 w-12 bg-[#3e7aa7]" />
                 <div className="flex flex-col items-center">
                   <span className="h-4 w-4 rounded-full bg-[#1f357c] text-[#4ad1c7] flex items-center justify-center text-[9px] font-bold">★</span>
                   <span className="text-[9px] text-[#1f357c] font-bold mt-1">Direct Hire</span>
@@ -239,8 +239,8 @@ export default function LandingPage() {
               <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-30 flex items-center justify-between px-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800" />
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[8px] font-mono text-emerald-400 font-bold">LIVE</span>
+                  <div className="w-2 h-2 rounded-full bg-[#4ad1c7] animate-pulse" />
+                  <span className="text-[8px] font-mono text-[#4ad1c7] font-bold">LIVE</span>
                 </div>
               </div>
 
@@ -256,7 +256,7 @@ export default function LandingPage() {
                     </svg>
                     {/* Battery icon */}
                     <div className="w-5 h-2.5 rounded-sm border border-slate-700 p-0.5 flex items-center">
-                      <div className="h-full w-full bg-emerald-500 rounded-xs" />
+                      <div className="h-full w-full bg-[#4ad1c7] rounded-xs" />
                     </div>
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export default function LandingPage() {
                     <div className="grid grid-cols-2 gap-1.5 mt-2.5 text-[9px]">
                       <div className="p-2 rounded-lg bg-white border border-slate-100">
                         <span className="text-slate-400 block text-[8px] uppercase font-bold">Jest Test Suites</span>
-                        <span className="font-extrabold text-emerald-600">16 / 16 Passed</span>
+                        <span className="font-extrabold text-[#1f357c]">16 / 16 Passed</span>
                       </div>
                       <div className="p-2 rounded-lg bg-white border border-slate-100">
                         <span className="text-slate-400 block text-[8px] uppercase font-bold">Plagiarism Scan</span>
@@ -311,8 +311,8 @@ export default function LandingPage() {
 
                     {/* Audit stamp */}
                     <div className="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                      <span className="text-[9px] font-bold text-emerald-700 flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-emerald-600" /> Superadmin Audited
+                      <span className="text-[9px] font-bold text-[#1f357c] flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-[#4ad1c7]" /> Superadmin Audited
                       </span>
                       <Link
                         href="/recruiter"
@@ -335,7 +335,7 @@ export default function LandingPage() {
                           <div className="text-[8px] text-slate-400">42 verified UI components</div>
                         </div>
                       </div>
-                      <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      <span className="text-[9px] font-bold text-[#1f357c] bg-[#1f357c]/10 px-1.5 py-0.5 rounded border border-[#3e7aa7]/30">
                         9.4 / 10
                       </span>
                     </div>
@@ -615,7 +615,7 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Test Automation</span>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-xs font-bold text-[#1f357c] bg-[#4ad1c7]/15 px-2.5 py-0.5 rounded-full border border-[#4ad1c7]/30">
                   99.99% Accuracy
                 </span>
               </div>
@@ -629,10 +629,10 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1.5 text-slate-500 pb-2 border-b border-slate-800 text-[10px]">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#4ad1c7]" />
                   <span className="ml-2">order_service.test.ts • Jest</span>
                 </div>
-                <pre className="pt-3 text-[11px] leading-relaxed text-emerald-400">
+                <pre className="pt-3 text-[11px] leading-relaxed text-[#4ad1c7]">
 {`PASS src/__tests__/order_service.test.ts
   ✓ validates inventory balance (4ms)
   ✓ executes PostgreSQL transaction (8ms)
@@ -722,7 +722,7 @@ Tests:       16 passed, 16 total`}
               <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-800">
                   <span>Audit ID: FTW-HIRE-2026-98</span>
-                  <span className="text-emerald-600">Offer Accepted</span>
+                  <span className="text-[#1f357c] font-extrabold">Offer Accepted</span>
                 </div>
                 <div className="flex justify-between text-xs text-slate-500">
                   <span>Candidate: Arjun K.</span>
@@ -757,9 +757,9 @@ Tests:       16 passed, 16 total`}
                 Commit timestamp inspection, branch diff analysis, and LLM plagiarism detection ensure zero copied boilerplate.
               </p>
 
-              <div className="mt-6 p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between">
+              <div className="mt-6 p-4 rounded-2xl bg-[#1f357c]/5 border border-[#3e7aa7]/30 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-[#1f357c] text-[#4ad1c7] flex items-center justify-center font-bold">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div>
@@ -767,7 +767,7 @@ Tests:       16 passed, 16 total`}
                     <div className="text-[11px] text-slate-500">100% Original Code Commits</div>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-emerald-700 bg-white px-2.5 py-1 rounded-lg border border-emerald-200">
+                <span className="text-xs font-bold text-[#1f357c] bg-white px-2.5 py-1 rounded-lg border border-[#3e7aa7]/30">
                   CLEAN
                 </span>
               </div>
@@ -775,7 +775,7 @@ Tests:       16 passed, 16 total`}
 
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
               <div>
-                <span className="text-2xl font-black text-emerald-600">0.0%</span>
+                <span className="text-2xl font-black text-[#1f357c]">0.0%</span>
                 <span className="text-xs text-slate-500 block">Copied code threshold</span>
               </div>
               <div>
@@ -956,7 +956,7 @@ Tests:       16 passed, 16 total`}
           </form>
 
           {subSuccess && (
-            <p className="mt-3 text-xs font-bold text-emerald-700 animate-fadeIn">
+            <p className="mt-3 text-xs font-bold text-[#4ad1c7] animate-fadeIn">
               ✓ Thanks! You are subscribed to Fresher2Work updates.
             </p>
           )}

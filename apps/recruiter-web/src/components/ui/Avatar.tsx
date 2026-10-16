@@ -44,7 +44,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
-          className={`${sizeMap[size].container} rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200 select-none shadow-xs`}
+          className={`${sizeMap[size].container} rounded-full bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center font-bold border border-[#3e7aa7]/30 select-none shadow-xs`}
         >
           <span className={sizeMap[size].text}>{getInitials(name)}</span>
         </div>
@@ -54,9 +54,9 @@ export const Avatar: React.FC<AvatarProps> = ({
         <span
           className={`absolute bottom-0 right-0 ${sizeMap[size].dot} rounded-full ring-2 ring-white ${
             status === 'online'
-              ? 'bg-emerald-500'
+              ? 'bg-[#4ad1c7]'
               : status === 'verified'
-              ? 'bg-indigo-500'
+              ? 'bg-[#3e7aa7]'
               : 'bg-slate-400'
           }`}
         />

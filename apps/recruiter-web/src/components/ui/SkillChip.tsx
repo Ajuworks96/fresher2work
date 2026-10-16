@@ -25,7 +25,7 @@ export const SkillChip: React.FC<SkillChipProps> = ({
   const levelBadges: Record<SkillLevel, string> = {
     BEGINNER: 'bg-slate-100 text-slate-600',
     INTERMEDIATE: 'bg-indigo-50 text-indigo-700',
-    ADVANCED: 'bg-emerald-50 text-emerald-700 font-bold',
+    ADVANCED: 'bg-[#1f357c]/10 text-[#1f357c] font-bold border border-[#3e7aa7]/30',
   };
 
   return (
@@ -37,7 +37,7 @@ export const SkillChip: React.FC<SkillChipProps> = ({
         {levelLabels[level]}
       </span>
       {isVerified && (
-        <span title="Verified via Proof of Work" className="text-emerald-600 text-xs">
+        <span title="Verified via Proof of Work" className="text-[#4ad1c7] font-bold text-xs">
           ✓
         </span>
       )}

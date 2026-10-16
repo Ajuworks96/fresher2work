@@ -170,7 +170,7 @@ export default function ShortlistsPage() {
         <div className="py-20 text-center text-slate-400">Loading saved shortlists...</div>
       ) : shortlists.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center space-y-3 shadow-xs">
-          <div className="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-200/60">
+          <div className="h-12 w-12 rounded-2xl bg-[#1f357c]/10 text-[#1f357c] flex items-center justify-center mx-auto border border-[#3e7aa7]/30">
             <BookmarkCheck className="w-6 h-6 stroke-[1.75]" />
           </div>
           <p className="text-base font-bold text-slate-900">No candidates saved to your shortlist yet</p>
@@ -179,7 +179,7 @@ export default function ShortlistsPage() {
           </p>
           <a
             href="/discover"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 shadow-xs"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[#1f357c]/20"
           >
             Discover Talents →
           </a>
@@ -208,12 +208,12 @@ export default function ShortlistsPage() {
                         {student?.fullName || 'Candidate'}
                       </h4>
                       {student?.placement || student?.isHired ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs shrink-0">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs shrink-0">
+                          <CheckCircle2 className="w-3 h-3 text-[#4ad1c7]" />
                           HIRED
                         </span>
                       ) : student?.completenessScore ? (
-                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                        <span className="rounded-full bg-[#1f357c]/5 px-2 py-0.5 text-[10px] font-bold text-[#1f357c] border border-[#3e7aa7]/25">
                           {student.completenessScore}% Match
                         </span>
                       ) : null}
@@ -224,14 +224,14 @@ export default function ShortlistsPage() {
 
                     {/* Placement Banner if Hired */}
                     {(student?.placement || student?.isHired) && (
-                      <div className="mt-2 rounded-xl bg-emerald-50 border border-emerald-200 p-2 text-xs text-emerald-950 font-semibold flex items-center justify-between">
+                      <div className="mt-2 rounded-xl bg-[#1f357c]/5 border border-[#3e7aa7]/25 p-2 text-xs text-[#1f357c] font-semibold flex items-center justify-between">
                         <span className="truncate flex items-center gap-1.5">
-                          <Briefcase className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                          <strong className="text-emerald-900">Placed:</strong> {student.placement?.companyName || student.placement?.company?.name || 'Partner Company'}
+                          <Briefcase className="w-3.5 h-3.5 text-[#3e7aa7] shrink-0" />
+                          <strong className="text-[#1f357c]">Placed:</strong> {student.placement?.companyName || student.placement?.company?.name || 'Partner Company'}
                           {student.placement?.roleTitle && ` • ${student.placement.roleTitle}`}
                         </span>
                         {student.placement?.packageLpa && (
-                          <span className="shrink-0 font-black text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded text-[10px] ml-1.5">
+                          <span className="shrink-0 font-black text-[#1f357c] bg-[#1f357c]/15 px-2 py-0.5 rounded text-[10px] ml-1.5">
                             {student.placement.packageLpa}
                           </span>
                         )}
@@ -249,7 +249,7 @@ export default function ShortlistsPage() {
                       <div className="mt-3 space-y-1.5 border-t border-slate-100 pt-2.5">
                         <div className="flex items-center justify-between text-[11px] font-extrabold text-slate-700">
                           <span className="flex items-center gap-1">
-                            <FolderGit2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <FolderGit2 className="w-3.5 h-3.5 text-[#3e7aa7]" />
                             Proof of Work ({student.projects.length} Projects)
                           </span>
                           {student.cvFileUrl && (
@@ -257,9 +257,9 @@ export default function ShortlistsPage() {
                               href={student.cvFileUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200 inline-flex items-center gap-1"
+                              className="text-[10px] font-bold text-[#1f357c] bg-[#1f357c]/10 hover:bg-[#1f357c]/20 px-2 py-0.5 rounded border border-[#3e7aa7]/30 inline-flex items-center gap-1"
                             >
-                              <FileText className="w-3 h-3" />
+                              <FileText className="w-3 h-3 text-[#3e7aa7]" />
                               CV PDF ↗
                             </a>
                           )}
@@ -278,7 +278,7 @@ export default function ShortlistsPage() {
                                         href={demoUrl}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="text-[10px] font-extrabold text-emerald-600 hover:text-emerald-700 underline"
+                                        className="text-[10px] font-extrabold text-[#3e7aa7] hover:text-[#1f357c] underline"
                                       >
                                         Demo ↗
                                       </a>
@@ -295,7 +295,7 @@ export default function ShortlistsPage() {
                                     )}
                                   </div>
                                 </div>
-                                {p.role && <p className="text-[10px] text-emerald-700 font-bold mt-0.5">Role: {p.role}</p>}
+                                {p.role && <p className="text-[10px] text-[#3e7aa7] font-bold mt-0.5">Role: {p.role}</p>}
                                 {p.toolsUsed && p.toolsUsed.length > 0 && (
                                   <div className="flex flex-wrap gap-1 mt-1">
                                     {p.toolsUsed.map((tool, idx) => (
@@ -365,12 +365,12 @@ export default function ShortlistsPage() {
                               setSelectedCandidate(student);
                               setContactRevealed(null);
                             }}
-                            className="rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-800 transition-colors cursor-pointer shadow-xs"
+                            className="rounded-xl bg-[#1f357c] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#17285c] transition-colors cursor-pointer shadow-xs"
                           >
                             View Placed Profile
                           </button>
-                          <span className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-xs border border-emerald-300 shrink-0">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-[#1f357c]/10 text-[#1f357c] font-extrabold text-xs border border-[#3e7aa7]/30 shrink-0">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" />
                             Your Hire
                           </span>
                         </>
@@ -401,9 +401,9 @@ export default function ShortlistsPage() {
                         </button>
                         <button
                           onClick={() => handleOpenHireModal(student)}
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 text-xs font-bold transition-all shadow-xs cursor-pointer"
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white px-3.5 py-2 text-xs font-bold transition-all shadow-xs cursor-pointer"
                         >
-                          <Briefcase className="w-3.5 h-3.5" />
+                          <Briefcase className="w-3.5 h-3.5 text-[#4ad1c7]" />
                           Hire
                         </button>
                       </>
@@ -443,34 +443,34 @@ export default function ShortlistsPage() {
 
               {/* Placement Details Banner in Drawer if Hired */}
               {(selectedCandidate.placement || selectedCandidate.isHired) && (
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 shadow-xs space-y-2">
+                <div className="bg-[#1f357c]/5 border border-[#3e7aa7]/30 rounded-2xl p-4 shadow-xs space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 text-white px-2.5 py-0.5 text-xs font-black uppercase tracking-wider">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1f357c] text-white px-2.5 py-0.5 text-xs font-black uppercase tracking-wider">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#4ad1c7]" />
                       Candidate Placed & Hired
                     </span>
                     {selectedCandidate.placement?.packageLpa && (
-                      <span className="text-xs font-black text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-300">
+                      <span className="text-xs font-black text-[#1f357c] bg-[#1f357c]/15 px-2 py-0.5 rounded-lg border border-[#3e7aa7]/30">
                         {selectedCandidate.placement.packageLpa}
                       </span>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs pt-1">
                     <div>
-                      <p className="text-emerald-700 font-bold uppercase text-[10px]">Hiring Company</p>
-                      <p className="font-extrabold text-emerald-950">
+                      <p className="text-[#3e7aa7] font-bold uppercase text-[10px]">Hiring Company</p>
+                      <p className="font-extrabold text-[#1f357c]">
                         {selectedCandidate.placement?.companyName || selectedCandidate.placement?.company?.name || 'Partner Company'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-emerald-700 font-bold uppercase text-[10px]">Job Role</p>
-                      <p className="font-extrabold text-emerald-950">
+                      <p className="text-[#3e7aa7] font-bold uppercase text-[10px]">Job Role</p>
+                      <p className="font-extrabold text-[#1f357c]">
                         {selectedCandidate.placement?.roleTitle || 'Graduate Trainee'}
                       </p>
                     </div>
                   </div>
                   {selectedCandidate.placement?.notes && (
-                    <p className="text-xs text-emerald-800 bg-emerald-100/50 p-2 rounded-lg italic">
+                    <p className="text-xs text-[#1f357c] bg-[#1f357c]/10 p-2 rounded-lg italic">
                       "{selectedCandidate.placement.notes}"
                     </p>
                   )}
@@ -497,7 +497,7 @@ export default function ShortlistsPage() {
                           <div className="flex items-start justify-between">
                             <div>
                               <p className="text-sm font-bold text-slate-900">{p.title}</p>
-                              {p.role && <p className="text-xs font-semibold text-emerald-700">Role: {p.role}</p>}
+                              {p.role && <p className="text-xs font-semibold text-[#3e7aa7]">Role: {p.role}</p>}
                             </div>
                             <div className="flex items-center gap-2">
                               {demoUrl && (
@@ -505,7 +505,7 @@ export default function ShortlistsPage() {
                                   href={demoUrl}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="flex items-center gap-1 text-xs font-bold text-emerald-600 hover:underline"
+                                  className="flex items-center gap-1 text-xs font-bold text-[#3e7aa7] hover:text-[#1f357c] hover:underline"
                                 >
                                   <Globe className="w-3.5 h-3.5" />
                                   Demo ↗
@@ -549,7 +549,7 @@ export default function ShortlistsPage() {
                           {p.mediaUrls && p.mediaUrls.length > 0 && (
                             <div className="space-y-1.5 pt-1 border-t border-slate-200/70">
                               <p className="text-[10px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1">
-                                <ImageIcon className="w-3.5 h-3.5 text-emerald-600" />
+                                <ImageIcon className="w-3.5 h-3.5 text-[#3e7aa7]" />
                                 Visual Proof Deliverables ({p.mediaUrls.length})
                               </p>
                               <div className="grid grid-cols-2 gap-2">
@@ -559,7 +559,7 @@ export default function ShortlistsPage() {
                                     href={url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-all shadow-2xs block"
+                                    className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-[#3e7aa7] transition-all shadow-2xs block"
                                   >
                                     <img src={url} alt={`Deliverable ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
@@ -589,7 +589,7 @@ export default function ShortlistsPage() {
                       <div key={sample.id} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
                         <div className="flex items-start justify-between">
                           <div>
-                            <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                            <span className="text-[9px] font-black uppercase tracking-wider bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-1.5 py-0.5 rounded">
                               {sample.category.replace('_', ' ')}
                             </span>
                             <h5 className="text-xs font-bold text-slate-900 mt-1">{sample.title}</h5>
@@ -602,7 +602,7 @@ export default function ShortlistsPage() {
                               href={sample.workLink}
                               target="_blank"
                               rel="noreferrer"
-                              className="flex items-center gap-1 text-xs font-bold text-emerald-600 hover:underline"
+                              className="flex items-center gap-1 text-xs font-bold text-[#3e7aa7] hover:text-[#1f357c] hover:underline"
                             >
                               <ExternalLink className="w-3 h-3" />
                               View ↗
@@ -627,7 +627,7 @@ export default function ShortlistsPage() {
                                 href={url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-emerald-500 transition-all shadow-2xs block"
+                                className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-100 hover:border-[#3e7aa7] transition-all shadow-2xs block"
                               >
                                 <img src={url} alt={`Asset ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
@@ -648,18 +648,18 @@ export default function ShortlistsPage() {
               {selectedCandidate.cvFileUrl && (
                 <div>
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Verified Candidate CV</h4>
-                  <div className="mt-2 flex items-center justify-between bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl">
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-900">
-                      <FileText className="w-4 h-4 text-emerald-700" />
+                  <div className="mt-2 flex items-center justify-between bg-[#1f357c]/5 border border-[#3e7aa7]/30 p-3.5 rounded-xl">
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-[#1f357c]">
+                      <FileText className="w-4 h-4 text-[#3e7aa7]" />
                       Original PDF CV
                     </span>
                     <a
                       href={selectedCandidate.cvFileUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 shadow-xs"
+                      className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] px-3 py-1.5 text-xs font-bold text-white shadow-xs"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[#4ad1c7]" />
                       Open PDF
                     </a>
                   </div>
@@ -693,14 +693,14 @@ export default function ShortlistsPage() {
                     {selectedCandidate.certificates.map((cert) => (
                       <div key={cert.id} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Award className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <Award className="w-4 h-4 text-[#3e7aa7] shrink-0" />
                           <div>
                             <p className="text-xs font-bold text-slate-900">{cert.name}</p>
                             <p className="text-[11px] text-slate-500">{cert.issuingOrganization} • {cert.issueDate}</p>
                           </div>
                         </div>
                         {cert.credentialUrl && (
-                          <a href={cert.credentialUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-emerald-600 hover:underline">
+                          <a href={cert.credentialUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-[#3e7aa7] hover:text-[#1f357c] hover:underline">
                             Verify ↗
                           </a>
                         )}
@@ -720,7 +720,7 @@ export default function ShortlistsPage() {
                     {selectedCandidate.skills.map((sk) => (
                       <span key={sk.id} className="bg-slate-100 text-slate-800 text-xs font-bold px-2.5 py-1 rounded-lg border border-slate-200 flex items-center gap-1">
                         {sk.skillName}
-                        {sk.isVerified && <CheckCircle2 className="w-3 h-3 text-emerald-600" />}
+                        {sk.isVerified && <CheckCircle2 className="w-3 h-3 text-[#4ad1c7]" />}
                       </span>
                     ))}
                   </div>
@@ -758,16 +758,16 @@ export default function ShortlistsPage() {
                 )}
 
                 {selectedCandidate.placement || selectedCandidate.isHired ? (
-                  <div className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-emerald-100 border border-emerald-300 py-3 text-xs font-black text-emerald-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <div className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-[#1f357c]/10 border border-[#3e7aa7]/30 py-3 text-xs font-black text-[#1f357c]">
+                    <CheckCircle2 className="w-4 h-4 text-[#4ad1c7]" />
                     Placed
                   </div>
                 ) : (
                   <button
                     onClick={() => handleOpenHireModal(selectedCandidate)}
-                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] py-3 text-xs font-bold text-white cursor-pointer shadow-xs"
                   >
-                    <Briefcase className="w-4 h-4" />
+                    <Briefcase className="w-4 h-4 text-[#4ad1c7]" />
                     Hire Candidate
                   </button>
                 )}
@@ -783,8 +783,8 @@ export default function ShortlistsPage() {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black">
-                  <Briefcase className="w-6 h-6 stroke-[2]" />
+                <div className="h-12 w-12 rounded-2xl bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 flex items-center justify-center font-black">
+                  <Briefcase className="w-6 h-6 stroke-[2] text-[#3e7aa7]" />
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-slate-900">Hire Candidate</h3>
@@ -799,7 +799,7 @@ export default function ShortlistsPage() {
               </button>
             </div>
 
-            <div className="bg-emerald-50 rounded-2xl p-3.5 border border-emerald-200 text-xs text-emerald-900 leading-relaxed font-medium">
+            <div className="bg-[#1f357c]/5 rounded-2xl p-3.5 border border-[#3e7aa7]/30 text-xs text-[#1f357c] leading-relaxed font-medium">
               💡 <strong>Instant Global Placement:</strong> Recording this placement marks the candidate as <strong>HIRED</strong> across FresherToWork for all recruiters and admins.
             </div>
 
@@ -810,7 +810,7 @@ export default function ShortlistsPage() {
             )}
 
             {hireSuccessMsg && (
-              <div className="bg-emerald-100 text-emerald-900 p-3 rounded-xl border border-emerald-300 text-xs font-bold">
+              <div className="bg-[#1f357c]/10 text-[#1f357c] p-3 rounded-xl border border-[#3e7aa7]/30 text-xs font-bold">
                 {hireSuccessMsg}
               </div>
             )}
@@ -825,7 +825,7 @@ export default function ShortlistsPage() {
                   placeholder="e.g. Junior Frontend Developer, QA Engineer"
                   value={hireRoleTitle}
                   onChange={(e) => setHireRoleTitle(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50"
                 />
               </div>
 
@@ -838,7 +838,7 @@ export default function ShortlistsPage() {
                   placeholder="e.g. ₹ 4.5 LPA, 45,000 AED/yr"
                   value={hirePackageLpa}
                   onChange={(e) => setHirePackageLpa(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50"
                 />
               </div>
 
@@ -851,7 +851,7 @@ export default function ShortlistsPage() {
                   placeholder="e.g. Joining on 1st October in Bangalore office"
                   value={hireNotes}
                   onChange={(e) => setHireNotes(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-800 focus:outline-emerald-500 bg-slate-50/50 resize-none"
+                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-800 focus:outline-[#3e7aa7] bg-slate-50/50 resize-none"
                 />
               </div>
             </div>
@@ -869,7 +869,7 @@ export default function ShortlistsPage() {
                 type="button"
                 onClick={handleConfirmHire}
                 disabled={hiringLoading}
-                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
               >
                 {hiringLoading ? 'Recording Hire...' : 'Confirm Hire'}
               </button>
@@ -903,7 +903,7 @@ export default function ShortlistsPage() {
             <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-900 text-sm">{lockedModalCandidate.fullName}</span>
-                <span className="rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.2 text-[9px] font-black uppercase">
+                <span className="rounded-full bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 px-2 py-0.2 text-[9px] font-black uppercase">
                   HIRED
                 </span>
               </div>

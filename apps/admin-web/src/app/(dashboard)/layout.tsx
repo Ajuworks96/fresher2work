@@ -61,7 +61,7 @@ export default function AdminDashboardLayout({
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0B0F17] text-white font-sans">
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="h-9 w-9 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin" />
+          <div className="h-9 w-9 rounded-full border-2 border-[#3e7aa7]/30 border-t-[#4ad1c7] animate-spin" />
           <p className="text-sm font-bold text-slate-200">Verifying Superadmin Authorization...</p>
           <p className="text-xs text-slate-500">Checking 256-bit administrative session key</p>
         </div>
@@ -166,14 +166,14 @@ export default function AdminDashboardLayout({
         <div className="p-4 border-t border-slate-800/80 bg-[#080B10]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 font-black text-xs">
+              <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[#4ad1c7] font-black text-xs">
                 SA
               </div>
               <div>
                 <p className="text-xs font-bold text-white leading-tight">Super Admin</p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <p className="text-[10px] text-emerald-400/90 font-medium">Online</p>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4ad1c7] animate-pulse" />
+                  <p className="text-[10px] text-[#4ad1c7] font-medium">Online</p>
                 </div>
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function AdminDashboardLayout({
           </div>
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4ad1c7]" />
               Live PostgreSQL Connected
             </span>
           </div>
