@@ -1039,7 +1039,7 @@ Tests:       16 passed, 16 total`}
                 <li><Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link></li>
                 <li><Link href="/refund-policy" className="hover:text-slate-900 transition-colors">Refund Policy</Link></li>
-                <li><span className="text-emerald-600 font-semibold">Cloudflare Zero Trust Verified</span></li>
+                <li><span className="text-emerald-600 font-semibold">Verified Enterprise Access Control</span></li>
               </ul>
             </div>
 

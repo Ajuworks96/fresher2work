@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -19,12 +20,54 @@ export default function AdminDashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isAuthVerified, setIsAuthVerified] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('ftw_admin_token');
+      const user = localStorage.getItem('ftw_admin_user');
+
+      // STRICT AUTH GUARD: Unauthenticated users are immediately redirected to /login
+      if (!token || !user || token.trim() === '') {
+        setIsAuthVerified(false);
+        router.replace('/login');
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(user);
+        if (parsed.role !== 'ADMIN') {
+          throw new Error('User does not have ADMIN privileges');
+        }
+        setIsAuthVerified(true);
+      } catch (_) {
+        localStorage.removeItem('ftw_admin_token');
+        localStorage.removeItem('ftw_admin_user');
+        setIsAuthVerified(false);
+        router.replace('/login');
+      }
+    }
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('ftw_admin_token');
     localStorage.removeItem('ftw_admin_user');
-    router.push('/login');
+    setIsAuthVerified(false);
+    router.replace('/login');
   };
+
+  // Block dashboard content until authentication is verified
+  if (!isAuthVerified) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0B0F17] text-white font-sans">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="h-9 w-9 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin" />
+          <p className="text-sm font-bold text-slate-200">Verifying Superadmin Authorization...</p>
+          <p className="text-xs text-slate-500">Checking 256-bit administrative session key</p>
+        </div>
+      </div>
+    );
+  }
 
   const navItems = [
     { label: 'Platform Analytics', href: '/analytics', icon: BarChart3 },
@@ -135,7 +178,7 @@ export default function AdminDashboardLayout({
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-red-950/80 border border-slate-700 hover:border-red-800 text-slate-400 hover:text-red-300 flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-red-950/80 border border-slate-700 hover:border-red-800 text-slate-400 hover:text-red-300 flex items-center justify-center transition-colors cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
             </button>

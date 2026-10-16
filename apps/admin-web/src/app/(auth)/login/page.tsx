@@ -142,7 +142,22 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-slate-800 text-center">
+          {/* Quick Demo Credentials */}
+          <div className="mt-4 pt-3 border-t border-slate-800">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('admin@freshertowork.com');
+                setPassword('SuperAdmin@Pass2026#');
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-emerald-950/40 border border-slate-700 hover:border-emerald-700/60 text-slate-400 hover:text-emerald-300 text-xs font-medium transition-all flex items-center justify-between cursor-pointer"
+            >
+              <span>Quick-fill Admin: admin@freshertowork.com</span>
+              <span className="text-[10px] text-emerald-400 font-mono">1-Click</span>
+            </button>
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-slate-800 text-center">
             <p className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
               <span>Session encrypted with 256-bit JWT authorization</span>

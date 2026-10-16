@@ -537,9 +537,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
   }
 
   // 8. Recruiter Profile
-  if (path === 'recruiters/profile') {
+  if (path === 'recruiters/profile' || path === 'discovery/recruiter/me' || path === 'recruiter/profile' || path === 'recruiter/me') {
     const recruiterData =
-      (platformData.recruiters || []).find((r: any) => authUser && r.id === authUser.id) ||
+      (platformData.recruiters || []).find((r: any) => authUser && (r.id === authUser.id || r.businessEmail === authUser.email || r.email === authUser.email)) ||
       platformData.recruiters?.[0];
     if (recruiterData) {
       return NextResponse.json({ recruiter: recruiterData, ...recruiterData });
@@ -547,8 +547,23 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     return NextResponse.json({ error: 'Recruiter profile not found' }, { status: 404 });
   }
 
+  // 8b. Recruiter Company Profile
+  if (path === 'discovery/company' || path === 'recruiters/company' || path === 'company') {
+    const recruiterData =
+      (platformData.recruiters || []).find((r: any) => authUser && (r.id === authUser.id || r.businessEmail === authUser.email || r.email === authUser.email)) ||
+      platformData.recruiters?.[0];
+    const compId = recruiterData?.companyId;
+    const companyData =
+      (platformData.companies || []).find((c: any) => (compId && c.id === compId) || (recruiterData?.companyName && c.name?.toLowerCase() === recruiterData.companyName?.toLowerCase())) ||
+      platformData.companies?.[0];
+    if (companyData) {
+      return NextResponse.json({ company: companyData, ...companyData });
+    }
+    return NextResponse.json({ error: 'Company profile not found' }, { status: 404 });
+  }
+
   // 9. Recruiter Shortlists
-  if (path === 'recruiters/shortlists') {
+  if (path === 'recruiters/shortlists' || path === 'discovery/shortlists') {
     return NextResponse.json({ shortlists: globalStore.__ftw_shortlists || [] });
   }
 
@@ -1192,22 +1207,35 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     });
   }
 
-  // 7. Recruiter Shortlist toggle
-  if (path === 'recruiters/shortlists') {
-    const { studentId } = body;
-    const existingIdx = (globalStore.__ftw_shortlists || []).findIndex((s: any) => s.studentId === studentId);
+  // 7. Recruiter Shortlist toggle / add
+  if (
+    path === 'recruiters/shortlists' ||
+    path === 'discovery/shortlists' ||
+    path === 'discovery/shortlist' ||
+    (path.startsWith('discovery/talents/') && path.endsWith('/shortlist'))
+  ) {
+    let studentId = body?.studentId;
+    if (!studentId && path.startsWith('discovery/talents/')) {
+      studentId = path.replace('discovery/talents/', '').replace('/shortlist', '');
+    }
+    const note = body?.note || '';
+    const existingIdx = (globalStore.__ftw_shortlists || []).findIndex(
+      (s: any) => s.studentId === studentId || s.id === studentId
+    );
     if (existingIdx >= 0) {
-      globalStore.__ftw_shortlists.splice(existingIdx, 1);
-      return NextResponse.json({ success: true, action: 'removed' });
+      const removed = globalStore.__ftw_shortlists.splice(existingIdx, 1)[0];
+      return NextResponse.json({ success: true, action: 'removed', message: 'Shortlist removed', shortlist: removed });
     } else {
       const student = studentsList.find((s) => s.id === studentId);
-      globalStore.__ftw_shortlists.push({
+      const newShortlist = {
         id: `sl-${Date.now()}`,
         studentId,
         student,
+        note,
         createdAt: new Date().toISOString(),
-      });
-      return NextResponse.json({ success: true, action: 'added' });
+      };
+      globalStore.__ftw_shortlists.push(newShortlist);
+      return NextResponse.json({ success: true, action: 'added', message: 'Candidate shortlisted successfully', shortlist: newShortlist });
     }
   }
 
@@ -1597,6 +1625,40 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ rout
     return NextResponse.json({ success: true, preferences: body });
   }
 
+  // Update Recruiter Profile
+  if (path === 'discovery/recruiter/me' || path === 'recruiters/profile' || path === 'recruiter/me') {
+    const authUser = getAuthUser(req);
+    const recruiterData =
+      (platformData.recruiters || []).find((r: any) => authUser && (r.id === authUser.id || r.businessEmail === authUser.email || r.email === authUser.email)) ||
+      platformData.recruiters?.[0];
+    if (recruiterData) {
+      Object.assign(recruiterData, body);
+      globalStore.__ftw_recruiters = platformData.recruiters;
+      await setDbState('recruiters', platformData.recruiters);
+      return NextResponse.json({ success: true, message: 'Recruiter profile updated successfully', recruiter: recruiterData });
+    }
+    return NextResponse.json({ error: 'Recruiter not found' }, { status: 404 });
+  }
+
+  // Update Company Profile
+  if (path === 'discovery/company' || path === 'recruiters/company' || path === 'company') {
+    const authUser = getAuthUser(req);
+    const recruiterData =
+      (platformData.recruiters || []).find((r: any) => authUser && (r.id === authUser.id || r.businessEmail === authUser.email || r.email === authUser.email)) ||
+      platformData.recruiters?.[0];
+    const compId = recruiterData?.companyId;
+    let companyData =
+      (platformData.companies || []).find((c: any) => (compId && c.id === compId) || (recruiterData?.companyName && c.name?.toLowerCase() === recruiterData.companyName?.toLowerCase())) ||
+      platformData.companies?.[0];
+    if (companyData) {
+      Object.assign(companyData, body);
+      globalStore.__ftw_companies = platformData.companies;
+      await setDbState('companies', platformData.companies);
+      return NextResponse.json({ success: true, message: 'Company updated successfully', company: companyData });
+    }
+    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
+  }
+
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
 }
 
@@ -1679,6 +1741,27 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
     }
     await setDbState('payments', []);
     return NextResponse.json({ success: true, payments: [] });
+  }
+
+  // 6. Delete Candidate from Shortlists
+  if (
+    path.startsWith('discovery/shortlists/') ||
+    path.startsWith('recruiters/shortlists/') ||
+    (path.startsWith('discovery/talents/') && path.endsWith('/shortlist'))
+  ) {
+    let studentId = '';
+    if (path.startsWith('discovery/talents/') && path.endsWith('/shortlist')) {
+      studentId = path.replace('discovery/talents/', '').replace('/shortlist', '');
+    } else {
+      studentId = path.replace(/^(discovery\/shortlists\/|recruiters\/shortlists\/)/, '');
+    }
+    const idx = (globalStore.__ftw_shortlists || []).findIndex(
+      (s: any) => s.studentId === studentId || s.id === studentId
+    );
+    if (idx >= 0) {
+      globalStore.__ftw_shortlists.splice(idx, 1);
+    }
+    return NextResponse.json({ success: true, message: 'Candidate removed from shortlists' });
   }
 
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
