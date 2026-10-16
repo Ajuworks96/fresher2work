@@ -7,24 +7,7 @@ export default function RecruiterLoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const defaultRecruiter = {
-        id: 'user-recruiter-demo',
-        fullName: 'Partner Recruiter',
-        designation: 'Lead Talent Partner',
-        businessEmail: 'recruiter@freshertowork.com',
-        role: 'RECRUITER',
-        company: {
-          id: 'company-razorscale',
-          name: 'RazorScale Technologies',
-          verificationStatus: 'VERIFIED',
-        },
-        companyName: 'RazorScale Technologies',
-      };
-      localStorage.setItem('ftw_recruiter_token', 'ftw_recruiter_jwt_demo');
-      localStorage.setItem('ftw_recruiter_user', JSON.stringify(defaultRecruiter));
-      router.replace('/recruiter');
-    }
+    router.replace('/recruiter');
   }, [router]);
 
   return (

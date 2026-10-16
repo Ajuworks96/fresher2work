@@ -14,30 +14,20 @@ export default function DashboardLayout({
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [isAuthVerified, setIsAuthVerified] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      let token = localStorage.getItem('ftw_recruiter_token');
-      let stored = localStorage.getItem('ftw_recruiter_user');
+      const token = localStorage.getItem('ftw_recruiter_token');
+      const stored = localStorage.getItem('ftw_recruiter_user');
+
+      // STRICT ZERO-TRUST: No token or session -> redirect to /recruiter immediately
       if (!token || !stored) {
-        const defaultRecruiter = {
-          id: 'user-recruiter-demo',
-          fullName: 'Partner Recruiter',
-          designation: 'Lead Talent Partner',
-          businessEmail: 'recruiter@freshertowork.com',
-          role: 'RECRUITER',
-          company: {
-            id: 'company-razorscale',
-            name: 'RazorScale Technologies',
-            verificationStatus: 'VERIFIED',
-          },
-          companyName: 'RazorScale Technologies',
-        };
-        token = 'ftw_recruiter_jwt_demo';
-        stored = JSON.stringify(defaultRecruiter);
-        localStorage.setItem('ftw_recruiter_token', token);
-        localStorage.setItem('ftw_recruiter_user', stored);
+        setIsAuthVerified(false);
+        router.replace('/recruiter');
+        return;
       }
+
       try {
         const parsed = JSON.parse(stored);
         const r = parsed.recruiter || parsed;
@@ -45,16 +35,38 @@ export default function DashboardLayout({
         const comp = r.company?.name || r.companyName || parsed.companyName || 'Corporate Partner';
         setUserName(name);
         setCompanyName(comp);
+        setIsAuthVerified(true);
       } catch (e) {
-        setUserName('Partner Recruiter');
-        setCompanyName('Corporate Partner');
+        // Corrupted session -> clear and redirect
+        localStorage.removeItem('ftw_recruiter_token');
+        localStorage.removeItem('ftw_recruiter_user');
+        setIsAuthVerified(false);
+        router.replace('/recruiter');
       }
     }
   }, [router]);
 
   const handleLogout = () => {
-    router.push('/recruiter');
+    localStorage.removeItem('ftw_recruiter_token');
+    localStorage.removeItem('ftw_recruiter_user');
+    router.replace('/recruiter');
   };
+
+  if (!isAuthVerified) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white font-sans">
+        <div className="w-full max-w-sm text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-emerald-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Cloudflare Zero Trust • Verifying Session</span>
+          </div>
+          <div className="h-10 w-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-bold text-slate-200">Verifying Recruiter Credentials...</p>
+          <p className="text-xs text-slate-500">Checking enterprise access token & TLS security context</p>
+        </div>
+      </div>
+    );
+  }
 
   const navItems = [
     { label: 'Talent Discovery', href: '/discover', icon: Compass },

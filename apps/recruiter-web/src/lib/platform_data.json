@@ -56,6 +56,27 @@
       },
       "password": "Recruiter@123",
       "createdAt": "2026-09-15T10:00:00.000Z"
+    },
+    {
+      "id": "rec-demo-partner-01",
+      "fullName": "Lead Talent Partner",
+      "businessEmail": "recruiter@freshertowork.com",
+      "email": "recruiter@freshertowork.com",
+      "phone": "+91 99887 76655",
+      "designation": "Talent Acquisition Head",
+      "companyId": "comp-velvetbyte-01",
+      "companyName": "Velvetbyte PVT Ltd",
+      "company": {
+        "id": "comp-velvetbyte-01",
+        "name": "Velvetbyte PVT Ltd",
+        "website": "https://velvetbyte.com",
+        "industry": "Web Development",
+        "location": "Calicut",
+        "verificationStatus": "VERIFIED",
+        "createdAt": "2026-09-15T10:00:00.000Z"
+      },
+      "password": "Recruiter@123",
+      "createdAt": "2026-09-15T10:00:00.000Z"
     }
   ],
   "payments": []

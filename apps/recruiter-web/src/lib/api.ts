@@ -12,7 +12,9 @@ export const recruiterApi = new FresherToWorkApiClient({
   },
   onUnauthorized: () => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('ftw_recruiter_token', 'ftw_recruiter_jwt_demo');
+      localStorage.removeItem('ftw_recruiter_token');
+      localStorage.removeItem('ftw_recruiter_user');
+      window.location.href = '/recruiter';
     }
   },
 });

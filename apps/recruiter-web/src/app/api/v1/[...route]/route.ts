@@ -661,8 +661,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
-    // Recruiter Authentication (Matching recruiters created by Super Admin)
-    const existingRecruiter = (platformData.recruiters || []).find(
+    // Recruiter Authentication (Matching recruiters created by Super Admin or seeded)
+    const allRecruiters = [...(globalStore.__ftw_recruiters || []), ...(platformData.recruiters || [])];
+    const existingRecruiter = allRecruiters.find(
       (r: any) =>
         r.businessEmail?.toLowerCase() === email?.toLowerCase() ||
         r.email?.toLowerCase() === email?.toLowerCase()
