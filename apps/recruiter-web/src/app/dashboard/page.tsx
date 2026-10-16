@@ -20,10 +20,10 @@ export default function DashboardRedirectPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex items-center justify-center p-6 text-white font-sans">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-slate-900 font-sans">
       <div className="flex items-center gap-3">
-        <div className="w-5 h-5 border-2 border-[#FF5A36] border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs text-slate-400 font-medium">Navigating to dashboard...</span>
+        <div className="w-5 h-5 border-2 border-[#1f357c] border-t-[#4ad1c7] rounded-full animate-spin" />
+        <span className="text-xs text-slate-500 font-medium">Navigating to dashboard...</span>
       </div>
     </div>
   );

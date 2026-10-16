@@ -108,41 +108,41 @@ export default function RecruiterPortalPage() {
 
   if (checkingExistingSession) {
     return (
-      <div className="min-h-screen bg-[#070D1F] flex items-center justify-center p-6 text-white">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-slate-900 font-sans">
         <div className="flex items-center gap-3">
-          <RefreshCw className="w-5 h-5 animate-spin text-[#4ad1c7]" />
-          <span className="text-sm font-medium text-slate-300">Checking recruiter session...</span>
+          <RefreshCw className="w-5 h-5 animate-spin text-[#1f357c]" />
+          <span className="text-sm font-medium text-slate-500">Checking recruiter session...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#070D1F] text-slate-100 font-sans flex flex-col justify-between selection:bg-[#4ad1c7]/20 selection:text-[#4ad1c7]">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between selection:bg-[#4ad1c7]/20 selection:text-[#1f357c]">
       
       {/* 1. TOP BRAND HEADER */}
-      <header className="border-b border-slate-800/80 bg-[#0C1633]/80 backdrop-blur-md px-4 sm:px-8 py-3.5 sticky top-0 z-20">
+      <header className="border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-8 py-3.5 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2 group">
               <img
                 src="/brand/logo.png"
                 alt="Fresher2Work"
-                className="h-9 sm:h-10 w-auto object-contain brightness-105 transition-transform group-hover:scale-105"
+                className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105"
               />
             </Link>
-            <span className="text-slate-700 hidden sm:inline">|</span>
-            <span className="text-slate-400 font-medium hidden sm:inline">Recruiter Enterprise Portal</span>
+            <span className="text-slate-300 hidden sm:inline">|</span>
+            <span className="text-slate-500 font-medium hidden sm:inline">Recruiter Enterprise Portal</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#142251]/80 border border-[#3e7aa7]/40 text-[11px] text-[#4ad1c7] font-medium shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1f357c]/5 border border-[#3e7aa7]/30 text-[11px] text-[#1f357c] font-bold shadow-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#4ad1c7] animate-pulse" />
               <span>Verified Employer Portal</span>
             </div>
             <Link
               href="/superadmin"
-              className="text-[11px] font-semibold text-slate-400 hover:text-[#4ad1c7] transition-colors hidden md:inline"
+              className="text-[11px] font-semibold text-slate-500 hover:text-[#1f357c] transition-colors hidden md:inline"
             >
               Super Admin Console ↗
             </Link>
@@ -150,30 +150,27 @@ export default function RecruiterPortalPage() {
         </div>
       </header>
 
-      {/* 2. MAIN AUTHENTICATION CONTAINER */}
-      <main className="flex-1 flex items-center justify-center px-4 py-10 relative overflow-hidden">
-        {/* Subtle Ambient Background Gradients with #1f357c, #3e7aa7, #4ad1c7 */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#1f357c]/25 via-[#3e7aa7]/20 to-[#4ad1c7]/20 rounded-full blur-3xl pointer-events-none -z-10" />
-
+      {/* 2. MAIN AUTHENTICATION CONTAINER (Identical to Super Admin Color Pattern) */}
+      <main className="flex-1 flex items-center justify-center px-4 py-10 relative">
         <div className="w-full max-w-md space-y-6">
 
           {/* ACTIVE SESSION BANNER (if user already logged in) */}
           {activeUser && (
-            <div className="p-4 rounded-2xl bg-[#0C1633]/90 border border-[#3e7aa7]/60 shadow-xl space-y-3 backdrop-blur-md">
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-lg space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#4ad1c7] flex items-center gap-1">
-                    <UserCheck className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#1f357c] flex items-center gap-1">
+                    <UserCheck className="w-3.5 h-3.5 text-[#3e7aa7]" />
                     Existing Active Session
                   </span>
-                  <h4 className="text-sm font-bold text-white mt-0.5">
+                  <h4 className="text-sm font-extrabold text-slate-900 mt-0.5">
                     {activeUser.fullName || 'Verified Recruiter'}
                   </h4>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-slate-500">
                     {activeUser.company?.name || activeUser.companyName || 'Corporate Partner'} • {activeUser.businessEmail || activeUser.email}
                   </p>
                 </div>
-                <span className="p-1.5 rounded-lg bg-[#142251] text-[#4ad1c7]">
+                <span className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200">
                   <CheckCircle2 className="w-4 h-4" />
                 </span>
               </div>
@@ -182,41 +179,45 @@ export default function RecruiterPortalPage() {
                 <button
                   type="button"
                   onClick={() => router.push('/discover')}
-                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#3e7aa7] to-[#4ad1c7] hover:from-[#356d96] hover:to-[#38c2b7] text-[#070D1F] text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#1f357c]/20"
                 >
                   <span>Go to Discovery Dashboard</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[#4ad1c7]" />
                 </button>
                 <button
                   type="button"
                   onClick={handleSignOutCurrent}
-                  className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                  className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-slate-200"
                 >
-                  <LogOut className="w-3.5 h-3.5 text-red-400" />
+                  <LogOut className="w-3.5 h-3.5 text-red-500" />
                   <span>Sign Out</span>
                 </button>
               </div>
             </div>
           )}
 
-          {/* MAIN LOGIN CARD */}
-          <div className="rounded-3xl bg-[#0C1633]/95 border border-[#3e7aa7]/40 shadow-2xl shadow-black/70 p-6 sm:p-8 backdrop-blur-xl space-y-6">
+          {/* MAIN LOGIN CARD (Matches Super Admin's white card and typography) */}
+          <div className="rounded-2xl bg-white border border-slate-200 shadow-xl p-8 space-y-6">
             
-            {/* Card Header */}
+            {/* Card Header with Centered Logo */}
             <div className="text-center space-y-2">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1f357c] via-[#3e7aa7] to-[#4ad1c7] text-white shadow-lg shadow-[#1f357c]/30 mx-auto">
-                <Building2 className="w-6 h-6 stroke-[2]" />
-              </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Recruiter Portal Login</h2>
-              <p className="text-xs text-slate-300 max-w-xs mx-auto">
-                Enter your work credentials to discover verified fresher talent and hire directly.
+              <Link href="/" className="inline-block mb-1">
+                <img
+                  src="/brand/logo.png"
+                  alt="Fresher2Work"
+                  className="h-10 w-auto mx-auto object-contain"
+                />
+              </Link>
+              <h2 className="text-2xl font-black tracking-tight text-[#1f357c]">Recruiter Portal Login</h2>
+              <p className="text-xs text-slate-500 font-medium max-w-xs mx-auto">
+                Fresher2Work Corporate Hiring & Talent Discovery
               </p>
             </div>
 
             {/* Error Notification */}
             {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-800/80 text-xs text-red-200 flex items-start gap-2.5 animate-fadeIn">
-                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-center gap-2 animate-fadeIn">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                 <span>{errorMessage}</span>
               </div>
             )}
@@ -226,7 +227,7 @@ export default function RecruiterPortalPage() {
               
               {/* Work Email Input */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
                   <span>Work Email</span>
                   <span className="text-[10px] text-slate-400 font-normal">Corporate domain</span>
                 </label>
@@ -239,14 +240,14 @@ export default function RecruiterPortalPage() {
                     required
                     placeholder="arjunworks96@gmail.com"
                     autoComplete="email"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#070D1F]/90 border border-slate-700/80 text-sm text-white font-medium placeholder:text-slate-500 focus:bg-[#070D1F] focus:border-[#4ad1c7] focus:outline-none focus:ring-2 focus:ring-[#4ad1c7]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:bg-white focus:border-[#3e7aa7] focus:outline-none focus:ring-2 focus:ring-[#3e7aa7]/15 transition-all"
                   />
                 </div>
               </div>
 
               {/* Password Input */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
                   <span>Password</span>
                   <span className="text-[10px] text-slate-400 font-normal">Encrypted TLS</span>
                 </label>
@@ -259,12 +260,12 @@ export default function RecruiterPortalPage() {
                     required
                     placeholder="••••••••••••"
                     autoComplete="current-password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#070D1F]/90 border border-slate-700/80 text-sm text-white font-medium placeholder:text-slate-500 focus:bg-[#070D1F] focus:border-[#4ad1c7] focus:outline-none focus:ring-2 focus:ring-[#4ad1c7]/20 transition-all"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:bg-white focus:border-[#3e7aa7] focus:outline-none focus:ring-2 focus:ring-[#3e7aa7]/15 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#4ad1c7] transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -273,28 +274,28 @@ export default function RecruiterPortalPage() {
 
               {/* Remember Me Option */}
               <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300 hover:text-white select-none">
+                <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 hover:text-slate-900 select-none">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded bg-slate-800 border-slate-700 text-[#4ad1c7] focus:ring-0 cursor-pointer"
+                    className="w-3.5 h-3.5 rounded bg-slate-100 border-slate-300 text-[#1f357c] focus:ring-[#1f357c]/20 cursor-pointer"
                   />
                   <span>Keep me signed in</span>
                 </label>
                 <Link
                   href="/contact"
-                  className="text-[11px] text-slate-400 hover:text-[#4ad1c7] transition-colors"
+                  className="text-[11px] text-[#3e7aa7] hover:underline transition-colors font-medium"
                 >
                   Need access help?
                 </Link>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button (Identical to Super Admin Gradient Button) */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#3e7aa7] to-[#4ad1c7] hover:opacity-95 text-white text-xs font-bold tracking-wide transition-all shadow-lg shadow-[#1f357c]/30 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99] disabled:opacity-60"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] text-white text-xs font-bold transition-all shadow-md shadow-[#1f357c]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {isLoading ? (
                   <>
@@ -305,63 +306,63 @@ export default function RecruiterPortalPage() {
                   <>
                     <Shield className="w-4 h-4 stroke-[2]" />
                     <span>Sign In to Recruiter Portal</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#4ad1c7]" />
                   </>
                 )}
               </button>
             </form>
 
             {/* QUICK AUTOFILL CREDENTIALS FOR TESTING / DEMO */}
-            <div className="pt-4 border-t border-slate-800/80 space-y-2.5">
-              <div className="flex items-center justify-between text-[11px] text-slate-400">
-                <span className="font-semibold text-slate-300 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-[#4ad1c7]" /> Quick Demo Recruiter Accounts:
+            <div className="pt-3 border-t border-slate-100 space-y-2.5">
+              <div className="flex items-center justify-between text-[11px] text-slate-500">
+                <span className="font-semibold flex items-center gap-1 text-slate-700">
+                  <Sparkles className="w-3.5 h-3.5 text-[#3e7aa7]" /> Quick Demo Recruiter Accounts:
                 </span>
-                <span className="text-[10px] text-[#4ad1c7] font-mono">1-Click Fill</span>
+                <span className="text-[10px] text-[#1f357c] font-bold">1-Click Fill</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                 <button
                   type="button"
                   onClick={() => handleAutofillRecruiter('arjunworks96@gmail.com', 'Recruiter@123')}
-                  className="p-2.5 rounded-xl bg-[#070D1F]/80 hover:bg-[#142251]/60 border border-slate-700/80 hover:border-[#4ad1c7]/50 text-left transition-all group cursor-pointer"
+                  className="p-2.5 rounded-xl bg-slate-50 hover:bg-[#1f357c]/5 border border-slate-200 hover:border-[#3e7aa7]/50 text-left transition-all group cursor-pointer"
                 >
-                  <div className="font-bold text-white group-hover:text-[#4ad1c7] transition-colors flex items-center justify-between">
+                  <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
                     <span>Arjun (CEO)</span>
-                    <span className="text-[9px] text-[#4ad1c7] font-mono">Active</span>
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-mono font-bold border border-emerald-200">Active</span>
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate">arjunworks96@gmail.com</div>
-                  <div className="text-[9px] text-slate-500 font-mono mt-0.5">Pass: Recruiter@123</div>
+                  <div className="text-[10px] text-slate-500 truncate mt-0.5">arjunworks96@gmail.com</div>
+                  <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleAutofillRecruiter('recruiter@freshertowork.com', 'Recruiter@123')}
-                  className="p-2.5 rounded-xl bg-[#070D1F]/80 hover:bg-[#142251]/60 border border-slate-700/80 hover:border-[#4ad1c7]/50 text-left transition-all group cursor-pointer"
+                  className="p-2.5 rounded-xl bg-slate-50 hover:bg-[#1f357c]/5 border border-slate-200 hover:border-[#3e7aa7]/50 text-left transition-all group cursor-pointer"
                 >
-                  <div className="font-bold text-white group-hover:text-[#4ad1c7] transition-colors flex items-center justify-between">
+                  <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
                     <span>Lead Partner</span>
-                    <span className="text-[9px] text-[#4ad1c7] font-mono">Active</span>
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-mono font-bold border border-emerald-200">Active</span>
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate">recruiter@freshertowork.com</div>
-                  <div className="text-[9px] text-slate-500 font-mono mt-0.5">Pass: Recruiter@123</div>
+                  <div className="text-[10px] text-slate-500 truncate mt-0.5">recruiter@freshertowork.com</div>
+                  <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>
                 </button>
               </div>
             </div>
 
             {/* Footer Links & Registration */}
-            <div className="pt-2 flex flex-col gap-2.5 text-[11px] text-slate-400">
+            <div className="pt-2 flex flex-col gap-2.5 text-[11px] text-slate-500">
               <div className="flex items-center justify-between">
                 <span>New employer or hiring manager?</span>
-                <Link href="/register" className="text-[#4ad1c7] hover:underline font-bold transition-colors">
+                <Link href="/register" className="text-[#1f357c] hover:underline font-bold transition-colors">
                   Create Recruiter Account →
                 </Link>
               </div>
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800/60">
-                <Link href="/" className="hover:text-white transition-colors">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <Link href="/" className="hover:text-slate-900 transition-colors">
                   ← Back to Home
                 </Link>
-                <Link href="/superadmin" className="text-[#4ad1c7] hover:text-white font-semibold transition-colors">
+                <Link href="/superadmin" className="text-[#3e7aa7] hover:text-[#1f357c] font-semibold transition-colors">
                   Super Admin Console ↗
                 </Link>
               </div>
@@ -370,7 +371,7 @@ export default function RecruiterPortalPage() {
 
           {/* Security Assurance footer pill */}
           <div className="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-[#4ad1c7]" />
+            <Lock className="w-3.5 h-3.5 text-[#1f357c]" />
             <span>End-to-End Enterprise Encryption • Authorized Corporate Access</span>
           </div>
 
@@ -378,7 +379,7 @@ export default function RecruiterPortalPage() {
       </main>
 
       {/* 3. FOOTER */}
-      <footer className="border-t border-slate-800/80 py-4 px-4 text-center text-xs text-slate-500 bg-[#070D1F]">
+      <footer className="border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500 bg-white">
         © 2026 Fresher2Work Inc. Enterprise Talent Acquisition System. All rights reserved.
       </footer>
     </div>

@@ -122,13 +122,12 @@ export default function TalentPassportPage() {
       {/* Top Navbar */}
       <header className="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-20 px-4 sm:px-8 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow-md shadow-blue-600/30">
-            F
-          </div>
-          <span className="text-base font-black tracking-tight text-white">
-            Fresher<span className="text-blue-400">ToWork</span>
-          </span>
-          <span className="text-[10px] font-extrabold uppercase tracking-widest bg-blue-500/10 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/20 ml-1">
+          <img
+            src="/brand/logo.png"
+            alt="Fresher2Work"
+            className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
+          />
+          <span className="text-[10px] font-extrabold uppercase tracking-widest bg-[#1f357c]/40 text-[#4ad1c7] px-2.5 py-0.5 rounded-full border border-[#3e7aa7]/40 ml-1">
             Talent Passport
           </span>
         </Link>

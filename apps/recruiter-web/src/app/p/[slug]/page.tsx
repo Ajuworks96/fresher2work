@@ -80,10 +80,14 @@ export default function PublicProfilePage() {
       {/* Header */}
       <header className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-10 px-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-black tracking-tight text-slate-900">
-            Fresher<span className="text-emerald-600">ToWork</span>
-          </span>
-          <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+          <Link href="/" className="inline-block">
+            <img
+              src="/brand/logo.png"
+              alt="Fresher2Work"
+              className="h-8 sm:h-9 w-auto object-contain"
+            />
+          </Link>
+          <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-[#1f357c] px-2 py-0.5 rounded border border-slate-200">
             Portfolio
           </span>
         </div>

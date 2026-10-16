@@ -13,13 +13,12 @@ export default function ContactPage() {
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2 text-xl font-black tracking-tight text-slate-950">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 font-extrabold text-slate-950 shadow-md shadow-emerald-500/20">
-              F
-            </span>
-            <span>
-              Fresher<span className="text-emerald-600">ToWork</span>
-            </span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <img
+              src="/brand/logo.png"
+              alt="Fresher2Work"
+              className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105"
+            />
           </Link>
           <div className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-semibold">
             <Link href="/privacy" className="text-slate-600 transition hover:text-slate-950">

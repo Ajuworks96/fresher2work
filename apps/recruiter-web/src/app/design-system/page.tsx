@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Button,
   Input,
@@ -38,14 +39,23 @@ export default function DesignSystemGalleryPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-8 space-y-12 max-w-7xl mx-auto">
       {/* Design System Header */}
-      <div className="border-b border-slate-200 pb-6">
-        <div className="flex items-center gap-2">
-          <span className="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">
-            FresherToWork Design System
-          </span>
-          <span className="text-xs text-slate-400 font-mono">v1.0.0</span>
+      <div className="border-b border-slate-200 pb-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="inline-block">
+            <img
+              src="/brand/logo.png"
+              alt="Fresher2Work"
+              className="h-9 w-auto object-contain"
+            />
+          </Link>
+          <div className="flex items-center gap-2">
+            <span className="bg-[#1f357c]/10 text-[#1f357c] border border-[#3e7aa7]/30 text-xs px-2.5 py-0.5 rounded-full font-bold">
+              Design System
+            </span>
+            <span className="text-xs text-slate-400 font-mono">v1.0.0</span>
+          </div>
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 mt-2">
+        <h1 className="text-3xl font-extrabold text-slate-900">
           Component & Token Showcase
         </h1>
         <p className="text-sm text-slate-500 mt-1">
