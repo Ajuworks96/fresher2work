@@ -132,8 +132,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="transition-colors hover:text-emerald-400">
-                  Recruiter Sign In
+                <Link href="/recruiter" className="transition-colors hover:text-emerald-400">
+                  Recruiter Portal
                 </Link>
               </li>
               <li>
@@ -142,7 +142,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="transition-colors hover:text-emerald-400 text-slate-400">
+                <Link href="/superadmin" className="transition-colors hover:text-emerald-400 text-slate-400">
                   Super Admin Console
                 </Link>
               </li>

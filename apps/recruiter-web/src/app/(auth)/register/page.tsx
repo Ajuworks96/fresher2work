@@ -165,8 +165,8 @@ export default function RecruiterRegisterPage() {
           <div className="mt-4 border-t border-slate-100 pt-4 flex flex-col gap-2 text-center">
             <p className="text-xs text-slate-500">
               Already have an account?{' '}
-              <Link href="/login" className="font-semibold text-emerald-600 hover:underline">
-                Sign in here
+              <Link href="/recruiter" className="font-semibold text-emerald-600 hover:underline">
+                Go to Recruiter Portal
               </Link>
             </p>
           </div>

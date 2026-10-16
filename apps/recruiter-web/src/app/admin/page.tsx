@@ -939,7 +939,7 @@ export default function SuperAdminSidebarPage() {
             <span className="flex items-center gap-1 font-medium">
               <Lock className="w-3 h-3 text-emerald-600" /> End-to-End Enterprise Encryption
             </span>
-            <Link href="/login" className="text-emerald-600 hover:underline font-bold">
+            <Link href="/recruiter" className="text-emerald-600 hover:underline font-bold">
               Recruiter Hub ↗
             </Link>
           </div>

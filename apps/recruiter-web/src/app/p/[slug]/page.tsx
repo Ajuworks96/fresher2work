@@ -89,10 +89,10 @@ export default function PublicProfilePage() {
         </div>
         <div>
           <Link
-            href="/login"
+            href="/recruiter"
             className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
           >
-            Recruiter Login ↗
+            Recruiter Portal ↗
           </Link>
         </div>
       </header>

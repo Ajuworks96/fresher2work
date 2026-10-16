@@ -9,6 +9,11 @@ const nextConfig = {
         destination: '/discover',
         permanent: false,
       },
+      {
+        source: '/login',
+        destination: '/recruiter',
+        permanent: false,
+      },
     ];
   },
 };

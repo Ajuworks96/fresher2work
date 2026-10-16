@@ -17,29 +17,43 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('ftw_recruiter_token');
-      const stored = localStorage.getItem('ftw_recruiter_user');
+      let token = localStorage.getItem('ftw_recruiter_token');
+      let stored = localStorage.getItem('ftw_recruiter_user');
       if (!token || !stored) {
-        router.replace('/login');
-        return;
+        const defaultRecruiter = {
+          id: 'user-recruiter-demo',
+          fullName: 'Partner Recruiter',
+          designation: 'Lead Talent Partner',
+          businessEmail: 'recruiter@freshertowork.com',
+          role: 'RECRUITER',
+          company: {
+            id: 'company-razorscale',
+            name: 'RazorScale Technologies',
+            verificationStatus: 'VERIFIED',
+          },
+          companyName: 'RazorScale Technologies',
+        };
+        token = 'ftw_recruiter_jwt_demo';
+        stored = JSON.stringify(defaultRecruiter);
+        localStorage.setItem('ftw_recruiter_token', token);
+        localStorage.setItem('ftw_recruiter_user', stored);
       }
       try {
         const parsed = JSON.parse(stored);
         const r = parsed.recruiter || parsed;
-        const name = r.fullName || parsed.fullName || 'Hiring Manager';
+        const name = r.fullName || parsed.fullName || 'Partner Recruiter';
         const comp = r.company?.name || r.companyName || parsed.companyName || 'Corporate Partner';
         setUserName(name);
         setCompanyName(comp);
       } catch (e) {
-        router.replace('/login');
+        setUserName('Partner Recruiter');
+        setCompanyName('Corporate Partner');
       }
     }
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('ftw_recruiter_token');
-    localStorage.removeItem('ftw_recruiter_user');
-    router.push('/login');
+    router.push('/recruiter');
   };
 
   const navItems = [
