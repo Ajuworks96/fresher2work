@@ -394,35 +394,55 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
     return NextResponse.json({ recruiters: platformData.recruiters || [] });
   }
 
-  // 5. Admin Payments
+  // 5. Admin Payments (Real Products Only)
   if (path === 'admin/payments') {
+    const deletedPaymentIds = new Set(globalStore.__ftw_deleted_payments || []);
     if (!platformData.payments || platformData.payments.length === 0) {
       try {
         const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_TchOu7JRRpZS37';
         const keySecret = process.env.RAZORPAY_KEY_SECRET || 'H6fhPAbNIVsPGg8P6gy9reUU';
         const basicAuth = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
-        const rzpRes = await fetch('https://api.razorpay.com/v1/payments?count=20', {
+        const rzpRes = await fetch('https://api.razorpay.com/v1/payments?count=50', {
           headers: { Authorization: `Basic ${basicAuth}` },
         });
         if (rzpRes.ok) {
           const rzpData = await rzpRes.json();
-          const items = (rzpData.items || []).filter((p: any) => p.status === 'captured');
+          // Filter out dummy/test payments: ONLY genuine captured payments for the ₹299 product (amount 29900 paise)
+          const items = (rzpData.items || []).filter(
+            (p: any) => p.status === 'captured' && Number(p.amount) === 29900 && !deletedPaymentIds.has(p.id)
+          );
           let syncRev = 0;
           platformData.payments = items.map((p: any) => {
-            syncRev += Math.round(p.amount / 100);
+            const amountInRupees = Math.round(p.amount / 100);
+            syncRev += amountInRupees;
+            const contact = (p.contact || '').trim();
+            const rawEmail = (p.email || '').trim();
+            const isDummyEmail = !rawEmail || rawEmail === 'void@razorpay.com';
+
+            let resolvedName = p.notes?.candidateName;
+            let resolvedEmail = isDummyEmail ? '' : rawEmail;
+            if (!resolvedName && contact.includes('9539980990')) {
+              resolvedName = 'Arjun';
+              if (!resolvedEmail) resolvedEmail = 'arjunworks96@gmail.com';
+            } else if (!resolvedName) {
+              resolvedName = 'Candidate';
+            }
+
             return {
               id: p.id,
               gatewayOrderId: p.order_id,
               razorpayOrderId: p.order_id,
               gatewayPaymentId: p.id,
               razorpayPaymentId: p.id,
+              product: 'Candidate Discovery Pass (₹299)',
+              productType: 'DISCOVERY_PASS',
               amountPaise: p.amount,
               currency: p.currency || 'INR',
               status: 'SUCCESS',
               createdAt: new Date(p.created_at * 1000).toISOString(),
-              candidateName: p.notes?.candidateName || 'Verified Candidate',
-              candidateEmail: p.email || 'candidate@freshertowork.com',
-              candidatePhone: p.contact || '',
+              candidateName: resolvedName,
+              candidateEmail: resolvedEmail || (contact ? `${contact}` : 'candidate@freshertowork.com'),
+              candidatePhone: contact,
               method: (p.method || 'UPI').toUpperCase(),
               isTest: false,
             };
@@ -435,6 +455,29 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         }
       } catch (e) {
         console.warn('[Sync Razorpay Payments Error]', e);
+      }
+    } else {
+      // Ensure existing in-memory payments also exclude dummy < ₹299 payments
+      platformData.payments = (platformData.payments || [])
+        .filter(
+          (p: any) =>
+            p.status === 'SUCCESS' &&
+            (p.amountPaise === 29900 || p.amountPaise >= 29900) &&
+            !deletedPaymentIds.has(p.id) &&
+            !deletedPaymentIds.has(p.gatewayPaymentId)
+        )
+        .map((p: any) => ({
+          ...p,
+          product: p.product || 'Candidate Discovery Pass (₹299)',
+          productType: p.productType || 'DISCOVERY_PASS',
+        }));
+      globalStore.__ftw_payments = platformData.payments;
+      if (platformData.analytics?.metrics) {
+        platformData.analytics.metrics.successfulPaymentsCount = platformData.payments.length;
+        platformData.analytics.metrics.totalRevenueInRupees = platformData.payments.reduce(
+          (acc: number, p: any) => acc + Math.round((p.amountPaise || 29900) / 100),
+          0
+        );
       }
     }
     return NextResponse.json({ payments: platformData.payments || [] });
@@ -1450,6 +1493,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       candidateEmail: studentDisplayEmail,
       candidatePhone: targetPhone || matchedStudent.phone || '',
       method: (rzpPayData?.method || 'UPI').toUpperCase(),
+      product: 'Candidate Discovery Pass (₹299)',
+      productType: 'DISCOVERY_PASS',
       user: {
         id: matchedStudent.userId || matchedStudent.id || `user-${Date.now()}`,
         email: studentDisplayEmail,
@@ -1794,17 +1839,21 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
   // 4. Delete Single Payment Transaction (admin/payments/:id)
   if (path.startsWith('admin/payments/')) {
     const payId = path.replace('admin/payments/', '');
+    if (!globalStore.__ftw_deleted_payments) globalStore.__ftw_deleted_payments = [];
+    globalStore.__ftw_deleted_payments.push(payId);
+
     const paymentsList: any[] = platformData.payments || [];
     const idx = paymentsList.findIndex(
       (p: any) => p.id === payId || p.gatewayPaymentId === payId || p.razorpayPaymentId === payId
     );
     if (idx >= 0) {
-      paymentsList.splice(idx, 1);
+      const removed = paymentsList.splice(idx, 1)[0];
+      const removedRupees = Math.round((removed?.amountPaise || 29900) / 100);
       if (platformData.analytics?.metrics) {
         platformData.analytics.metrics.successfulPaymentsCount = Math.max(0, paymentsList.length);
         platformData.analytics.metrics.totalRevenueInRupees = Math.max(
           0,
-          (platformData.analytics.metrics.totalRevenueInRupees || 299) - 299
+          (platformData.analytics.metrics.totalRevenueInRupees || removedRupees) - removedRupees
         );
       }
     }
@@ -1815,6 +1864,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
 
   // 5. Clear All Test Payments (admin/payments)
   if (path === 'admin/payments') {
+    if (!globalStore.__ftw_deleted_payments) globalStore.__ftw_deleted_payments = [];
+    for (const p of platformData.payments || []) {
+      if (p.id) globalStore.__ftw_deleted_payments.push(p.id);
+      if (p.gatewayPaymentId) globalStore.__ftw_deleted_payments.push(p.gatewayPaymentId);
+    }
     platformData.payments = [];
     globalStore.__ftw_payments = [];
     if (platformData.analytics?.metrics) {

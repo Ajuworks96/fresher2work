@@ -383,8 +383,10 @@ export default function SuperAdminSidebarPage() {
       setRecruiters(mergedRecruiters);
       setCompanies(mergedCompanies);
 
-      // Server response is the single source of truth for payment ledger
-      const serverPayments: any[] = resPayments.payments || [];
+      // Server response is the single source of truth for payment ledger (filter dummy test payments)
+      const serverPayments: any[] = (resPayments.payments || []).filter(
+        (p: any) => p.status === 'SUCCESS' && (p.amountPaise === 29900 || p.amountPaise >= 29900)
+      );
       setPayments(serverPayments);
       try {
         localStorage.setItem('ftw_admin_payments_cache', JSON.stringify(serverPayments));
@@ -2709,7 +2711,7 @@ export default function SuperAdminSidebarPage() {
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gross Platform Revenue</span>
                 <h3 className="text-3xl font-black text-slate-900">
-                  ₹{analytics?.totalRevenueInRupees || payments.length * 99}
+                  ₹{payments.reduce((acc, p) => acc + Math.round((p.amountPaise || 29900) / 100), 0) || analytics?.totalRevenueInRupees || 0}
                 </h3>
                 <p className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" /> 100% Verified Razorpay Transactions
@@ -3098,18 +3100,18 @@ export default function SuperAdminSidebarPage() {
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <span className="text-[11px] font-bold text-slate-400 uppercase">Total Revenue Collected</span>
                 <p className="text-xl font-black text-emerald-600 mt-0.5">
-                  ₹{(payments.reduce((acc, p) => acc + (p.amountPaise || 9900), 0) / 100).toFixed(2)}
+                  ₹{(payments.reduce((acc, p) => acc + (p.amountPaise || 29900), 0) / 100).toFixed(2)}
                 </p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-                <span className="text-[11px] font-bold text-slate-400 uppercase">Successful Activations</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Real Product Activations</span>
                 <p className="text-xl font-black text-slate-900 mt-0.5">{payments.length}</p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <span className="text-[11px] font-bold text-slate-400 uppercase">Payment Gateway</span>
                 <p className="text-xs font-bold text-slate-700 mt-1 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Razorpay SDK • Official Merchant Active
+                  Razorpay Live SDK • Official Merchant Active
                 </p>
               </div>
             </div>
@@ -3122,6 +3124,7 @@ export default function SuperAdminSidebarPage() {
                     <tr>
                       <th className="px-5 py-3.5">Receipt ID</th>
                       <th className="px-5 py-3.5">Candidate Details</th>
+                      <th className="px-5 py-3.5">Product Purchased</th>
                       <th className="px-5 py-3.5">Amount</th>
                       <th className="px-5 py-3.5">Razorpay Order ID</th>
                       <th className="px-5 py-3.5">Payment ID</th>
@@ -3133,7 +3136,7 @@ export default function SuperAdminSidebarPage() {
                   <tbody className="divide-y divide-slate-100 text-[11px]">
                     {payments.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="text-center py-12 text-slate-400 font-medium">
+                        <td colSpan={9} className="text-center py-12 text-slate-400 font-medium">
                           No payments recorded yet in the ledger.
                         </td>
                       </tr>
@@ -3143,7 +3146,7 @@ export default function SuperAdminSidebarPage() {
                         const candidateName = p.user?.fullName || p.candidateName || 'Candidate';
                         const rzpOrder = p.razorpayOrderId || p.gatewayOrderId || '—';
                         const rzpPayment = p.razorpayPaymentId || p.gatewayPaymentId || '—';
-                        const amountInRupees = ((p.amountPaise || 9900) / 100).toFixed(2);
+                        const amountInRupees = ((p.amountPaise || 29900) / 100).toFixed(2);
 
                         return (
                           <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
@@ -3151,8 +3154,27 @@ export default function SuperAdminSidebarPage() {
                               {p.id.length > 14 ? `${p.id.substring(0, 12)}...` : p.id}
                             </td>
                             <td className="px-5 py-3.5">
-                              <p className="font-bold text-slate-900 text-xs">{candidateName}</p>
-                              <p className="text-[10px] text-slate-400 font-mono">{candidateEmail}</p>
+                              <p className="font-bold text-slate-900 text-xs">
+                                {candidateName && candidateName !== 'Verified Candidate'
+                                  ? candidateName
+                                  : (p.candidatePhone ? `Candidate (${p.candidatePhone})` : 'Verified Candidate')}
+                              </p>
+                              <p className="text-[10px] text-slate-500 font-mono">
+                                {candidateEmail && candidateEmail !== 'void@razorpay.com'
+                                  ? candidateEmail
+                                  : (p.candidatePhone || 'Razorpay UPI Verified')}
+                              </p>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <div className="flex flex-col">
+                                <span className="font-extrabold text-[#1f357c] text-xs flex items-center gap-1.5">
+                                  <Sparkles className="w-3.5 h-3.5 text-[#3e7aa7]" />
+                                  {p.product || 'Candidate Discovery Pass'}
+                                </span>
+                                <span className="text-[10px] text-slate-500 font-medium">
+                                  ₹299 Lifetime Activation & Discovery
+                                </span>
+                              </div>
                             </td>
                             <td className="px-5 py-3.5 font-black text-emerald-600 font-mono">
                               ₹{amountInRupees}
@@ -3175,7 +3197,7 @@ export default function SuperAdminSidebarPage() {
                             <td className="px-5 py-3.5 text-right">
                               <button
                                 onClick={() => handleDeletePayment(p.id)}
-                                title="Delete test payment transaction from ledger"
+                                title="Delete payment transaction from ledger"
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[11px] font-bold transition-colors cursor-pointer"
                               >
                                 <Trash2 className="w-3 h-3" />

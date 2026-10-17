@@ -2,13 +2,13 @@
   "analytics": {
     "metrics": {
       "totalStudents": 0,
-      "activatedStudents": 0,
+      "activatedStudents": 1,
       "activationRatePercent": 0,
       "pendingModeration": 0,
       "totalRecruiters": 1,
       "totalCompanies": 1,
       "successfulPaymentsCount": 1,
-      "totalRevenueInRupees": 99,
+      "totalRevenueInRupees": 299,
       "totalHiredCandidates": 0,
       "inAppDirectPlacements": 0,
       "inAppPlacementRatioPercent": 0,
