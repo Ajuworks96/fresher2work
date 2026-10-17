@@ -1089,7 +1089,7 @@ export default function SuperAdminSidebarPage() {
                     <span>Revenue & Ledger</span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-md bg-[#4ad1c7]/20 text-[10px] font-extrabold text-[#1f357c]">
-                    ₹99
+                    ₹299
                   </span>
                 </button>
               </nav>
@@ -2182,7 +2182,7 @@ export default function SuperAdminSidebarPage() {
                   {activeTab === 'placements' && 'Verified In-App Placements & Success Telemetry'}
                   {activeTab === 'dashboard' && 'Executive Platform Overview & Telemetry'}
                   {activeTab === 'recruiters' && 'Recruiter & Employer Partner Management'}
-                  {activeTab === 'ledger' && 'Financial Revenue & ₹99 Activation Ledger'}
+                  {activeTab === 'ledger' && 'Financial Revenue & ₹299 Activation Ledger'}
                 </h1>
                 <p className="text-xs text-slate-500">
                   {activeTab === 'candidates' && 'Inspect student proof of work, view uploaded PDF resumes, and verify hired status'}
@@ -2755,7 +2755,7 @@ export default function SuperAdminSidebarPage() {
                 </h4>
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="font-bold text-slate-700">Activated & Discovery Ready (₹99 Paid)</span>
+                    <span className="font-bold text-slate-700">Activated & Discovery Ready (₹299 Paid)</span>
                     <span className="font-black text-slate-900">{students.filter((s) => s.isActivated).length}</span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
@@ -2788,7 +2788,7 @@ export default function SuperAdminSidebarPage() {
                     <span className="font-black text-slate-900">{recruiters.length}</span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="font-bold text-slate-700">Successful ₹99 Profile Activations</span>
+                    <span className="font-bold text-slate-700">Successful ₹299 Profile Activations</span>
                     <span className="font-black text-slate-900">{payments.length}</span>
                   </div>
                 </div>
@@ -3067,7 +3067,7 @@ export default function SuperAdminSidebarPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Candidate ₹99 activation receipts, gateway payment audit IDs, and ledger control
+                  Candidate ₹299 activation receipts, gateway payment audit IDs, and ledger control
                 </p>
               </div>
 
@@ -3595,7 +3595,7 @@ export default function SuperAdminSidebarPage() {
               >
                 <div>
                   <p className="font-extrabold text-slate-900 group-hover:text-emerald-950">
-                    3. ₹99 Revenue & Financial Ledger (.CSV)
+                    3. ₹299 Revenue & Financial Ledger (.CSV)
                   </p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
                     Razorpay order IDs, payment IDs, verification timestamps
