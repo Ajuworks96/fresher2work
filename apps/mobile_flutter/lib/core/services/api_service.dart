@@ -282,7 +282,7 @@ class ApiService {
   static Future<Map<String, dynamic>> verifyPayment({
     required String orderId,
     required String paymentId,
-    required String signature,
+    String? signature,
     String? candidateName,
     String? email,
     String? studentId,
@@ -291,9 +291,9 @@ class ApiService {
       Uri.parse('$baseUrl/payments/verify-payment'),
       headers: await _headers(),
       body: jsonEncode({
-        'orderId': orderId,
+        if (orderId.isNotEmpty) 'orderId': orderId,
         'paymentId': paymentId,
-        'signature': signature,
+        if (signature != null && signature.isNotEmpty) 'signature': signature,
         if (candidateName != null && candidateName.isNotEmpty) 'candidateName': candidateName,
         if (email != null && email.isNotEmpty) 'email': email,
         if (studentId != null && studentId.isNotEmpty) 'studentId': studentId,
