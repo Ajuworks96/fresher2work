@@ -80,6 +80,32 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: AppColors.blueBg, width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.bluePrimary.withValues(alpha: 0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(13),
+                  child: Image.asset(
+                    'assets/images/app_icon.png',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

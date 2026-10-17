@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.READ_SMS" tools:node="remove"/>
 
     <application
-        android:label="fresher2work_mobile"
+        android:label="Fresher2Work"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

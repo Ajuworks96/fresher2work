@@ -96,17 +96,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // Branded Logo / Icon
                 Container(
-                  width: 56,
-                  height: 56,
+                  width: 58,
+                  height: 58,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEFF6FF),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFFDBEAFE)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.blueBg, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.bluePrimary.withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
-                    Icons.work_outline_rounded,
-                    color: AppColors.bluePrimary,
-                    size: 26,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Image.asset(
+                      'assets/images/app_icon.png',
+                      width: 56,
+                      height: 56,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),

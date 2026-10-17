@@ -153,16 +153,16 @@ class _SplashScreenState extends State<SplashScreen>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // App Logo Icon inside soft blue circle
+                      // Official App Logo Icon
                       Container(
-                        width: 82,
-                        height: 82,
+                        width: 86,
+                        height: 86,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEFF6FF),
-                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(22),
                           border: Border.all(
-                            color: const Color(0xFFDBEAFE),
-                            width: 2,
+                            color: AppColors.blueBg,
+                            width: 1.5,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -172,11 +172,13 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ],
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.work_rounded,
-                            size: 40,
-                            color: AppColors.bluePrimary,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'assets/images/app_icon.png',
+                            width: 84,
+                            height: 84,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

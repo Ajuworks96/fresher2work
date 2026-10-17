@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Clean Crisp White & Soft Blue Backgrounds
+  // Clean Crisp White & Soft Brand Backgrounds
   static const Color scaffoldBg = Color(0xFFF8FAFC);
   static const Color cardBg = Color(0xFFFFFFFF);
-  static const Color cardBlue = Color(0xFFEFF6FF);
-  static const Color cardLightBlue = Color(0xFFF0F7FF);
+  static const Color cardBlue = Color(0xFFF0F7FB);
+  static const Color cardLightBlue = Color(0xFFDCEDF6);
 
-  // Royal / Electric Blue Brand Palette
-  static const Color bluePrimary = Color(0xFF2563EB); // #2563EB (Royal Blue)
-  static const Color blueAccent = Color(0xFF1D4ED8);  // #1D4ED8 (Deep Blue)
-  static const Color blueLight = Color(0xFF3B82F6);   // #3B82F6 (Electric Blue)
-  static const Color blueBg = Color(0xFFDBEAFE);      // #DBEAFE (Soft Blue Pill)
-  static const Color blueGradientStart = Color(0xFF3B82F6);
-  static const Color blueGradientEnd = Color(0xFF1D4ED8);
+  // Official Brand Palette: Navy #1f357c, Ocean #3e7aa7, Teal #4ad1c7
+  static const Color bluePrimary = Color(0xFF1F357C); // #1F357C (Deep Royal Navy Primary)
+  static const Color blueAccent = Color(0xFF192C67);  // #192C67 (Navy Dark Accent)
+  static const Color blueLight = Color(0xFF3E7AA7);   // #3E7AA7 (Ocean Blue Midtone)
+  static const Color blueBg = Color(0xFFDCEDF6);      // #DCEDF6 (Soft Brand Pill)
+  static const Color blueGradientStart = Color(0xFF1F357C);
+  static const Color blueGradientEnd = Color(0xFF3E7AA7);
+
+  // Brand Accents
+  static const Color brandNavy = Color(0xFF1F357C);
+  static const Color brandOcean = Color(0xFF3E7AA7);
+  static const Color brandTeal = Color(0xFF4AD1C7);
 
   // Dark Slate / Charcoal for contrast
   static const Color darkPill = Color(0xFF0F172A);
@@ -28,11 +33,11 @@ class AppColors {
   static const Color borderSubtle = Color(0xFFE2E8F0);
   static const Color borderLight = Color(0xFFCBD5E1);
 
-  // Status Colors
-  static const Color primaryGreen = Color(0xFF10B981);
-  static const Color success = Color(0xFF10B981);
-  static const Color successBg = Color(0xFFECFDF5);
-  static const Color successBorder = Color(0xFFA7F3D0);
+  // Status Colors (Success aligned with ocean/teal and navy)
+  static const Color primaryGreen = Color(0xFF3E7AA7);
+  static const Color success = Color(0xFF1F357C);
+  static const Color successBg = Color(0xFFF0F7FB);
+  static const Color successBorder = Color(0xFFB5CAF3);
 
   static const Color danger = Color(0xFFEF4444);
   static const Color dangerDark = Color(0xFFDC2626);

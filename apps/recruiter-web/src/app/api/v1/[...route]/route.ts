@@ -147,7 +147,7 @@ async function sendPasswordResetEmail(toEmail: string, otp: string, recipientNam
       <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'User'}</strong>,</p>
       <p style="color: #334155; font-size: 14px; line-height: 1.5;">We received a request to reset the password for your FresherToWork account. Please use the verification code below to set your new password:</p>
       <div style="text-align: center; margin: 28px 0;">
-        <span style="display: inline-block; background: #eff6ff; border: 2px dashed #2563eb; color: #1d4ed8; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
+        <span style="display: inline-block; background: #f0f7fb; border: 2px dashed #1f357c; color: #1f357c; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
       </div>
       <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">This code will expire in 10 minutes. If you did not request this password reset, your password remains unchanged and you can safely disregard this email.</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
