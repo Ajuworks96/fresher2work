@@ -2019,7 +2019,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildPolicyRowItem(
             icon: Icons.currency_rupee_rounded,
             title: 'Refund & Cancellation',
-            subtitle: '₹99 verification fee & refund criteria',
+            subtitle: '₹499 Discovery Pass fee & refund criteria',
             tab: LegalTab.refund,
           ),
           _buildPolicyRowItem(

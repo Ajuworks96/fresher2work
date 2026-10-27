@@ -264,7 +264,7 @@ class ApiService {
   }
 
   // ===========================================================================
-  // PAYMENTS & ₹99 ACTIVATION
+  // PAYMENTS & ₹499 ACTIVATION
   // ===========================================================================
 
   static Future<Map<String, dynamic>> createPaymentOrder() async {
