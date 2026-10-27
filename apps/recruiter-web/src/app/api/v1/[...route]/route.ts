@@ -407,9 +407,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         });
         if (rzpRes.ok) {
           const rzpData = await rzpRes.json();
-          // Filter out dummy/test payments: ONLY genuine captured payments for the ₹299 product (amount 29900 paise)
+          // Filter out dummy/test payments: ONLY genuine captured payments for the ₹499 product (amount 49900 paise, or existing ₹299)
           const items = (rzpData.items || []).filter(
-            (p: any) => p.status === 'captured' && Number(p.amount) === 29900 && !deletedPaymentIds.has(p.id)
+            (p: any) =>
+              p.status === 'captured' &&
+              (Number(p.amount) === 49900 || Number(p.amount) === 29900) &&
+              !deletedPaymentIds.has(p.id)
           );
           let syncRev = 0;
           platformData.payments = items.map((p: any) => {
@@ -428,13 +431,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
               resolvedName = 'Candidate';
             }
 
+            const is499 = Number(p.amount) === 49900;
             return {
               id: p.id,
               gatewayOrderId: p.order_id,
               razorpayOrderId: p.order_id,
               gatewayPaymentId: p.id,
               razorpayPaymentId: p.id,
-              product: 'Candidate Discovery Pass (₹299)',
+              product: is499 ? 'Candidate Discovery Pass (₹499)' : 'Candidate Discovery Pass (₹299)',
               productType: 'DISCOVERY_PASS',
               amountPaise: p.amount,
               currency: p.currency || 'INR',
@@ -462,20 +466,20 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         .filter(
           (p: any) =>
             p.status === 'SUCCESS' &&
-            (p.amountPaise === 29900 || p.amountPaise >= 29900) &&
+            (p.amountPaise === 49900 || p.amountPaise === 29900 || p.amountPaise >= 29900) &&
             !deletedPaymentIds.has(p.id) &&
             !deletedPaymentIds.has(p.gatewayPaymentId)
         )
         .map((p: any) => ({
           ...p,
-          product: p.product || 'Candidate Discovery Pass (₹299)',
+          product: p.product || (p.amountPaise === 49900 ? 'Candidate Discovery Pass (₹499)' : 'Candidate Discovery Pass (₹299)'),
           productType: p.productType || 'DISCOVERY_PASS',
         }));
       globalStore.__ftw_payments = platformData.payments;
       if (platformData.analytics?.metrics) {
         platformData.analytics.metrics.successfulPaymentsCount = platformData.payments.length;
         platformData.analytics.metrics.totalRevenueInRupees = platformData.payments.reduce(
-          (acc: number, p: any) => acc + Math.round((p.amountPaise || 29900) / 100),
+          (acc: number, p: any) => acc + Math.round((p.amountPaise || 49900) / 100),
           0
         );
       }
@@ -1338,7 +1342,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
           'Authorization': `Basic ${basicAuth}`,
         },
         body: JSON.stringify({
-          amount: 29900,
+          amount: 49900,
           currency: 'INR',
           receipt: `rcpt_${Date.now()}`,
           notes: {
@@ -1363,7 +1367,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     return NextResponse.json({
       success: true,
       orderId,
-      amount: 29900,
+      amount: 49900,
       currency: 'INR',
       keyId,
     });
@@ -1475,9 +1479,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     const studentDisplayName = candidateName || matchedStudent?.fullName || 'Candidate';
     const studentDisplayEmail = (targetEmail && targetEmail !== 'void@razorpay.com') ? targetEmail : matchedStudent?.email;
 
-    const paidAmountPaise = rzpPayData?.amount || 29900;
+    const paidAmountPaise = rzpPayData?.amount || 49900;
     const paidAmountRupees = Math.round(paidAmountPaise / 100);
 
+    const is499 = paidAmountPaise === 49900;
     const newPayment = {
       id: `pay-${Date.now()}`,
       gatewayOrderId: effectiveOrderId,
@@ -1493,7 +1498,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       candidateEmail: studentDisplayEmail,
       candidatePhone: targetPhone || matchedStudent.phone || '',
       method: (rzpPayData?.method || 'UPI').toUpperCase(),
-      product: 'Candidate Discovery Pass (₹299)',
+      product: is499 ? 'Candidate Discovery Pass (₹499)' : 'Candidate Discovery Pass (₹299)',
       productType: 'DISCOVERY_PASS',
       user: {
         id: matchedStudent.userId || matchedStudent.id || `user-${Date.now()}`,
@@ -1848,7 +1853,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
     );
     if (idx >= 0) {
       const removed = paymentsList.splice(idx, 1)[0];
-      const removedRupees = Math.round((removed?.amountPaise || 29900) / 100);
+      const removedRupees = Math.round((removed?.amountPaise || 49900) / 100);
       if (platformData.analytics?.metrics) {
         platformData.analytics.metrics.successfulPaymentsCount = Math.max(0, paymentsList.length);
         platformData.analytics.metrics.totalRevenueInRupees = Math.max(

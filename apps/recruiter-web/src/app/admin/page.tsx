@@ -385,7 +385,7 @@ export default function SuperAdminSidebarPage() {
 
       // Server response is the single source of truth for payment ledger (filter dummy test payments)
       const serverPayments: any[] = (resPayments.payments || []).filter(
-        (p: any) => p.status === 'SUCCESS' && (p.amountPaise === 29900 || p.amountPaise >= 29900)
+        (p: any) => p.status === 'SUCCESS' && (p.amountPaise === 49900 || p.amountPaise === 29900 || p.amountPaise >= 29900)
       );
       setPayments(serverPayments);
       try {
@@ -1091,7 +1091,7 @@ export default function SuperAdminSidebarPage() {
                     <span>Revenue & Ledger</span>
                   </div>
                   <span className="px-1.5 py-0.5 rounded-md bg-[#4ad1c7]/20 text-[10px] font-extrabold text-[#1f357c]">
-                    ₹299
+                    ₹499
                   </span>
                 </button>
               </nav>
@@ -2184,7 +2184,7 @@ export default function SuperAdminSidebarPage() {
                   {activeTab === 'placements' && 'Verified In-App Placements & Success Telemetry'}
                   {activeTab === 'dashboard' && 'Executive Platform Overview & Telemetry'}
                   {activeTab === 'recruiters' && 'Recruiter & Employer Partner Management'}
-                  {activeTab === 'ledger' && 'Financial Revenue & ₹299 Activation Ledger'}
+                  {activeTab === 'ledger' && 'Financial Revenue & ₹499 Activation Ledger'}
                 </h1>
                 <p className="text-xs text-slate-500">
                   {activeTab === 'candidates' && 'Inspect student proof of work, view uploaded PDF resumes, and verify hired status'}
@@ -2711,7 +2711,7 @@ export default function SuperAdminSidebarPage() {
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gross Platform Revenue</span>
                 <h3 className="text-3xl font-black text-slate-900">
-                  ₹{payments.reduce((acc, p) => acc + Math.round((p.amountPaise || 29900) / 100), 0) || analytics?.totalRevenueInRupees || 0}
+                  ₹{payments.reduce((acc, p) => acc + Math.round((p.amountPaise || 49900) / 100), 0) || analytics?.totalRevenueInRupees || 0}
                 </h3>
                 <p className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" /> 100% Verified Razorpay Transactions
@@ -2757,7 +2757,7 @@ export default function SuperAdminSidebarPage() {
                 </h4>
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="font-bold text-slate-700">Activated & Discovery Ready (₹299 Paid)</span>
+                    <span className="font-bold text-slate-700">Activated & Discovery Ready (₹499 Paid)</span>
                     <span className="font-black text-slate-900">{students.filter((s) => s.isActivated).length}</span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
@@ -2790,7 +2790,7 @@ export default function SuperAdminSidebarPage() {
                     <span className="font-black text-slate-900">{recruiters.length}</span>
                   </div>
                   <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="font-bold text-slate-700">Successful ₹299 Profile Activations</span>
+                    <span className="font-bold text-slate-700">Successful ₹499 Profile Activations</span>
                     <span className="font-black text-slate-900">{payments.length}</span>
                   </div>
                 </div>
@@ -3069,7 +3069,7 @@ export default function SuperAdminSidebarPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Candidate ₹299 activation receipts, gateway payment audit IDs, and ledger control
+                  Candidate ₹499 activation receipts, gateway payment audit IDs, and ledger control
                 </p>
               </div>
 
@@ -3100,7 +3100,7 @@ export default function SuperAdminSidebarPage() {
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <span className="text-[11px] font-bold text-slate-400 uppercase">Total Revenue Collected</span>
                 <p className="text-xl font-black text-emerald-600 mt-0.5">
-                  ₹{(payments.reduce((acc, p) => acc + (p.amountPaise || 29900), 0) / 100).toFixed(2)}
+                  ₹{(payments.reduce((acc, p) => acc + (p.amountPaise || 49900), 0) / 100).toFixed(2)}
                 </p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
@@ -3146,7 +3146,7 @@ export default function SuperAdminSidebarPage() {
                         const candidateName = p.user?.fullName || p.candidateName || 'Candidate';
                         const rzpOrder = p.razorpayOrderId || p.gatewayOrderId || '—';
                         const rzpPayment = p.razorpayPaymentId || p.gatewayPaymentId || '—';
-                        const amountInRupees = ((p.amountPaise || 29900) / 100).toFixed(2);
+                        const amountInRupees = ((p.amountPaise || 49900) / 100).toFixed(2);
 
                         return (
                           <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
@@ -3172,7 +3172,7 @@ export default function SuperAdminSidebarPage() {
                                   {p.product || 'Candidate Discovery Pass'}
                                 </span>
                                 <span className="text-[10px] text-slate-500 font-medium">
-                                  ₹299 Lifetime Activation & Discovery
+                                  ₹499 Lifetime Activation & Discovery
                                 </span>
                               </div>
                             </td>
@@ -3617,7 +3617,7 @@ export default function SuperAdminSidebarPage() {
               >
                 <div>
                   <p className="font-extrabold text-slate-900 group-hover:text-emerald-950">
-                    3. ₹299 Revenue & Financial Ledger (.CSV)
+                    3. ₹499 Revenue & Financial Ledger (.CSV)
                   </p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
                     Razorpay order IDs, payment IDs, verification timestamps

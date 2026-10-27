@@ -112,7 +112,7 @@ export default function DesignSystemGalleryPage() {
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant="brand" dot>Active Talent</Badge>
             <Badge variant="accent" dot>Recruiter Verified</Badge>
-            <Badge variant="success">Payment Verified (₹99)</Badge>
+            <Badge variant="success">Payment Verified (₹499)</Badge>
             <Badge variant="warning">Under Review</Badge>
             <Badge variant="error">Suspended</Badge>
             <Badge variant="neutral">Draft</Badge>
@@ -219,7 +219,7 @@ export default function DesignSystemGalleryPage() {
           <CandidateCardSkeleton />
           <div className="space-y-3">
             <AlertBanner type="success" title="Profile Activated!" message="Your profile has entered the active fresher talent discovery pool." />
-            <AlertBanner type="warning" title="Incomplete Profile" message="Reach at least 70% completeness to enable ₹99 profile activation." />
+            <AlertBanner type="warning" title="Incomplete Profile" message="Reach at least 70% completeness to enable ₹499 profile activation." />
             <AlertBanner type="error" title="Upload Failed" message="Only PDF documents up to 5MB are permitted." />
             <Button variant="secondary" onClick={() => setModalOpen(true)}>
               Open Interactive Modal Preview

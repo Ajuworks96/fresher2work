@@ -80,7 +80,7 @@ export default function MobilePreviewPage() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <span style={{ fontSize: '12px', color: '#94a3b8' }}>₹99 Activation:</span>
+            <span style={{ fontSize: '12px', color: '#94a3b8' }}>₹499 Activation:</span>
             <button
               onClick={() => setIsActivated(!isActivated)}
               style={{
@@ -94,7 +94,7 @@ export default function MobilePreviewPage() {
                 cursor: 'pointer'
               }}
             >
-              {isActivated ? 'Activated (Unlocked)' : 'Pending (₹99)'}
+              {isActivated ? 'Activated (Unlocked)' : 'Pending (₹499)'}
             </button>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default function MobilePreviewPage() {
               Mobile Candidate Experience & Proof-of-Work Engine
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.6, marginTop: '10px' }}>
-              Fresher candidates build their profile, link live GitHub proof-of-work repositories, pay the ₹99 one-time activation, and receive direct recruiter inquiries and verification alerts.
+              Fresher candidates build their profile, link live GitHub proof-of-work repositories, pay the ₹499 one-time activation, and receive direct recruiter inquiries and verification alerts.
             </p>
           </div>
 
@@ -189,7 +189,7 @@ export default function MobilePreviewPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Zap size={18} color="#f59e0b" />
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '14px' }}>3. ₹99 Discovery Activation</div>
+                  <div style={{ fontWeight: 700, fontSize: '14px' }}>3. ₹499 Discovery Activation</div>
                   <div style={{ fontSize: '12px', color: '#64748b' }}>One-time paywall to feature in recruiter pool</div>
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function MobilePreviewPage() {
                         <span style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '9999px' }}>
                           ⚡ 1-Time Activation
                         </span>
-                        <span style={{ fontSize: '16px', fontWeight: 800 }}>₹99</span>
+                        <span style={{ fontSize: '16px', fontWeight: 800 }}>₹499</span>
                       </div>
                       <h4 style={{ fontSize: '15px', fontWeight: 800, margin: '8px 0 4px 0' }}>Get Discovered by Top Recruiters</h4>
                       <p style={{ fontSize: '12px', opacity: 0.9, lineHeight: 1.4, margin: 0 }}>
@@ -485,15 +485,15 @@ export default function MobilePreviewPage() {
                       <Zap size={28} />
                     </div>
                     <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', margin: 0 }}>Candidate Discovery Pass</h2>
-                    <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px' }}>1-Time ₹99 Activation • Lifetime Validity</p>
+                    <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px' }}>1-Time ₹499 Activation • Lifetime Validity</p>
                   </div>
 
                   <div style={{ background: '#ffffff', borderRadius: '18px', border: '2px solid #e0e7ff', padding: '18px', boxShadow: '0 4px 20px rgba(79, 70, 229, 0.08)' }}>
                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
                       <span style={{ fontSize: '14px', fontWeight: 700, color: '#334155' }}>One-time fee</span>
                       <div>
-                        <span style={{ fontSize: '28px', fontWeight: 900, color: '#4f46e5' }}>₹99</span>
-                        <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', marginLeft: '6px' }}>₹499</span>
+                        <span style={{ fontSize: '28px', fontWeight: 900, color: '#4f46e5' }}>₹499</span>
+                        <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', marginLeft: '6px' }}>₹999</span>
                       </div>
                     </div>
 
@@ -538,7 +538,7 @@ export default function MobilePreviewPage() {
                         </>
                       ) : (
                         <>
-                          Pay ₹99 via Razorpay / UPI →
+                          Pay ₹499 via Razorpay / UPI →
                         </>
                       )}
                     </button>
@@ -682,7 +682,7 @@ export default function MobilePreviewPage() {
                 style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', cursor: 'pointer', color: activeTab === 'activation' ? '#f59e0b' : '#94a3b8' }}
               >
                 <Zap size={20} />
-                <span style={{ fontSize: '10px', fontWeight: activeTab === 'activation' ? 700 : 500 }}>₹99 Pass</span>
+                <span style={{ fontSize: '10px', fontWeight: activeTab === 'activation' ? 700 : 500 }}>₹499 Pass</span>
               </button>
 
               <button

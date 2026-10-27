@@ -114,7 +114,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Please wait while we confirm your ₹299 payment with Razorpay and activate your Discovery Pass.',
+                'Please wait while we confirm your ₹499 payment with Razorpay and activate your Discovery Pass.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
@@ -180,7 +180,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Color(0xFF10B981),
-              content: Text('✓ ₹299 Discovery Pass Activated! Verified by Razorpay & Admin.'),
+              content: Text('✓ ₹499 Discovery Pass Activated! Verified by Razorpay & Admin.'),
             ),
           );
 
@@ -232,14 +232,14 @@ class _ActivationScreenState extends State<ActivationScreen> {
       final orderId = order['orderId'] as String;
       _currentOrderId = orderId;
       final keyId = (order['keyId'] as String?) ?? 'rzp_test_TchOu7JRRpZS37';
-      final amount = order['amount'] ?? 29900;
+      final amount = order['amount'] ?? 49900;
       final profile = order['profile'] as Map<String, dynamic>?;
 
       var options = {
         'key': keyId,
         'amount': amount,
         'name': 'FresherToWork',
-        'description': 'Direct HR Matching - ₹299 Discovery Pass',
+        'description': 'Direct HR Matching - ₹499 Discovery Pass',
         'order_id': orderId,
         'timeout': 300,
         'prefill': {
@@ -340,7 +340,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
               Text(
                 _isActivated
                     ? 'Admin Verified • Direct HR Discovery Active'
-                    : '1-Time ₹299 Activation • Lifetime Talent Passport & HR Discovery',
+                    : '1-Time ₹499 Activation • Lifetime Talent Passport & HR Discovery',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   color: _isActivated ? const Color(0xFF047857) : AppColors.textMuted,
@@ -466,7 +466,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                           Row(
                             children: [
                               Text(
-                                '₹299',
+                                '₹499',
                                 style: GoogleFonts.plusJakartaSans(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.bluePrimary),
                               ),
                               const SizedBox(width: 8),
@@ -512,7 +512,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                           child: _processing
                               ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                               : Text(
-                                  'Pay ₹299 via UPI / Razorpay →',
+                                  'Pay ₹499 via UPI / Razorpay →',
                                   style: GoogleFonts.plusJakartaSans(fontSize: 14.5, fontWeight: FontWeight.w800),
                                 ),
                         ),

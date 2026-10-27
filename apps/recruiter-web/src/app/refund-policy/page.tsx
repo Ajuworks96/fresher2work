@@ -48,7 +48,7 @@ export default function RefundPolicyPage() {
             Refund & Cancellation Policy
           </h1>
           <p className="mt-3 text-sm text-slate-600 sm:text-base max-w-2xl mx-auto">
-            Transparent and fair guidelines regarding the candidate profile verification fee (₹299) and employer services
+            Transparent and fair guidelines regarding the candidate profile verification fee (₹499) and employer services
           </p>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function RefundPolicyPage() {
               <h2 className="text-xl font-bold">1. Purpose & Scope of Fee</h2>
             </div>
             <p className="mt-4">
-              At <strong>FresherToWork</strong> (operated by <strong>Velvetbyte PVT Ltd</strong>), we believe in 100% transparency. Candidates pay a one-time, nominal profile verification & discovery pass fee of <strong>₹299 (inclusive of GST)</strong>.
+              At <strong>FresherToWork</strong> (operated by <strong>Velvetbyte PVT Ltd</strong>), we believe in 100% transparency. Candidates pay a one-time, nominal profile verification & discovery pass fee of <strong>₹499 (inclusive of GST)</strong>.
             </p>
             <p className="mt-3">
               This one-time fee directly offsets manual human engineering review, project repository auditing, fraud prevention, server cloud costs, and direct matching with registered corporate HR recruiters.
@@ -82,7 +82,7 @@ export default function RefundPolicyPage() {
               <h2 className="text-xl font-bold">2. Circumstances Eligible for a Full Refund</h2>
             </div>
             <p className="mt-4">
-              You are entitled to a full 100% refund of your ₹299 payment under any of the following circumstances:
+              You are entitled to a full 100% refund of your ₹499 payment under any of the following circumstances:
             </p>
             <ul className="mt-4 space-y-3">
               <li className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
