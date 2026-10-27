@@ -2,6 +2,7 @@
 apps/mobile_flutter
 apps/mobile
 *.apk
+!apps/recruiter-web/public/Fresher2Work.apk
 node_modules
 .git
 .turbo
