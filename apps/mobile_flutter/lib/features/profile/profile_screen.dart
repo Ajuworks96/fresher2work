@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '_');
   }
 
-  String get _talentPassportUrl => 'https://freshertowork.com/u/${_getUsername()}';
+  String get _talentPassportUrl => 'https://fresher2work.com/u/${_getUsername()}';
 
   int _calculateProfileStrength() {
     int score = 0;
@@ -430,7 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ? _candidateFullName.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-')
         : 'profile';
     Clipboard.setData(ClipboardData(
-        text: 'https://recruiter-web-ajuworks96s-projects.vercel.app/p/$slug'));
+        text: 'https://fresher2work.com/p/$slug'));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: AppColors.bluePrimary,
@@ -808,8 +808,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 42,
-                              height: 42,
+                              width: 38,
+                              height: 38,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -821,9 +821,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               child: IconButton(
+                                padding: EdgeInsets.zero,
                                 icon: const Icon(
                                   Icons.sync_rounded,
-                                  size: 20,
+                                  size: 18,
                                   color: AppColors.bluePrimary,
                                 ),
                                 tooltip: 'Sync Status',
@@ -844,10 +845,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Container(
-                              width: 42,
-                              height: 42,
+                              width: 38,
+                              height: 38,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -859,9 +860,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               child: IconButton(
+                                padding: EdgeInsets.zero,
                                 icon: const Icon(
                                   Icons.shield_outlined,
-                                  size: 19,
+                                  size: 18,
                                   color: AppColors.bluePrimary,
                                 ),
                                 tooltip: 'Legal & Policies',
@@ -874,10 +876,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Container(
-                              width: 42,
-                              height: 42,
+                              width: 38,
+                              height: 38,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -889,18 +891,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               child: IconButton(
+                                padding: EdgeInsets.zero,
                                 icon: const Icon(
                                   Icons.share_outlined,
-                                  size: 19,
+                                  size: 18,
                                   color: AppColors.textDark,
                                 ),
+                                tooltip: 'Share Pitch Link',
                                 onPressed: _copyPitchLink,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Container(
-                              width: 42,
-                              height: 42,
+                              width: 38,
+                              height: 38,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -912,11 +916,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               child: IconButton(
+                                padding: EdgeInsets.zero,
                                 icon: const Icon(
                                   Icons.logout_rounded,
-                                  size: 19,
+                                  size: 18,
                                   color: AppColors.danger,
                                 ),
+                                tooltip: 'Logout',
                                 onPressed: _handleLogout,
                               ),
                             ),
@@ -1015,7 +1021,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
 
-            const SizedBox(height: 52),
+            const SizedBox(height: 60),
 
             // 2. Profile Details & Controls
             Padding(
@@ -1208,7 +1214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Legal, Trust & Policies Card
                   _buildLegalPoliciesCard(),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
@@ -2303,7 +2309,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'FRESHERTOWORK TALENT PASSPORT',
+                      'FRESHER2WORK TALENT PASSPORT',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 10.5,
                         fontWeight: FontWeight.w900,

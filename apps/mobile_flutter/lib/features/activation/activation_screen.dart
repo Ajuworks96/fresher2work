@@ -486,7 +486,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                       const Divider(height: 1, color: AppColors.borderSubtle),
                       const SizedBox(height: 18),
 
-                      _buildBenefitRow('Verified Talent Passport & Public URL (freshertowork.com/u/you)'),
+                      _buildBenefitRow('Verified Talent Passport & Public URL (fresher2work.com/u/you)'),
                       const SizedBox(height: 12),
                       _buildBenefitRow('Direct recruiter WhatsApp & Email inquiries'),
                       const SizedBox(height: 12),

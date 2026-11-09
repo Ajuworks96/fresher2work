@@ -97,30 +97,33 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBg,
         body: screens[_currentIndex],
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
-          color: AppColors.scaffoldBg,
+        bottomNavigationBar: SafeArea(
+          top: false,
           child: Container(
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: AppColors.borderSubtle),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Home'),
-                _buildNavItem(1, Icons.folder_special_rounded, Icons.folder_special_outlined, 'Proof Hub'),
-                _buildNavItem(2, Icons.person_rounded, Icons.person_outline_rounded, 'Profile'),
-              ],
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+            color: AppColors.scaffoldBg,
+            child: Container(
+              height: 64,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(color: AppColors.borderSubtle),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Home'),
+                  _buildNavItem(1, Icons.folder_special_rounded, Icons.folder_special_outlined, 'Proof Hub'),
+                  _buildNavItem(2, Icons.person_rounded, Icons.person_outline_rounded, 'Profile'),
+                ],
+              ),
             ),
           ),
         ),

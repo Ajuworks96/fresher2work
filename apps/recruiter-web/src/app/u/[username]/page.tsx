@@ -49,7 +49,7 @@ export default function TalentPassportPage() {
     fetchPassport();
   }, [username]);
 
-  const passportUrl = typeof window !== 'undefined' ? window.location.href : `https://freshertowork.com/u/${username}`;
+  const passportUrl = typeof window !== 'undefined' ? window.location.href : `https://fresher2work.com/u/${username}`;
 
   const handleCopyLink = () => {
     if (navigator?.clipboard) {
@@ -309,7 +309,7 @@ export default function TalentPassportPage() {
           <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
               <Globe className="w-3.5 h-3.5 text-[#4ad1c7]" />
-              <span>freshertowork.com/u/<strong className="text-white">{username}</strong></span>
+              <span>fresher2work.com/u/<strong className="text-white">{username}</strong></span>
             </div>
 
             <div className="flex items-center gap-2.5 w-full sm:w-auto">

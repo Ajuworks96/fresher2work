@@ -312,46 +312,8 @@ export default function RecruiterPortalPage() {
               </button>
             </form>
 
-            {/* QUICK AUTOFILL CREDENTIALS FOR TESTING / DEMO */}
-            <div className="pt-3 border-t border-slate-100 space-y-2.5">
-              <div className="flex items-center justify-between text-[11px] text-slate-500">
-                <span className="font-semibold flex items-center gap-1 text-slate-700">
-                  <Sparkles className="w-3.5 h-3.5 text-[#3e7aa7]" /> Quick Demo Recruiter Accounts:
-                </span>
-                <span className="text-[10px] text-[#1f357c] font-bold">1-Click Fill</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                <button
-                  type="button"
-                  onClick={() => handleAutofillRecruiter('arjunworks96@gmail.com', 'Recruiter@123')}
-                  className="p-2.5 rounded-xl bg-slate-50 hover:bg-[#1f357c]/5 border border-slate-200 hover:border-[#3e7aa7]/50 text-left transition-all group cursor-pointer"
-                >
-                  <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
-                    <span>Arjun (CEO)</span>
-                    <span className="text-[9px] text-[#1f357c] bg-[#1f357c]/10 px-1.5 py-0.2 rounded font-mono font-bold border border-[#3e7aa7]/30">Active</span>
-                  </div>
-                  <div className="text-[10px] text-slate-500 truncate mt-0.5">arjunworks96@gmail.com</div>
-                  <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleAutofillRecruiter('recruiter@freshertowork.com', 'Recruiter@123')}
-                  className="p-2.5 rounded-xl bg-slate-50 hover:bg-[#1f357c]/5 border border-slate-200 hover:border-[#3e7aa7]/50 text-left transition-all group cursor-pointer"
-                >
-                  <div className="font-bold text-slate-900 group-hover:text-[#1f357c] transition-colors flex items-center justify-between">
-                    <span>Lead Partner</span>
-                    <span className="text-[9px] text-[#1f357c] bg-[#1f357c]/10 px-1.5 py-0.2 rounded font-mono font-bold border border-[#3e7aa7]/30">Active</span>
-                  </div>
-                  <div className="text-[10px] text-slate-500 truncate mt-0.5">recruiter@freshertowork.com</div>
-                  <div className="text-[9px] text-slate-400 font-mono mt-0.5">Pass: Recruiter@123</div>
-                </button>
-              </div>
-            </div>
-
             {/* Footer Links & Registration */}
-            <div className="pt-2 flex flex-col gap-2.5 text-[11px] text-slate-500">
+            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5 text-[11px] text-slate-500">
               <div className="flex items-center justify-between">
                 <span>New employer or hiring manager?</span>
                 <Link href="/register" className="text-[#1f357c] hover:underline font-bold transition-colors">

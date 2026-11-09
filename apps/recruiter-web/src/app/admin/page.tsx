@@ -901,7 +901,7 @@ export default function SuperAdminSidebarPage() {
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 font-medium focus:bg-white focus:border-[#3e7aa7] focus:outline-none focus:ring-2 focus:ring-[#3e7aa7]/15"
-                  placeholder="admin@freshertowork.com"
+                  placeholder="admin@fresher2work.com"
                   required
                 />
               </div>
@@ -940,21 +940,6 @@ export default function SuperAdminSidebarPage() {
               )}
             </button>
           </form>
-
-          {/* Quick Demo Credentials */}
-          <div className="pt-3 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => {
-                setAdminEmail('admin@freshertowork.com');
-                setAdminPassword('SuperAdmin@Pass2026#');
-              }}
-              className="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-600 hover:text-emerald-800 text-xs font-medium transition-all flex items-center justify-between cursor-pointer"
-            >
-              <span className="font-semibold">Quick-fill Admin: admin@freshertowork.com</span>
-              <span className="text-[10px] text-emerald-600 font-mono">1-Click</span>
-            </button>
-          </div>
 
           <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400">
             <span className="flex items-center gap-1 font-medium">

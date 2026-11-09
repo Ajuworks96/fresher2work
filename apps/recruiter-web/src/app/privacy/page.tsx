@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-xl font-bold">1. Introduction & Operating Entity</h2>
             </div>
             <p className="mt-4">
-              Welcome to <strong>FresherToWork</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;FresherToWork&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-[#1f357c]">freshertowork.com</span> and <span className="font-semibold text-[#1f357c]">recruiter-web-lac.vercel.app</span>).
+              Welcome to <strong>FresherToWork</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;FresherToWork&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-[#1f357c]">fresher2work.com</span>).
             </p>
             <p className="mt-3">
               This Privacy Policy explains what personal information we collect, why we collect it, how it is processed and secured, and your explicit rights under the law. By registering or using FresherToWork, you consent to the transparent practices described herein.

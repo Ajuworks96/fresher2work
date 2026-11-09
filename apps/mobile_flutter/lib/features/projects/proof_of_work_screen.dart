@@ -477,7 +477,7 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                         title: config.fileUploadTitle,
                         hint: config.fileUploadHint,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 100),
                     ],
                   );
                 }(),
@@ -765,7 +765,7 @@ class _ProofOfWorkScreenState extends State<ProofOfWorkScreen> {
                       return _buildProofCard(proof, index);
                     }),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 100),
                 ],
               ),
       ),
