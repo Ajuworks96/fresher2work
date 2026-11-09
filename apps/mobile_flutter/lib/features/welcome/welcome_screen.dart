@@ -123,7 +123,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const SizedBox(height: 16),
 
                 Text(
-                  'Join FresherToWork',
+                  'Join Fresher2Work',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,

@@ -5,16 +5,16 @@ import 'features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const FresherToWorkApp());
+  runApp(const Fresher2WorkApp());
 }
 
-class FresherToWorkApp extends StatelessWidget {
-  const FresherToWorkApp({super.key});
+class Fresher2WorkApp extends StatelessWidget {
+  const Fresher2WorkApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FresherToWork',
+      title: 'Fresher2Work',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

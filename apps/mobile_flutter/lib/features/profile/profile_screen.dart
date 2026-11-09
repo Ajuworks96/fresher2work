@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _shareTalentPassport() async {
     final url = _talentPassportUrl;
-    final text = 'Check out my verified Talent Passport on FresherToWork: $url';
+    final text = 'Check out my verified Talent Passport on Fresher2Work: $url';
     await Clipboard.setData(ClipboardData(text: url));
     final waUri = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(text)}');
     try {

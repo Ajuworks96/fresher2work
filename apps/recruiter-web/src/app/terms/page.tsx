@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Scale, CheckCircle2, AlertTriangle, Briefcase, UserCheck, Shield, Mail, ArrowLeft, ArrowUpRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Terms & Conditions | FresherToWork',
-  description: 'Terms and Conditions governing the use of FresherToWork for candidates, recruiters, and hiring organizations.',
+  title: 'Terms & Conditions | Fresher2Work',
+  description: 'Terms and Conditions governing the use of Fresher2Work for candidates, recruiters, and hiring organizations.',
 };
 
 export default function TermsOfServicePage() {
@@ -66,7 +66,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-xl font-bold">1. Agreement to Terms</h2>
             </div>
             <p className="mt-4">
-              These Terms & Conditions constitute a legally binding agreement between you (&quot;User&quot;, &quot;Candidate&quot;, or &quot;Recruiter&quot;) and <strong>Velvetbyte PVT Ltd</strong>, operating <strong>FresherToWork</strong> (&quot;Platform&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By creating an account, browsing candidate projects, making payments, or accessing any part of our service, you agree to comply with and be bound by these Terms.
+              These Terms & Conditions constitute a legally binding agreement between you (&quot;User&quot;, &quot;Candidate&quot;, or &quot;Recruiter&quot;) and <strong>Velvetbyte PVT Ltd</strong>, operating <strong>Fresher2Work</strong> (&quot;Platform&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By creating an account, browsing candidate projects, making payments, or accessing any part of our service, you agree to comply with and be bound by these Terms.
             </p>
             <p className="mt-3">
               If you do not agree with any part of these Terms, you must immediately discontinue using our applications and web portals.
@@ -82,12 +82,12 @@ export default function TermsOfServicePage() {
               <h2 className="text-xl font-bold">2. Nature of Service & Proof-of-Work Model</h2>
             </div>
             <p className="mt-4">
-              FresherToWork is a curated talent discovery platform designed to solve the entry-level hiring mismatch in India by showcasing authentic proof-of-work (code repositories, design prototypes, live web apps, product analysis) rather than unverified resumes.
+              Fresher2Work is a curated talent discovery platform designed to solve the entry-level hiring mismatch in India by showcasing authentic proof-of-work (code repositories, design prototypes, live web apps, product analysis) rather than unverified resumes.
             </p>
             <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50/50 p-4 text-slate-700">
               <p className="font-semibold text-blue-950">Important Clarification on Employment:</p>
               <p className="mt-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                FresherToWork connects job seekers with corporate recruiters. While we vigorously vet candidate proof-of-work and verify recruiter identities, we do not guarantee employment, interview invitations, or specific salary compensation. Final hiring decisions rest entirely with prospective employers.
+                Fresher2Work connects job seekers with corporate recruiters. While we vigorously vet candidate proof-of-work and verify recruiter identities, we do not guarantee employment, interview invitations, or specific salary compensation. Final hiring decisions rest entirely with prospective employers.
               </p>
             </div>
           </section>
@@ -152,7 +152,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-xl font-bold">5. Intellectual Property Rights</h2>
             </div>
             <p className="mt-4">
-              Candidates retain 100% full intellectual property ownership of the source code, design assets, and projects they link or upload. By submitting projects to FresherToWork, candidates grant us a non-exclusive license to showcase previews, screenshots, and summaries solely for the purpose of connecting them with prospective employers.
+              Candidates retain 100% full intellectual property ownership of the source code, design assets, and projects they link or upload. By submitting projects to Fresher2Work, candidates grant us a non-exclusive license to showcase previews, screenshots, and summaries solely for the purpose of connecting them with prospective employers.
             </p>
           </section>
 
@@ -194,7 +194,7 @@ export default function TermsOfServicePage() {
               If you have any questions or require legal clarification regarding these Terms of Service, please contact our administrative team:
             </p>
             <div className="mt-4 rounded-xl border border-[#3e7aa7]/20 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
-              <p><strong className="text-slate-950">Legal Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
+              <p><strong className="text-slate-950">Legal Entity:</strong> Velvetbyte PVT Ltd / Fresher2Work</p>
               <p><strong className="text-slate-950">Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] hover:underline font-semibold">infovelvetbyte@gmail.com</a></p>
               <p><strong className="text-slate-950">Helpline:</strong> <a href="tel:+918921658090" className="text-[#1f357c] hover:underline font-semibold">+91 8921658090</a></p>
               <p><strong className="text-slate-950">Locations:</strong> Calicut and Kochi, Kerala, India</p>

@@ -800,7 +800,7 @@ export default function ShortlistsPage() {
             </div>
 
             <div className="bg-[#1f357c]/5 rounded-2xl p-3.5 border border-[#3e7aa7]/30 text-xs text-[#1f357c] leading-relaxed font-medium">
-              💡 <strong>Instant Global Placement:</strong> Recording this placement marks the candidate as <strong>HIRED</strong> across FresherToWork for all recruiters and admins.
+              💡 <strong>Instant Global Placement:</strong> Recording this placement marks the candidate as <strong>HIRED</strong> across Fresher2Work for all recruiters and admins.
             </div>
 
             {hireError && (
@@ -922,7 +922,7 @@ export default function ShortlistsPage() {
                 Platform Placement Privacy Policy
               </p>
               <p className="text-[11px] text-amber-800">
-                To protect candidate exclusivity and corporate hiring agreements, once a talent is hired through FresherToWork, their full profile, project portfolios, original CV, and direct contact details are <strong>strictly accessible only to the employer who hired them and the Super Admin</strong>.
+                To protect candidate exclusivity and corporate hiring agreements, once a talent is hired through Fresher2Work, their full profile, project portfolios, original CV, and direct contact details are <strong>strictly accessible only to the employer who hired them and the Super Admin</strong>.
               </p>
             </div>
 

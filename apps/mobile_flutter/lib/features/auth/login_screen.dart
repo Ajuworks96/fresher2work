@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: Border.all(color: AppColors.blueBg),
                 ),
                 child: Text(
-                  'FresherToWork • Proof of Work Platform',
+                  'Fresher2Work • Proof of Work Platform',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
@@ -287,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'New to FresherToWork? ',
+                    'New to Fresher2Work? ',
                     style: GoogleFonts.plusJakartaSans(fontSize: 14, color: AppColors.textMuted),
                   ),
                   GestureDetector(

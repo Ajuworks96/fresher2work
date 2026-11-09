@@ -77,7 +77,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: AppColors.success,
-            content: Text('Account verified successfully! Welcome to FresherToWork.'),
+            content: Text('Account verified successfully! Welcome to Fresher2Work.'),
           ),
         );
 

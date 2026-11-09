@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Shield, Lock, Eye, FileText, Database, UserCheck, Mail, ArrowLeft, CheckCircle2, ChevronRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Privacy Policy | FresherToWork',
-  description: 'Learn how FresherToWork collects, uses, and protects candidate and recruiter personal data in compliance with India DPDP Act 2023.',
+  title: 'Privacy Policy | Fresher2Work',
+  description: 'Learn how Fresher2Work collects, uses, and protects candidate and recruiter personal data in compliance with India DPDP Act 2023.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -66,10 +66,10 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-xl font-bold">1. Introduction & Operating Entity</h2>
             </div>
             <p className="mt-4">
-              Welcome to <strong>FresherToWork</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;FresherToWork&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-[#1f357c]">fresher2work.com</span>).
+              Welcome to <strong>Fresher2Work</strong>, operated by <strong>Velvetbyte PVT Ltd</strong> (&quot;Fresher2Work&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). We respect your personal privacy and are deeply committed to protecting the confidential data of both aspiring candidates and corporate recruiters using our mobile application and web portals (located at <span className="font-semibold text-[#1f357c]">fresher2work.com</span>).
             </p>
             <p className="mt-3">
-              This Privacy Policy explains what personal information we collect, why we collect it, how it is processed and secured, and your explicit rights under the law. By registering or using FresherToWork, you consent to the transparent practices described herein.
+              This Privacy Policy explains what personal information we collect, why we collect it, how it is processed and secured, and your explicit rights under the law. By registering or using Fresher2Work, you consent to the transparent practices described herein.
             </p>
           </section>
 
@@ -173,7 +173,7 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-xl font-bold">5. Your Legal Rights & Data Erasure (DPDP Act)</h2>
             </div>
             <p className="mt-4">
-              Under India&apos;s DPDP Act 2023, you have full ownership over your digital footprint on FresherToWork:
+              Under India&apos;s DPDP Act 2023, you have full ownership over your digital footprint on Fresher2Work:
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-700">
               <li><strong>Right of Access & Correction:</strong> View and update your profile, projects, resumes, and portfolio links at any moment via the mobile application.</li>
@@ -194,7 +194,7 @@ export default function PrivacyPolicyPage() {
               For any privacy inquiries, data deletion requests, or DPDP compliance concerns, you can directly reach our officer:
             </p>
             <div className="mt-4 rounded-xl border border-[#3e7aa7]/20 bg-white p-5 text-sm text-slate-700 shadow-sm space-y-2">
-              <p><strong className="text-slate-950">Corporate Entity:</strong> Velvetbyte PVT Ltd / FresherToWork</p>
+              <p><strong className="text-slate-950">Corporate Entity:</strong> Velvetbyte PVT Ltd / Fresher2Work</p>
               <p><strong className="text-slate-950">Official Email:</strong> <a href="mailto:infovelvetbyte@gmail.com" className="text-[#1f357c] hover:underline font-semibold">infovelvetbyte@gmail.com</a></p>
               <p><strong className="text-slate-950">Helpline Phone:</strong> <a href="tel:+918921658090" className="text-[#1f357c] hover:underline font-semibold">+91 8921658090</a></p>
               <p><strong className="text-slate-950">Operating Locations:</strong> Calicut and Kochi, Kerala, India</p>

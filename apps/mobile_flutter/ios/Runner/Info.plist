@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Fresher2work Mobile</string>
+	<string>Fresher2Work</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -65,6 +65,28 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+
+	<!-- App Permissions -->
+	<key>NSCameraUsageDescription</key>
+	<string>Fresher2Work requires camera access to record your video elevator pitch and capture profile pictures.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Fresher2Work requires microphone access to record audio for your video elevator pitch.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Fresher2Work requires access to your photo library to select profile photos and proof-of-work project screenshots.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+
+	<!-- URL Schemes for External Apps & Payments -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>tez</string>
+		<string>phonepe</string>
+		<string>paytmmp</string>
 	</array>
 </dict>
 </plist>

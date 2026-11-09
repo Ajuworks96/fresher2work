@@ -13,7 +13,7 @@ import 'package:fresher2work_mobile/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const FresherToWorkApp());
+    await tester.pumpWidget(const Fresher2WorkApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -78,17 +78,17 @@ async function sendVerificationEmail(toEmail: string, otp: string, recipientName
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
       <div style="text-align: center; margin-bottom: 24px;">
-        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">ToWork</span></h2>
+        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">2Work</span></h2>
         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Candidate Account Verification</p>
       </div>
       <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'Candidate'}</strong>,</p>
-      <p style="color: #334155; font-size: 14px; line-height: 1.5;">Welcome to FresherToWork. Please enter the 4-digit verification code below to verify your email address and activate your portfolio:</p>
+      <p style="color: #334155; font-size: 14px; line-height: 1.5;">Welcome to Fresher2Work. Please enter the 4-digit verification code below to verify your email address and activate your portfolio:</p>
       <div style="text-align: center; margin: 28px 0;">
         <span style="display: inline-block; background: #f0f7fb; border: 2px dashed #1f357c; color: #1f357c; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
       </div>
       <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-      <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">© 2026 FresherToWork Inc. Empowering graduates into real careers.</p>
+      <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">© 2026 Fresher2Work Inc. Empowering graduates into real careers.</p>
     </div>
   `;
 
@@ -96,9 +96,9 @@ async function sendVerificationEmail(toEmail: string, otp: string, recipientName
   try {
     const fromUser = process.env.GMAIL_USER || 'infovelvetbyte@gmail.com';
     await gmailTransporter.sendMail({
-      from: `"FresherToWork" <${fromUser}>`,
+      from: `"Fresher2Work" <${fromUser}>`,
       to: toEmail,
-      subject: `${otp} is your FresherToWork verification code`,
+      subject: `${otp} is your Fresher2Work verification code`,
       html: htmlContent,
     });
     console.log(`[Email Success] Verification OTP ${otp} sent to ${toEmail} via Gmail SMTP`);
@@ -118,9 +118,9 @@ async function sendVerificationEmail(toEmail: string, otp: string, recipientName
           Authorization: `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: 'FresherToWork <onboarding@resend.dev>',
+          from: 'Fresher2Work <onboarding@resend.dev>',
           to: [toEmail],
-          subject: `${otp} is your FresherToWork verification code`,
+          subject: `${otp} is your Fresher2Work verification code`,
           html: htmlContent,
         }),
       });
@@ -141,17 +141,17 @@ async function sendPasswordResetEmail(toEmail: string, otp: string, recipientNam
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
       <div style="text-align: center; margin-bottom: 24px;">
-        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">ToWork</span></h2>
+        <h2 style="color: #1f357c; margin: 0; font-size: 24px; font-weight: 800;">Fresher<span style="color: #3e7aa7;">2Work</span></h2>
         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Password Reset Request</p>
       </div>
       <p style="color: #334155; font-size: 15px; line-height: 1.5;">Hi <strong>${recipientName || 'User'}</strong>,</p>
-      <p style="color: #334155; font-size: 14px; line-height: 1.5;">We received a request to reset the password for your FresherToWork account. Please use the verification code below to set your new password:</p>
+      <p style="color: #334155; font-size: 14px; line-height: 1.5;">We received a request to reset the password for your Fresher2Work account. Please use the verification code below to set your new password:</p>
       <div style="text-align: center; margin: 28px 0;">
         <span style="display: inline-block; background: #f0f7fb; border: 2px dashed #1f357c; color: #1f357c; font-size: 32px; font-weight: 900; letter-spacing: 10px; padding: 14px 24px; border-radius: 12px;">${otp}</span>
       </div>
       <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">This code will expire in 10 minutes. If you did not request this password reset, your password remains unchanged and you can safely disregard this email.</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-      <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">© 2026 FresherToWork Inc. Secure Talent Platform.</p>
+      <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">© 2026 Fresher2Work Inc. Secure Talent Platform.</p>
     </div>
   `;
 
@@ -159,9 +159,9 @@ async function sendPasswordResetEmail(toEmail: string, otp: string, recipientNam
   try {
     const fromUser = process.env.GMAIL_USER || 'infovelvetbyte@gmail.com';
     await gmailTransporter.sendMail({
-      from: `"FresherToWork Support" <${fromUser}>`,
+      from: `"Fresher2Work Support" <${fromUser}>`,
       to: toEmail,
-      subject: `${otp} is your FresherToWork password reset code`,
+      subject: `${otp} is your Fresher2Work password reset code`,
       html: htmlContent,
     });
     console.log(`[Email Success] Password reset OTP ${otp} sent to ${toEmail} via Gmail SMTP`);
@@ -181,9 +181,9 @@ async function sendPasswordResetEmail(toEmail: string, otp: string, recipientNam
           Authorization: `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: 'FresherToWork <onboarding@resend.dev>',
+          from: 'Fresher2Work <onboarding@resend.dev>',
           to: [toEmail],
-          subject: `${otp} is your FresherToWork password reset code`,
+          subject: `${otp} is your Fresher2Work password reset code`,
           html: htmlContent,
         }),
       });
@@ -237,7 +237,7 @@ function getAuthUser(req: NextRequest): { id: string; email: string; role: strin
   if (!authHeader.startsWith('Bearer ')) return null;
   const token = authHeader.replace('Bearer ', '').trim();
   if (token.includes('admin') || token.includes('superadmin')) {
-    return { id: 'c8446f3a-f798-433b-9938-c8439fab1c2a', email: 'superadmin@freshertowork.com', role: 'ADMIN' };
+    return { id: 'c8446f3a-f798-433b-9938-c8439fab1c2a', email: 'admin@fresher2work.com', role: 'ADMIN' };
   }
   const matchedRecruiter = (platformData.recruiters || []).find((r: any) => token.includes(r.id));
   if (matchedRecruiter) {
@@ -248,7 +248,7 @@ function getAuthUser(req: NextRequest): { id: string; email: string; role: strin
     const matchedStudent = (studentsList || []).find((s: any) => s.id === studentId || s.userId === studentId);
     return {
       id: matchedStudent?.userId || matchedStudent?.id || studentId,
-      email: matchedStudent?.email || 'candidate@freshertowork.com',
+      email: matchedStudent?.email || 'candidate@fresher2work.com',
       role: 'STUDENT',
     };
   }
@@ -445,7 +445,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
               status: 'SUCCESS',
               createdAt: new Date(p.created_at * 1000).toISOString(),
               candidateName: resolvedName,
-              candidateEmail: resolvedEmail || (contact ? `${contact}` : 'candidate@freshertowork.com'),
+              candidateEmail: resolvedEmail || (contact ? `${contact}` : 'candidate@fresher2work.com'),
               candidatePhone: contact,
               method: (p.method || 'UPI').toUpperCase(),
               isTest: false,
@@ -723,7 +723,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
   // 11. Auth Me
   if (path === 'auth/me') {
     return NextResponse.json({
-      user: authUser || { id: 'user-default', email: 'user@freshertowork.com', role: 'STUDENT' },
+      user: authUser || { id: 'user-default', email: 'user@fresher2work.com', role: 'STUDENT' },
     });
   }
 
@@ -1454,7 +1454,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       const candidateDisplayName = candidateName || (authUser as any)?.fullName || 'Verified Candidate';
       const candidateDisplayEmail = (targetEmail && targetEmail !== 'void@razorpay.com')
         ? targetEmail
-        : `candidate_${paymentId.substring(4)}@freshertowork.com`;
+        : `candidate_${paymentId.substring(4)}@fresher2work.com`;
       matchedStudent = {
         id: newStudentId,
         userId: authUser?.id || `user-${Date.now()}`,

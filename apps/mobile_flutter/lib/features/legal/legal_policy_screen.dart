@@ -122,7 +122,7 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
         _buildSectionCard(
           title: '1. Introduction',
           content:
-              'FresherToWork (operated by Velvetbyte PVT Ltd) is committed to protecting the privacy of candidates and corporate recruiters. This policy outlines how your data is collected, stored, and utilized when using the mobile application and web portals.',
+              'Fresher2Work (operated by Velvetbyte PVT Ltd) is committed to protecting the privacy of candidates and corporate recruiters. This policy outlines how your data is collected, stored, and utilized when using the mobile application and web portals.',
         ),
         const SizedBox(height: 16),
         _buildSectionCard(
@@ -169,7 +169,7 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
         _buildSectionCard(
           title: '1. Platform Acceptance',
           content:
-              'By signing up or using FresherToWork, you agree to comply with all platform rules and policies. Failure to follow these rules may result in profile suspension or permanent blacklisting.',
+              'By signing up or using Fresher2Work, you agree to comply with all platform rules and policies. Failure to follow these rules may result in profile suspension or permanent blacklisting.',
         ),
         const SizedBox(height: 16),
         _buildSectionCard(
@@ -195,7 +195,7 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
         _buildSectionCard(
           title: '5. Disclaimer of Employment Guarantee',
           content:
-              'FresherToWork guarantees platform visibility and verified credentials to hiring recruiters. We do not guarantee a job offer, as selection depends entirely on candidate performance during interviews.',
+              'Fresher2Work guarantees platform visibility and verified credentials to hiring recruiters. We do not guarantee a job offer, as selection depends entirely on candidate performance during interviews.',
         ),
         const SizedBox(height: 32),
       ],
@@ -278,7 +278,7 @@ class _LegalPolicyScreenState extends State<LegalPolicyScreen>
               ),
               const SizedBox(height: 6),
               const Text(
-                'Velvetbyte PVT Ltd / FresherToWork\nCalicut and Kochi, Kerala, India',
+                'Velvetbyte PVT Ltd / Fresher2Work\nCalicut and Kochi, Kerala, India',
                 style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
               ),
               const Divider(color: Color(0xFF334155), height: 32),

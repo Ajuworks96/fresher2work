@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock, ArrowLeft, MessageSquare, ShieldCheck, CheckCircle2, ArrowUpRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact Us | FresherToWork',
-  description: 'Get in touch with FresherToWork support, candidate verification helpline, and recruiter partnerships.',
+  title: 'Contact Us | Fresher2Work',
+  description: 'Get in touch with Fresher2Work support, candidate verification helpline, and recruiter partnerships.',
 };
 
 export default function ContactPage() {

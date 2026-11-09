@@ -238,7 +238,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
       var options = {
         'key': keyId,
         'amount': amount,
-        'name': 'FresherToWork',
+        'name': 'Fresher2Work',
         'description': 'Direct HR Matching - ₹499 Discovery Pass',
         'order_id': orderId,
         'timeout': 300,

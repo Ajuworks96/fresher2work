@@ -60,7 +60,7 @@ export default function TalentPassportPage() {
   };
 
   const shareText = encodeURIComponent(
-    `Check out my verified Talent Passport on FresherToWork: ${passportUrl}`
+    `Check out my verified Talent Passport on Fresher2Work: ${passportUrl}`
   );
 
   if (loading) {
@@ -170,7 +170,7 @@ export default function TalentPassportPage() {
               </div>
               <div>
                 <p className="text-[10px] font-black tracking-widest uppercase text-[#4ad1c7]">
-                  FresherToWork • Official Talent Passport
+                  Fresher2Work • Official Talent Passport
                 </p>
                 <p className="text-xs text-slate-400 font-mono font-medium">
                   ID: FTW-{profile.id ? profile.id.slice(0, 8).toUpperCase() : 'VERIFIED'}
@@ -467,7 +467,7 @@ export default function TalentPassportPage() {
             Interested in hiring {candidateName}?
           </h3>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-            FresherToWork connects verified candidates directly with technical recruiters across Bangalore, Kochi, and Calicut. Zero agency commissions.
+            Fresher2Work connects verified candidates directly with technical recruiters across Bangalore, Kochi, and Calicut. Zero agency commissions.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -488,7 +488,7 @@ export default function TalentPassportPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500 space-y-1">
-        <p>© 2026 FresherToWork (Operated by Velvetbyte PVT Ltd) • Calicut & Kochi</p>
+        <p>© 2026 Fresher2Work (Operated by Velvetbyte PVT Ltd) • Calicut & Kochi</p>
         <p>Verified Talent Passport System • DPDP Act 2023 Compliant</p>
       </footer>
     </div>

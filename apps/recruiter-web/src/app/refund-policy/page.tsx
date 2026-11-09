@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { RotateCcw, CheckCircle2, AlertCircle, Clock, CreditCard, Mail, ArrowLeft, ArrowUpRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Refund & Cancellation Policy | FresherToWork',
-  description: 'Official Refund & Cancellation Policy for FresherToWork candidate activation and recruiter services.',
+  title: 'Refund & Cancellation Policy | Fresher2Work',
+  description: 'Official Refund & Cancellation Policy for Fresher2Work candidate activation and recruiter services.',
 };
 
 export default function RefundPolicyPage() {
@@ -66,7 +66,7 @@ export default function RefundPolicyPage() {
               <h2 className="text-xl font-bold">1. Purpose & Scope of Fee</h2>
             </div>
             <p className="mt-4">
-              At <strong>FresherToWork</strong> (operated by <strong>Velvetbyte PVT Ltd</strong>), we believe in 100% transparency. Candidates pay a one-time, nominal profile verification & discovery pass fee of <strong>₹499 (inclusive of GST)</strong>.
+              At <strong>Fresher2Work</strong> (operated by <strong>Velvetbyte PVT Ltd</strong>), we believe in 100% transparency. Candidates pay a one-time, nominal profile verification & discovery pass fee of <strong>₹499 (inclusive of GST)</strong>.
             </p>
             <p className="mt-3">
               This one-time fee directly offsets manual human engineering review, project repository auditing, fraud prevention, server cloud costs, and direct matching with registered corporate HR recruiters.
@@ -119,7 +119,7 @@ export default function RefundPolicyPage() {
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-700">
               <li>Once your candidate profile has been audited, approved, and assigned an active discovery badge in the recruiter portal.</li>
-              <li>Failure to secure an interview or job offer. FresherToWork guarantees platform discovery, recruiter search visibility, and portfolio auditing, but does not guarantee employment.</li>
+              <li>Failure to secure an interview or job offer. Fresher2Work guarantees platform discovery, recruiter search visibility, and portfolio auditing, but does not guarantee employment.</li>
               <li>Accounts banned or suspended due to submission of plagiarized work, counterfeit certificates, or code of conduct violations.</li>
             </ul>
           </section>
