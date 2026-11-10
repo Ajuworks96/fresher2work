@@ -251,7 +251,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: 'ToWork',
+                            text: '2Work',
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,

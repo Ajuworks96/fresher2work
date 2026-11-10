@@ -198,7 +198,7 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ),
                             TextSpan(
-                              text: 'ToWork',
+                              text: '2Work',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 30,
                                 fontWeight: FontWeight.w900,
