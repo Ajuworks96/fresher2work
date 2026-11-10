@@ -74,13 +74,26 @@ export default function LandingPage() {
             <a href="#tools" className="hover:text-[#1f357c] transition-colors">Talent Tools</a>
             <a href="#features" className="hover:text-[#1f357c] transition-colors">Proof-of-Work</a>
             <a href="#pricing" className="hover:text-[#1f357c] transition-colors">Recruiter Plans</a>
-            <Link href="/Fresher2Work.apk" className="hover:text-[#1f357c] font-bold transition-colors flex items-center gap-1.5 text-[#3e7aa7]">
-              <Download className="w-3.5 h-3.5 text-[#4ad1c7]" /> Mobile App
-            </Link>
+            <a
+              href="/Fresher2Work.apk"
+              download="Fresher2Work.apk"
+              className="hover:text-[#1f357c] font-bold transition-colors flex items-center gap-1.5 text-[#3e7aa7]"
+            >
+              <Download className="w-3.5 h-3.5 text-[#4ad1c7]" /> Download App (APK)
+            </a>
           </div>
 
           {/* Action CTAs */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="/Fresher2Work.apk"
+              download="Fresher2Work.apk"
+              className="inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-[#1f357c] bg-[#4ad1c7]/15 hover:bg-[#4ad1c7]/25 border border-[#4ad1c7]/40 shadow-xs transition-all"
+            >
+              <Download className="w-3 h-3 text-[#1f357c]" />
+              <span>Get App</span>
+            </a>
+
             <Link
               href="/superadmin"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#1f357c] bg-white hover:bg-slate-100 border border-slate-200/90 shadow-xs transition-all"
@@ -91,9 +104,9 @@ export default function LandingPage() {
             
             <Link
               href="/recruiter"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] shadow-md shadow-[#1f357c]/25 transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#1f357c] via-[#243e8f] to-[#3e7aa7] hover:from-[#17285c] hover:to-[#326489] shadow-md shadow-[#1f357c]/25 transition-all active:scale-[0.98]"
             >
-              <span>Recruiter Portal</span>
+              <span>Recruiter</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#4ad1c7]" />
             </Link>
           </div>
@@ -141,13 +154,14 @@ export default function LandingPage() {
               <ArrowRight className="w-4 h-4 text-[#4ad1c7]" />
             </Link>
 
-            <Link
+            <a
               href="/Fresher2Work.apk"
+              download="Fresher2Work.apk"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 hover:border-[#4ad1c7] shadow-xs transition-all active:scale-[0.98]"
             >
               <Smartphone className="w-4 h-4 text-[#3e7aa7]" />
-              <span>Download Candidate App</span>
-            </Link>
+              <span>Download Candidate App (APK)</span>
+            </a>
 
             <Link
               href="/superadmin"
