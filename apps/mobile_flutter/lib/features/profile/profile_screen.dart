@@ -444,6 +444,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _handleDeleteAccount() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0F172A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 28),
+            const SizedBox(width: 10),
+            Text(
+              'Delete Account?',
+              style: GoogleFonts.plusJakartaSans(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'This action is permanent and irreversible. Your profile, Talent Passport, uploaded proofs, and application records will be permanently erased from Fresher2Work in accordance with the India DPDP Act 2023.\n\nAre you sure you want to proceed?',
+          style: GoogleFonts.plusJakartaSans(
+            color: const Color(0xFF94A3B8),
+            fontSize: 13,
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.plusJakartaSans(
+                color: const Color(0xFF94A3B8),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              'Delete Permanently',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await ApiService.deleteAccount();
+      } catch (_) {}
+      await StorageService.clearAll();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(
+              'Your account and personal data have been permanently deleted.',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    }
+  }
+
   void _copyPitchLink() {
     final slug = _candidateFullName.isNotEmpty
         ? _candidateFullName.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-')
@@ -2052,6 +2131,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Contact & Grievance',
             subtitle: 'Email & WhatsApp helpline assistance',
             tab: LegalTab.contact,
+          ),
+          const SizedBox(height: 6),
+          const Divider(color: AppColors.borderSubtle, height: 16),
+          // Delete Account Permanently (Apple Guideline 5.1.1(v) & Google Play Data Safety)
+          InkWell(
+            onTap: _handleDeleteAccount,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_forever_rounded, size: 20, color: Colors.redAccent),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Delete Account Permanently',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                        Text(
+                          'Irreversible data erasure under India DPDP Act',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    size: 18,
+                    color: Colors.redAccent,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

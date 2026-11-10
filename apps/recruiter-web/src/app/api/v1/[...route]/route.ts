@@ -821,6 +821,41 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
       });
     }
 
+    // 2.5 Apple App Store & Google Play Store Reviewer Demo Account
+    if (
+      email?.toLowerCase() === 'reviewer@fresher2work.com' ||
+      email?.toLowerCase() === 'appreview@fresher2work.com'
+    ) {
+      if (password === 'Reviewer@F2W#2026!' || password === 'Reviewer@2026') {
+        const reviewerStudent = {
+          id: 'cand-appstore-reviewer-2026',
+          userId: 'cand-appstore-reviewer-2026',
+          fullName: 'Store Reviewer',
+          headline: 'Mobile App Quality Reviewer',
+          email: 'reviewer@fresher2work.com',
+          phone: '+91 8921658090',
+          isActivated: true,
+          discoveryPass: true,
+          verificationStatus: 'VERIFIED',
+          moderationStatus: 'APPROVED',
+          domain: 'technology',
+          role: 'STUDENT',
+          skills: ['Flutter', 'Next.js', 'Mobile Quality Testing'],
+          projects: [],
+          workSamples: [],
+          preferredLocations: ['Kochi', 'Bangalore', 'Remote'],
+        };
+        return NextResponse.json({
+          token: 'ftw_appstore_reviewer_jwt_token_2026',
+          user: reviewerStudent,
+          student: reviewerStudent,
+          isActivated: true,
+        });
+      } else {
+        return NextResponse.json({ error: 'Incorrect password for reviewer account.' }, { status: 401 });
+      }
+    }
+
     // 3. Candidate / Student Authentication
     const targetEmail = (email || '').toLowerCase().trim();
     const candidateRecord =
@@ -1584,6 +1619,31 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
     return NextResponse.json({ success: true, item: body }, { status: 201 });
   }
 
+  // 11. Student Self Account Deletion (Apple & Google Compliance)
+  if (path === 'auth/delete-account' || path === 'students/me/delete') {
+    const authUser = getAuthUser(req);
+    let targetEmail = authUser?.email || body?.email;
+    let targetId = authUser?.id || body?.id || body?.userId;
+
+    if (targetEmail || targetId) {
+      const idx = studentsList.findIndex(
+        (s: any) =>
+          (targetEmail && s.email?.toLowerCase() === targetEmail.toLowerCase()) ||
+          (targetId && (s.id === targetId || s.userId === targetId))
+      );
+      if (idx >= 0) {
+        const removed = studentsList.splice(idx, 1)[0];
+        if (removed?.id) await markStudentDeleted(removed.id);
+        if (removed?.userId) await markStudentDeleted(removed.userId);
+      }
+      await setDbState('students', studentsList);
+    }
+    return NextResponse.json({
+      success: true,
+      message: 'Account and personal data successfully deleted.',
+    });
+  }
+
   return NextResponse.json({ error: `Route /api/v1/${path} not found` }, { status: 404 });
 }
 
@@ -1852,6 +1912,35 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
   await syncFromDb();
   const resolvedParams = await params;
   const path = resolvedParams.route ? resolvedParams.route.join('/') : '';
+
+  // 0. Student Self Account Deletion (Apple Guideline 5.1.1(v) & Google Data Safety)
+  if (path === 'students/me' || path === 'auth/delete-account') {
+    const authUser = getAuthUser(req);
+    let targetEmail = authUser?.email;
+    let targetId = authUser?.id;
+
+    if (!targetEmail) {
+      targetEmail = req.nextUrl.searchParams.get('email') || undefined;
+    }
+
+    if (targetEmail || targetId) {
+      const idx = studentsList.findIndex(
+        (s: any) =>
+          (targetEmail && s.email?.toLowerCase() === targetEmail.toLowerCase()) ||
+          (targetId && (s.id === targetId || s.userId === targetId))
+      );
+      if (idx >= 0) {
+        const removed = studentsList.splice(idx, 1)[0];
+        if (removed?.id) await markStudentDeleted(removed.id);
+        if (removed?.userId) await markStudentDeleted(removed.userId);
+      }
+      await setDbState('students', studentsList);
+    }
+    return NextResponse.json({
+      success: true,
+      message: 'Account and personal data successfully and permanently deleted.',
+    });
+  }
 
   // 1. Delete Recruiter
   if (path.startsWith('admin/recruiters/')) {

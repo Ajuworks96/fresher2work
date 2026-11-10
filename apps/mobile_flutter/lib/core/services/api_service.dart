@@ -224,6 +224,26 @@ class ApiService {
   }
 
   // ===========================================================================
+  // ACCOUNT DELETION (Apple Guideline 5.1.1(v) & Google Play Data Safety)
+  // ===========================================================================
+
+  static Future<Map<String, dynamic>> deleteAccount() async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/students/me'),
+        headers: await _headers(),
+      );
+      return _parseResponse(response);
+    } catch (_) {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/delete-account'),
+        headers: await _headers(),
+      );
+      return _parseResponse(response);
+    }
+  }
+
+  // ===========================================================================
   // CV & FILE STORAGE
   // ===========================================================================
 

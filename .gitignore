@@ -45,4 +45,5 @@ build/
 .vercel
 .env*
 *.apk
+*.aab
 !apps/recruiter-web/public/Fresher2Work.apk

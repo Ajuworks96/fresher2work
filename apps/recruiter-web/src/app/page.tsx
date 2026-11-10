@@ -991,6 +991,63 @@ Tests:       16 passed, 16 total`}
         </div>
       </section>
 
+      {/* Modern Global Footer */}
+      <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 pt-16 pb-12 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-3">
+            <img src="/brand/logo.png" alt="Fresher2Work" className="h-8 w-auto brightness-200" />
+            <p className="text-xs text-slate-400 leading-relaxed">
+              India&apos;s verified skill & proof-of-work hiring ecosystem for genuine freshers. Powered by Velvetbyte PVT Ltd.
+            </p>
+            <p className="text-[11px] text-slate-500">
+              Calicut & Kochi, Kerala, India
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">For Candidates</h4>
+            <ul className="space-y-2 text-xs">
+              <li><a href="/Fresher2Work.apk" download="Fresher2Work.apk" className="hover:text-white transition">Download Android APK</a></li>
+              <li><Link href="/activate" className="hover:text-white transition">Activate Discovery Pass (₹499)</Link></li>
+              <li><Link href="/u/arjun_p" className="hover:text-white transition">Sample Talent Passport</Link></li>
+              <li><Link href="/login" className="hover:text-white transition">Candidate Login</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">For Recruiters</h4>
+            <ul className="space-y-2 text-xs">
+              <li><Link href="/recruiter" className="hover:text-white transition">Recruiter Platform</Link></li>
+              <li><Link href="/discover" className="hover:text-white transition">Discover Verified Talent</Link></li>
+              <li><Link href="/register" className="hover:text-white transition">Company Onboarding</Link></li>
+              <li><Link href="/admin" className="hover:text-white transition">Admin Portal</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Legal & Compliance</h4>
+            <ul className="space-y-2 text-xs">
+              <li><Link href="/privacy" className="hover:text-white transition">Privacy Policy (DPDP Act)</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition">Terms of Service</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-white transition">Refund & Cancellation</Link></li>
+              <li><Link href="/delete-account" className="text-rose-400 hover:text-rose-300 font-semibold transition">Request Account Deletion</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition">Grievance & Support</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-4">
+          <p>© {new Date().getFullYear()} Fresher2Work (Velvetbyte PVT Ltd). All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link href="/privacy" className="hover:underline">Privacy</Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:underline">Terms</Link>
+            <span>•</span>
+            <Link href="/delete-account" className="hover:underline">Data Erasure</Link>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }

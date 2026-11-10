@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/storage_service.dart';
@@ -82,6 +83,15 @@ class _ActivationScreenState extends State<ActivationScreen> {
         }
       }
     }
+  }
+
+  Future<void> _openWebActivation() async {
+    final uri = Uri.parse('https://fresher2work.com/activate');
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {}
   }
 
   void _showVerifyingOverlay() {
@@ -517,7 +527,42 @@ class _ActivationScreenState extends State<ActivationScreen> {
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
+                      // Alternative Web Activation (For Apple App Store & Web users)
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: OutlinedButton.icon(
+                          onPressed: _openWebActivation,
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFFCBD5E1)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            foregroundColor: const Color(0xFF1E293B),
+                          ),
+                          icon: const Icon(Icons.language_rounded, size: 18, color: Color(0xFF2563EB)),
+                          label: Text(
+                            'Activate Online via Web Portal',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      TextButton.icon(
+                        onPressed: _checkStatus,
+                        icon: const Icon(Icons.refresh_rounded, size: 16, color: Color(0xFF2563EB)),
+                        label: Text(
+                          'Already paid online? Refresh Status',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF2563EB),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       Center(
                         child: Wrap(
                           alignment: WrapAlignment.center,
