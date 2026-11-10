@@ -605,18 +605,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rout
         workMode: ['Remote', 'Hybrid'],
         preferredLocations: ['Kochi', 'Kozhikode', 'Bangalore'],
         portfolioUrl: `https://fresher2work.com/u/${cleanId}`,
-        projects: [
-          {
-            id: `proj-${Date.now()}-1`,
-            title: `${formattedName} - Signature Proof of Work Showcase`,
-            role: 'Lead Contributor & Developer',
-            description: 'Production-ready showcase with clean code architecture, verified repository commits, and performance benchmarks.',
-            keyMetrics: 'Audited & Verified on Fresher2Work',
-            status: 'VERIFIED',
-            techStack: ['Full-Stack', 'Modern Architecture', 'Clean Code'],
-            liveDemoUrl: 'https://fresher2work.com',
-          },
-        ],
+        projects: [],
+        workSamples: [],
+        certifications: [],
+        education: [],
       };
 
       studentsList.unshift(student);

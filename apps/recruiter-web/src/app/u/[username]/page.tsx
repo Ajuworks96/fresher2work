@@ -151,8 +151,8 @@ export default function TalentPassportPage() {
   const candidateName = profile.fullName || 'Candidate';
   const roleTitle = profile.headline || profile.roleTitle || 'Specialized Talent';
   const skillsList: string[] = Array.isArray(profile.skills)
-    ? profile.skills.map((s: any) => (typeof s === 'string' ? s : s.skillName || s.name))
-    : ['Full-Stack', 'UI/UX', 'Digital Marketing', 'Data Analysis'];
+    ? profile.skills.map((s: any) => (typeof s === 'string' ? s : s.skillName || s.name)).filter(Boolean)
+    : [];
 
   const projects = profile.projects || [];
   const openToTypes = profile.openTo?.types || profile.lookingFor || ['Full-time', 'Internship'];
@@ -297,7 +297,7 @@ export default function TalentPassportPage() {
                 Projects
               </p>
               <p className="text-2xl sm:text-3xl font-black text-white">
-                {String(projects.length || 4).padStart(2, '0')}
+                {String(projects.length).padStart(2, '0')}
               </p>
               <p className="text-[10px] text-[#4ad1c7] font-semibold">Proof Verified</p>
             </div>
@@ -307,7 +307,7 @@ export default function TalentPassportPage() {
                 Skills
               </p>
               <p className="text-2xl sm:text-3xl font-black text-white">
-                {String(skillsList.length || 8).padStart(2, '0')}
+                {String(skillsList.length).padStart(2, '0')}
               </p>
               <p className="text-[10px] text-[#3e7aa7] font-semibold">Audited Stack</p>
             </div>
@@ -317,7 +317,7 @@ export default function TalentPassportPage() {
                 Certificates
               </p>
               <p className="text-2xl sm:text-3xl font-black text-white">
-                {String(profile.certifications?.length || profile.education?.length || 2).padStart(2, '0')}
+                {String(profile.certifications?.length || profile.education?.length || 0).padStart(2, '0')}
               </p>
               <p className="text-[10px] text-indigo-400 font-semibold">Credentials</p>
             </div>

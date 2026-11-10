@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@freshertowork.com"
+                  placeholder="admin@fresher2work.com"
                   className="w-full rounded-xl border border-slate-700 bg-[#080B10] pl-10 pr-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#3e7aa7] focus:outline-none focus:ring-1 focus:ring-[#3e7aa7]"
                 />
               </div>
@@ -141,21 +141,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials */}
-          <div className="mt-4 pt-3 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('admin@freshertowork.com');
-                setPassword('SuperAdmin@Pass2026#');
-              }}
-              className="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-[#1f357c]/30 border border-slate-700 hover:border-[#3e7aa7]/60 text-slate-400 hover:text-[#4ad1c7] text-xs font-medium transition-all flex items-center justify-between cursor-pointer"
-            >
-              <span>Quick-fill Admin: admin@freshertowork.com</span>
-              <span className="text-[10px] text-[#4ad1c7] font-mono">1-Click</span>
-            </button>
-          </div>
-
+          {/* Secure Admin Portal Notice */}
           <div className="mt-4 pt-4 border-t border-slate-800 text-center">
             <p className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#4ad1c7]" />
