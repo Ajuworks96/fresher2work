@@ -58,7 +58,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return score.clamp(15, 100);
   }
 
+  void _syncProfileToBackend() {
+    final username = _getUsername();
+    ApiService.updateStudentProfile({
+      'username': username,
+      'fullName': _candidateFullName.isNotEmpty ? _candidateFullName : 'Candidate',
+      'headline': _userRoleTitle.isNotEmpty ? _userRoleTitle : 'Specialized Talent',
+      'about': _aboutText,
+      'phone': _phoneNumber,
+      'portfolioUrl': _portfolioUrl,
+      'skills': _skills,
+      'lookingFor': _lookingFor,
+      'workModes': _workModes,
+      'preferredLocations': _preferredLocations,
+    }).catchError((_) => <String, dynamic>{});
+  }
+
   Future<void> _shareTalentPassport() async {
+    _syncProfileToBackend();
     final url = _talentPassportUrl;
     final text = 'Check out my verified Talent Passport on Fresher2Work: $url';
     await Clipboard.setData(ClipboardData(text: url));
@@ -85,6 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _copyPassportLink() async {
+    _syncProfileToBackend();
     final url = _talentPassportUrl;
     await Clipboard.setData(ClipboardData(text: url));
     if (mounted) {
@@ -103,6 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _openPassportUrl() async {
+    _syncProfileToBackend();
     final uri = Uri.parse(_talentPassportUrl);
     try {
       if (await canLaunchUrl(uri)) {

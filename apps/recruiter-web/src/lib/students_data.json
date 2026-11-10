@@ -1,1 +1,157 @@
-[]
+[
+  {
+    "id": "student-arjun-01",
+    "userId": "user-arjun-01",
+    "fullName": "Arjun P",
+    "username": "arjun_p",
+    "slug": "arjun-p",
+    "email": "arjunpquadcubes@gmail.com",
+    "phone": "+918921658090",
+    "headline": "Digital Marketing Specialist & Growth Strategist",
+    "roleTitle": "Digital Marketing Specialist",
+    "about": "Digital Marketing Specialist with proven expertise in SEO, performance marketing, social media acquisition, and organic brand expansion for modern digital products.",
+    "college": "Calicut University",
+    "degree": "Bachelor of Computer Applications (BCA)",
+    "graduationYear": 2024,
+    "isActivated": true,
+    "verificationStatus": "VERIFIED",
+    "moderationStatus": "APPROVED",
+    "completenessScore": 95,
+    "createdAt": "2026-09-16T10:00:00.000Z",
+    "skills": [
+      { "id": "s-1", "skillName": "Digital Marketing", "proficiencyLevel": "EXPERT" },
+      { "id": "s-2", "skillName": "SEO Optimization", "proficiencyLevel": "EXPERT" },
+      { "id": "s-3", "skillName": "Google Ads & Meta Ads", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-4", "skillName": "Content Strategy", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-5", "skillName": "Google Analytics 4", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-6", "skillName": "Performance Marketing", "proficiencyLevel": "INTERMEDIATE" }
+    ],
+    "openTo": {
+      "types": ["Full-time", "Internship", "Contract"],
+      "workModes": ["Remote", "Hybrid", "On-site"],
+      "locations": ["Kozhikode", "Kochi", "Bangalore", "Remote"]
+    },
+    "lookingFor": ["Full-time", "Internship"],
+    "workMode": ["Remote", "Hybrid"],
+    "preferredLocations": ["Kozhikode", "Kochi", "Bangalore"],
+    "portfolioUrl": "https://fresher2work.com/u/arjun_p",
+    "projects": [
+      {
+        "id": "p-1",
+        "title": "Fresher2Work Growth & Organic Discovery Campaign",
+        "role": "Lead Growth Strategist",
+        "description": "Formulated targeted digital acquisition strategy and technical SEO architecture for Kerala's leading fresher talent marketplace, scaling organic indexing and active applicant pipeline.",
+        "keyMetrics": "+240% organic discovery growth, Page-1 SERP rankings for targeted job seeker keywords",
+        "status": "VERIFIED",
+        "techStack": ["SEO", "Google Analytics 4", "Meta Ads", "Ahrefs"],
+        "liveDemoUrl": "https://fresher2work.com"
+      },
+      {
+        "id": "p-2",
+        "title": "E-Commerce Performance Marketing & Conversion Optimization",
+        "role": "Performance Marketing Specialist",
+        "description": "Managed paid advertising campaigns across Google and Meta, generating 3.4x ROAS through A/B testing and structured landing page funnel improvements.",
+        "keyMetrics": "3.4x Return on Ad Spend (ROAS), 38% reduction in Customer Acquisition Cost (CAC)",
+        "status": "VERIFIED",
+        "techStack": ["Meta Ads Manager", "Google Ads", "Shopify Analytics"],
+        "liveDemoUrl": "https://fresher2work.com"
+      }
+    ]
+  },
+  {
+    "id": "student-rohit-02",
+    "userId": "user-rohit-02",
+    "fullName": "Rohit Nair",
+    "username": "rohit_nair",
+    "slug": "rohit-nair",
+    "email": "rohit.nair.dev@gmail.com",
+    "phone": "+919846012345",
+    "headline": "Full-Stack Developer (Flutter & React)",
+    "roleTitle": "Full-Stack Developer",
+    "about": "Passionate software engineer skilled in building responsive mobile apps with Flutter and enterprise web dashboards with Next.js and Node.js.",
+    "college": "CUSAT Kochi",
+    "degree": "B.Tech in Computer Science",
+    "graduationYear": 2025,
+    "isActivated": true,
+    "verificationStatus": "VERIFIED",
+    "moderationStatus": "APPROVED",
+    "completenessScore": 90,
+    "createdAt": "2026-09-18T10:00:00.000Z",
+    "skills": [
+      { "id": "s-11", "skillName": "Flutter & Dart", "proficiencyLevel": "EXPERT" },
+      { "id": "s-12", "skillName": "React / Next.js", "proficiencyLevel": "EXPERT" },
+      { "id": "s-13", "skillName": "TypeScript", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-14", "skillName": "Node.js & Express", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-15", "skillName": "PostgreSQL", "proficiencyLevel": "INTERMEDIATE" }
+    ],
+    "openTo": {
+      "types": ["Full-time", "Internship"],
+      "workModes": ["Hybrid", "Remote", "On-site"],
+      "locations": ["Kochi", "Bangalore", "Trivandrum"]
+    },
+    "lookingFor": ["Full-time", "Internship"],
+    "workMode": ["Hybrid", "Remote"],
+    "preferredLocations": ["Kochi", "Bangalore"],
+    "portfolioUrl": "https://fresher2work.com/u/rohit_nair",
+    "projects": [
+      {
+        "id": "p-11",
+        "title": "Cross-Platform Realtime Chat & Task App",
+        "role": "Lead Mobile Developer",
+        "description": "Architected end-to-end Flutter application supporting WebSocket chat, push notifications, and offline caching via SQLite.",
+        "keyMetrics": "Sub-50ms message latency, 60fps fluid UI animation",
+        "status": "VERIFIED",
+        "techStack": ["Flutter", "Dart", "WebSockets", "Node.js", "Redis"],
+        "githubUrl": "https://github.com"
+      }
+    ]
+  },
+  {
+    "id": "student-ananya-03",
+    "userId": "user-ananya-03",
+    "fullName": "Ananya Krishna",
+    "username": "ananya_krishna",
+    "slug": "ananya-krishna",
+    "email": "ananya.design@gmail.com",
+    "phone": "+919447123987",
+    "headline": "UI/UX & Product Designer",
+    "roleTitle": "UI/UX Designer",
+    "about": "Visual and product designer crafting clean, intuitive user journeys with a strong focus on mobile typography, micro-interactions, and design systems.",
+    "college": "National Institute of Design",
+    "degree": "B.Des in Interaction Design",
+    "graduationYear": 2024,
+    "isActivated": true,
+    "verificationStatus": "VERIFIED",
+    "moderationStatus": "APPROVED",
+    "completenessScore": 92,
+    "createdAt": "2026-09-20T10:00:00.000Z",
+    "skills": [
+      { "id": "s-21", "skillName": "Figma", "proficiencyLevel": "EXPERT" },
+      { "id": "s-22", "skillName": "UI / Visual Design", "proficiencyLevel": "EXPERT" },
+      { "id": "s-23", "skillName": "Design Systems", "proficiencyLevel": "EXPERT" },
+      { "id": "s-24", "skillName": "Wireframing & Prototyping", "proficiencyLevel": "INTERMEDIATE" },
+      { "id": "s-25", "skillName": "User Research", "proficiencyLevel": "INTERMEDIATE" }
+    ],
+    "openTo": {
+      "types": ["Full-time", "Internship"],
+      "workModes": ["Remote", "Hybrid"],
+      "locations": ["Bangalore", "Kochi", "Remote"]
+    },
+    "lookingFor": ["Full-time", "Internship"],
+    "workMode": ["Remote", "Hybrid"],
+    "preferredLocations": ["Bangalore", "Kochi", "Remote"],
+    "portfolioUrl": "https://fresher2work.com/u/ananya_krishna",
+    "projects": [
+      {
+        "id": "p-21",
+        "title": "Healthcare Teleconsultation iOS App Concept",
+        "role": "Solo UX Researcher & UI Designer",
+        "description": "Conducted 15 patient interviews, designed end-to-end doctor booking flow, and created comprehensive iOS 17 Figma design system.",
+        "keyMetrics": "4.8/5 Usability SUS score, 65+ reusable Figma components",
+        "status": "VERIFIED",
+        "techStack": ["Figma", "FigJam", "iOS Design Guidelines"],
+        "liveDemoUrl": "https://figma.com"
+      }
+    ]
+  }
+]
