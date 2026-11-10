@@ -231,7 +231,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
       final order = await ApiService.createPaymentOrder();
       final orderId = order['orderId'] as String;
       _currentOrderId = orderId;
-      final keyId = (order['keyId'] as String?) ?? 'rzp_test_TchOu7JRRpZS37';
+      final keyId = (order['keyId'] as String?) ?? 'rzp_live_TyRvY8wYW9958F';
       final amount = order['amount'] ?? 49900;
       final profile = order['profile'] as Map<String, dynamic>?;
 

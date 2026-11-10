@@ -1356,8 +1356,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
 
   // 8. Payment order creation
   if (path === 'payments/create-order') {
-    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_TchOu7JRRpZS37';
-    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'H6fhPAbNIVsPGg8P6gy9reUU';
+    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_TyRvY8wYW9958F';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'IwJiHC9AQsZJA6Va8QbJGTb3';
     let orderId = `order_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
     try {
@@ -1404,8 +1404,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ rou
   if (path === 'payments/verify-payment') {
     const { orderId, paymentId, signature, candidateName, email, studentId } = body;
     const authUser = getAuthUser(req);
-    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_TchOu7JRRpZS37';
-    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'H6fhPAbNIVsPGg8P6gy9reUU';
+    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_TyRvY8wYW9958F';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'IwJiHC9AQsZJA6Va8QbJGTb3';
 
     // paymentId is the primary required identifier from Razorpay
     if (!paymentId) {

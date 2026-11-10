@@ -3,8 +3,31 @@ import './globals.css';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://fresher2work.com'),
   title: 'Fresher2Work — India\'s Dedicated Proof-of-Work Fresher Hiring Ecosystem',
-  description: 'Search, filter and discover verified freshers based on proof of work, projects and technical skills.',
+  description: 'Search, filter and discover verified freshers based on proof of work, projects and technical skills. Empowering fresh graduates into verified career roles.',
+  openGraph: {
+    title: 'Fresher2Work — India\'s Dedicated Proof-of-Work Fresher Hiring Ecosystem',
+    description: 'Discover verified talent and showcase real proof-of-work. Get hired without agency commissions.',
+    url: 'https://fresher2work.com',
+    siteName: 'Fresher2Work',
+    images: [
+      {
+        url: '/brand/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Fresher2Work',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fresher2Work — Proof-of-Work Talent Marketplace',
+    description: 'Empowering freshers into real careers with verified Talent Passports and proof of work.',
+    images: ['/brand/logo.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
