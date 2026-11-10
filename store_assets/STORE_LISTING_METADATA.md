@@ -70,3 +70,4 @@ Paste the following credentials into the **"App Review Information / Sign-in req
 - **Account Type:** Verified Candidate Profile (Discovery Pass Activated, Zero OTP required).
 - **Notes for Reviewer:**
   > This is a dedicated demo reviewer account. It has full access to the Candidate dashboard, Talent Passport, proof-of-work showcase, profile settings, and verified job openings. No SMS or OTP verification is required to log in.
+
